@@ -1,0 +1,362 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.barramenu {
+    background-color: #007588;
+    font-size: small;
+}
+
+.Submenus a {
+    font-size: small;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.dropdown:hover > .dropdown-menu {
+    display: block;
+    margin-top: 0.125em;
+}
+
+.dropdown:hover > .dropdown-menu,
+.dropend:hover > .dropdown-menu {
+    display: block;
+    margin-top: 0.125em;
+    margin-left: 0.125em;
+}
+
+.tamancla a {
+    font-size: small;
+}
+
+.nav {
+    background-color: white;
+}
+
+    .nav .seccion {
+        color: black;
+    }
+    .nav .activo {
+        background-color: #5c8b91;
+        color: white;
+    }
+
+        .nav .seccion:hover {
+            color: white;
+            cursor: pointer;
+            background-color: #5c8b91;
+        }
+
+.nav-item:active {
+    color: white;
+    cursor: pointer;
+    background-color: #5c8b91;
+}
+/*p {
+    color: white;
+}*/
+.sidebar {
+    height: 80%;
+    width: 250px;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+}
+
+.Lateral {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.ticket-reparacion-table {
+    width: 100%;
+}
+
+    .ticket-reparacion-table th, .ticket-reparacion-table td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .ticket-reparacion-table th {
+        background-color: #5c8b91;
+        color: #f2f2f2;
+        font-size: small;
+    }
+
+    .ticket-reparacion-table td {
+        min-width: 75pt;
+    }
+
+    .ticket-reparacion-table p {
+        color: black;
+        font-size: small;
+    }
+
+.ticket-final-table {
+    width: 100%;
+}
+
+    .ticket-final-table th, .ticket-final-table td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .ticket-final-table th {
+        background-color: #5c8b91;
+        color: #f2f2f2;
+        font-size: small;
+    }
+
+    .ticket-final-table td {
+        min-width: 75pt;
+    }
+
+    .ticket-final-table p {
+        color: black;
+        font-size: small;
+    }
+
+.ticket-asigna-table {
+    width: 100%;
+}
+
+    .ticket-asigna-table th, .ticket-asigna-table td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .ticket-asigna-table th {
+        background-color: #5c8b91;
+        color: #f2f2f2;
+        font-size: small;
+    }
+
+    .ticket-asigna-table td {
+        min-width: 75pt;
+    }
+
+    .ticket-asigna-table p {
+        color: black;
+        font-size: small;
+    }
+
+
+.ticket-porasigna-table {
+    width: 100%;
+}
+
+    .ticket-porasigna-table th, .ticket-porasigna-table td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .ticket-porasigna-table th {
+        background-color: #5c8b91;
+        color: #f2f2f2;
+        font-size: small;
+    }
+
+    .ticket-porasigna-table td {
+        min-width: 75pt;
+    }
+
+    .ticket-porasigna-table p {
+        color: black;
+        font-size: small;
+    }
+    .ticket-porasigna-table .comment-cell {
+        flex-grow: 2; /* Make the comment cell grow more than others */
+    }
+
+
+.filtros {
+    height: 25pt;
+}
+
+.inputUploadFile {
+    display: block;
+    height: 30pt;
+    width: 200pt;
+    font-size: small;
+}
+
+.ComeMotvAsig {
+    display: block;
+    font-size: small;
+    height: 45pt;
+    width: 160pt;
+}
+.selectTableUser {
+    display: block;
+    width: 230pt;
+    font-size: small;
+}
+.Observaciones {
+    display: block;
+    width: 230pt;
+    font-size: small;
+}
+.fecha_Table {
+    display: block;
+    height: 30pt;
+    width: 110pt;
+    font-size: small;
+}
+
+.FechEstima {
+    display: block;
+    height: 30pt;
+    width: 110pt;
+    font-size: small;
+}
+
+.NumTick_Table {
+    display: block;
+    width: 10pt;
+}
+
+.FechTick_Table {
+    display: block;
+    width: 100pt;
+}
+
+.selectTickTable {
+    display: block;
+    height: 40pt;
+    width: 100pt;
+    font-size: small;
+}
+
+.selectTipFalTable {
+    display: block;
+    height: 40pt;
+    width: 130pt;
+}
+
+.textareaTable {
+    display: block;
+    height: 75pt;
+    width: 180pt;
+}
+
+
+.selectTableClasif {
+    display: block;
+    height: 30pt;
+    width: 110pt;
+    font-size: small;
+}
+
+    .selectTabApoy {
+        display: block;
+        height: 30pt;
+        width: 160pt;
+        font-size: small;
+    }
+
+.llantasTab {
+    display: block;
+    width: 250pt;
+    align-content: center;
+    text-align: center;
+    font-size: small;
+}
+    .datos-bak {
+        display: none;
+        background-color: #CCD1D1;
+    }
+
+        .datos-bak h6 {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+    .letras-index {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.custom-input {
+    border: none;
+    border-bottom: 1px solid black; /* Color de las líneas abajo (blanco en este caso) */
+    background-color: transparent; /* Fondo transparente */
+    color: black; /* Color del texto (blanco en este caso) */
+    width: 100pt;
+    font-size: small;
+}
+
+.custom-input {
+    
+    border: none;
+    border-bottom: 1px solid black; /* Color de las líneas abajo (negro en este caso) */
+    background-color: transparent; /* Fondo transparente */
+    outline: none; /* Quita el contorno al hacer clic */
+    box-shadow: none; /* Quita la sombra al hacer clic */
+    color: black; /* Color del texto (negro en este caso) */
+    width: 100pt;
+    font-size: small;
+}
+
+    /* Estilo personalizado para el placeholder */
+    .custom-input::placeholder {
+        color: black; /* Color del placeholder (negro en este caso) */
+    }
+
+.spinner-overlay {
+    position: fixed;
+    top: 50%; /* Centra verticalmente */
+    left: 50%; /* Centra horizontalmente */
+    transform: translate(-50%, -50%); /* Centra el contenido */
+    width: 100%;
+    height: 100%;
+    color: #008392;
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 9999;
+    display: none;
+}
+
+.spiner-center {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.carousel-inner img {
+    justify-content: center;
+    width: 150px; 
+    height: 150px;
+}
+
+/*.modal-body .item img {
+    max-width: 50%;
+    height: 50%;
+}*/
+
+/* Estilos para los videos */
+.modal-body .item-video video {
+    max-width: 10dp;
+    height: 10dp;
+}
