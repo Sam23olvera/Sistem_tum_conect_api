@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="shortcut icon" href="~/imag/logo_difuminado.png" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/ConPorOpera.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ConectDB.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datetime/jquery.datetimepicker.min.css" />
+    <!-- caruselowl -->
+    <link href="~/lib/owlcarousel/assets/owl.carousel.css" rel="stylesheet" />
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/owlcarousel/assets/owl.theme.default.min.css" rel="stylesheet" />
+
+</head>
+@(await Component.InvokeAsync("Menu", ViewData["UsuarioModel"]))
+<body>
+    <div class="container-fluid">
+        <main role="main">
+            <div class="container-fluid">
+                <div class="row text-center spiner-center">
+                    <div id="spinner-overlay" class="spinner-overlay">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/ConPorOpera.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/lib/datetime/jquery.datetimepicker.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.0.5/compressor.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

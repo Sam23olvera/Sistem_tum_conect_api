@@ -1,0 +1,267 @@
+﻿@using ConectDB.Models;
+@using Newtonsoft.Json;
+@model ConsulTipoOpera;
+@{
+    string? title = ViewData["Title"] as string;
+    Layout = "~/Views/Shared/_Layout_ConporOpe.cshtml";
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+}
+<div class="container-fluid">
+    <br />
+    <div class="row-cols-auto text-lg-start">
+        <h3>@ViewData["Title"]</h3>
+        <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
+        <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+    </div>
+    <br />
+    <form method="post" asp-controller="ConsultaporOperacion" asp-action="Busca">
+        <div class="row g-2 justify-content-center align-items-center">
+            <div class="col-auto">
+                <label for="FehInicio" class="form-label">Fecha Inicio:</label>
+                <input type="text" class="form-control" value="@((Convert.ToDateTime(TempData["FehInicio"]) == DateTime.MinValue) ? DateTime.Now.AddDays(-30).ToString("yyyy/MM/dd") : Convert.ToDateTime(TempData["FehInicio"]).ToString("yyyy/MM/dd"))" id="FehInicio" name="FehInicio" />
+            </div>
+            <div class="col-auto">
+                <label for="FehFin" class="form-label">Fecha Fin:</label>
+                <input type="text" class="form-control" value="@((Convert.ToDateTime(TempData["FehFin"]) == DateTime.MinValue) ? DateTime.Now.ToString("yyyy/MM/dd") : Convert.ToDateTime(TempData["FehFin"]).ToString("yyyy/MM/dd"))" id="FehFin" name="FehFin" />
+            </div>
+            <div class="col-auto">
+                <label for="NumTicket" class="form-label">Número de Ticket:</label>
+                <input type="number" class="form-control" placeholder="#Ticket" id="NumTicket" name="NumTicket" />
+            </div>
+            <div class="col-auto">
+                <label for="ClaveUnidadNegocio" class="form-label">Unidad de Negocio:</label>
+                <select class="form-select" id="ClaveUnidadNegocio" name="ClaveUnidadNegocio">
+                    <option value="0" selected>[Seleccionar]</option>
+                    @foreach (var une in Model.TBCAT_UNE)
+                    {
+                        if (Convert.ToInt16(TempData["ClaveUniNegocio"]) == @une.ClaveUnidadNegocio)
+                        {
+                            <option value="@une.ClaveUnidadNegocio" selected>@une.Descripcion </option>
+                        }
+                        else
+                        {
+                            <option value="@une.ClaveUnidadNegocio">@une.Descripcion </option>
+                        }
+                    }
+                </select>
+                <input type="hidden" value="@TempData["ClaveUniNegocio"]" id="cvNeg" />
+            </div>
+            <div class="col-auto">
+                <label for="ClaveTipoOperacion" class="form-label">Tipo de Operación:</label>
+                <select class="form-select" id="ClaveTipoOperacion" name="ClaveTipoOperacion">
+                    <option value="" selected>[Seleccionar]</option>
+                    <!-- Options will be dynamically loaded -->
+                </select>
+                <input type="hidden" value="@TempData["ClaveTipoOperacion"]" id="cvtp" />
+            </div>
+            <div class="col-auto">
+                <label for="clvEstatus" class="form-label">Estatus Ticket:</label>
+                <select class="form-select" id="clvEstatus" name="clvEstatus">
+                    <option value="" selected>[Seleccionar]</option>
+                    @foreach (var est in Model.TBCAT_Estatus)
+                    {
+                        if (Convert.ToInt16(TempData["clvEstatus"]) == @est.ClaveEstatus)
+                        {
+                            <option value="@est.ClaveEstatus" selected>@est.Descripcion</option>
+                        }
+                        else
+                        {
+                            <option value="@est.ClaveEstatus">@est.Descripcion</option>
+                        }
+                        
+                    }
+                </select>
+            </div>
+            <div class="col-auto">
+                <br/>
+                <button class="btn btn-primary" type="submit" id="btnConsultar" onclick="BtnConsultar()">Consultar</button>
+                <input type="hidden" id="cveEmp" value="@usuarioModel.Data[0].EmpS[0].cveEmp" name="cveEmp" />
+                <input type="hidden" id="XT" value="@usuarioModel.Token" name="XT" />
+            </div>
+            <div class="col-auto">
+                <br />
+                <button class="btn btn-success" type="submit" id="btnExcel" onclick="Btnexcel()">Excel</button>
+                <input type="hidden" id="excel" name="Excel" value="false" />
+            </div>
+        </div>
+    </form>
+    <br />
+    <div class="row justify-content-start align-items-start">
+        <div class="col-12">
+            <div class="container table-responsive container-fluid">
+                <table class="table table-bordered table-sm ticket-porasigna-table">
+                    <caption>@ViewData["Title"]</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col"> Unidad de Negocio            </th>
+                            <th scope="col"> Tipo Operación               </th>
+                            <th scope="col"> NumTicket                    </th>
+                            <th scope="col"> Estatus                      </th>
+                            <th scope="col"> Fecha Alta                   </th>
+                            <th scope="col"> Usuario Asignado             </th>
+                            <th scope="col"> Fecha Asignado               </th>
+                            <th scope="col"> Fecha Termino                </th>
+                            <th scope="col"> Tiempo de Reparacion         </th>
+                            <th scope="col"> Equipo                       </th>
+                            <th scope="col"> Diesel                       </th>
+                            <th scope="col"> Grua                         </th>
+                            <th scope="col"> Tipo Ticket                  </th>
+                            <th scope="col"> Tipo Falla                   </th>
+                            <th scope="col"> Comentario de Reprogramacion </th>
+                            <th scope="col"> Operador                     </th>
+                            <th scope="col"> Ruta                         </th>
+                            <th scope="col"> Telefono Operador            </th>
+                            <th scope="col"> Atencion Parcial           </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var op in Model.CSxTipoOeracion)
+                        {
+                            @if (@op.ClaveEstatus == 1)
+                            {
+                                <tr id="fila" style="background-color: #F1948A;width: 12rem;">
+                                    <td class="text-center"> <p> @op.UNE </p></td>
+                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="text-center"> <p> @op.NumTicket </p></td>
+                                    <td class="text-center"> <p> @op.Estatus </p></td>
+                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="text-center"> <p> @op.UsuarioAsignado</p> </td>
+                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="text-center"> <p> @op.TimerReparacion </p></td>
+                                    <td class="text-center"> <p> @op.Equipo</p></td>
+                                    <td class="text-center"> <p> @op.Diesel </p></td>
+                                    <td class="text-center"> <p> @op.Grua </p></td>
+                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="text-center"> <p> @op.NotasMonitoreo </p></td>
+                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
+                                    <td class="text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="text-center"> <p> @op.Tel_Operador </p> </td>
+                                    <td class="text-center"> <p> @op.AtencionParcial </p> </td>
+                                </tr>
+                            }
+                            @if (@op.ClaveEstatus == 2)
+                            {
+                                <tr id="fila" style="background-color: #85C1E9; width: 12rem;">
+                                    <td class="text-center"> <p> @op.UNE </p></td>
+                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="text-center"> <p> @op.NumTicket </p></td>
+                                    <td class="text-center"> <p> @op.Estatus </p></td>
+                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.UsuarioAsignado </p> </td>
+                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="text-center"> <p> @op.TimerReparacion </p></td>
+                                    <td class="text-center"> <p> @op.Equipo </p></td>
+                                    <td class="text-center"> <p> @op.Diesel </p></td>
+                                    <td class="text-center"> <p> @op.Grua </p></td>
+                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="text-center"> <p> @op.NotasMonitoreo </p></td>
+                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
+                                    <td class="text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="text-center"> <p> @op.Tel_Operador </p></td>
+                                    <td class="text-center"> <p> @op.AtencionParcial </p></td>
+                                </tr>
+                            }
+                            @if (@op.ClaveEstatus == 3)
+                            {
+                                <tr id="fila" style="background-color: #F8C471; width: 12rem;">
+                                    <td class="text-center"> <p> @op.UNE </p></td>
+                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="text-center"> <p> @op.NumTicket </p> </td>
+                                    <td class="text-center"> <p> @op.Estatus </p> </td>
+                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.UsuarioAsignado </p> </td>
+                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.TimerReparacion </p> </td>
+                                    <td class="text-center"> <p> @op.Equipo </p> </td>
+                                    <td class="text-center"> <p> @op.Diesel </p> </td>
+                                    <td class="text-center"> <p> @op.Grua </p></td>
+                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="text-center"> <p> @op.NotasMonitoreo </p></td>
+                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
+                                    <td class="text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="text-center"> <p> @op.Tel_Operador </p> </td>
+                                    <td class="text-center"> <p> @op.AtencionParcial </p> </td>
+                                </tr>
+                            }
+                            @if (@op.ClaveEstatus == 4)
+                            {
+                                <tr id="fila" style="background-color: #73C6B6; width: 12rem;">
+                                    <td class="text-center"> <p> @op.UNE </p></td>
+                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="text-center"> <p> @op.NumTicket </p></td>
+                                    <td class="text-center"> <p> @op.Estatus </p></td>
+                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.UsuarioAsignado </p></td>
+                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.TimerReparacion </p></td>
+                                    <td class="text-center"> <p> @op.Equipo </p></td>
+                                    <td class="text-center"> <p> @op.Diesel </p></td>
+                                    <td class="text-center"> <p> @op.Grua </p></td>
+                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="text-center"> <p> @op.NotasMonitoreo </p> </td>
+                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p> </td>
+                                    <td class="text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="text-center"> <p> @op.Tel_Operador </p> </td>
+                                    <td class="text-center"> <p> @op.AtencionParcial </p> </td>
+                                </tr>
+                            }
+                            @if (@op.ClaveEstatus == 5)
+                            {
+                                <tr id="fila" style="background-color: #B2BABB;width: 12rem;">
+                                    <td class="text-center"> <p> @op.UNE </p></td>
+                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="text-center"> <p> @op.NumTicket </p> </td>
+                                    <td class="text-center"> <p> @op.Estatus </p> </td>
+                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.UsuarioAsignado </p> </td>
+                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="text-center"> <p> @op.TimerReparacion </p> </td>
+                                    <td class="text-center"> <p> @op.Equipo </p> </td>
+                                    <td class="text-center"> <p> @op.Diesel </p></td>
+                                    <td class="text-center"> <p> @op.Grua </p></td>
+                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="text-center"> <p> @op.NotasMonitoreo </p> </td>
+                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p> </td>
+                                    <td class="text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="text-center"> <p> @op.Tel_Operador </p></td>
+                                    <td class="text-center"> <p> @op.AtencionParcial </p> </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <ul class="pagination pagination-sm">
+                        @if (ViewBag.CurrentPage == @i)
+                        {
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">@i</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="Busca?pagina=@i&XT=@usuarioModel.Token&cveEmp=@usuarioModel.Data[0].EmpS[0].cveEmp&NumTicket=0&ClaveTipoOperacion=@TempData["ClaveTipoOperacion"]&ClaveUnidadNegocio=@TempData["ClaveUniNegocio"]&clvEstatus=@TempData["clvEstatus"]&FehInicio=@Convert.ToDateTime(@TempData["FehInicio"]).ToString("yyyy/MM/dd")&FehFin =@Convert.ToDateTime(@TempData["FehFin"]).ToString("yyyy /MM/dd")">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
