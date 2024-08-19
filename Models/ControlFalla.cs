@@ -9,13 +9,14 @@
         private List<TBCATTipoApoyo> ZVaciTBCATTipApoyo = new List<TBCATTipoApoyo>();
         private List<TBCATTipoClasificacion> zVaciTBCATTipoClasificacion = new List<TBCATTipoClasificacion>();
         private List<TBCATUserAsignaReparacion> zVaciTBCATUserAsignaReparacion = new List<TBCATUserAsignaReparacion>();
-        
+        private List<Ordenes> Ordenesvacia = new List<Ordenes>();
         private List<soliGeneral> soliGenerals = new List<soliGeneral>();
         public int? TotalSolicitudes { get; set; }
         public int? status { get; set; }
         public string? message { get; set; }
         public List<soliGeneral> SolicitudesGenerales { get { return soliGenerals; } set { soliGenerals = value; } }
         public List<Solicitude> Solicitudes { get { return zVarcio; } set { zVarcio = value; } }
+        public List<Ordenes> OrdenesMtto { get { return Ordenesvacia; } set { Ordenesvacia = value; } }
         public List<TBCATTipoTicket> TBCAT_TipoTicket { get { return zVaciTBCATTipoTicket; } set { zVaciTBCATTipoTicket = value; } }
         public List<TBCATTipoFalla> TBCAT_TipoFalla { get { return zVaciTBCATFALLAS; } set { zVaciTBCATFALLAS = value; } }
         public List<TBCATTipoApoyo> TBCAT_TipoApoyo { get { return ZVaciTBCATTipApoyo; } set { ZVaciTBCATTipApoyo = value; } }
@@ -23,6 +24,18 @@
         public List<TBCATUserAsignaReparacion> TBCAT_UserAsignaReparacion { get { return zVaciTBCATUserAsignaReparacion; } set { zVaciTBCATUserAsignaReparacion = value; } }
 
     }
+    public class Ordenes
+    {
+        public int OrdenMtto { get; set; }
+        public string? Folio { get; set; }
+        public double? Costo { get; set; }
+        public string? Equipo { get; set; }
+        public string? Proveedor { get; set; }
+        public string Seleccionar { get; set; }
+        public int status { get; set; }
+        public string? message { get; set; }
+    }
+
     public class archivo
     {
         public int carpet { get; set; }
@@ -62,6 +75,7 @@
         public string? Ruta { get; set; }
         public string? TipoCarga { get; set; }
         public string? TipoFalla { get; set; }
+        public int ClaveTipoApoyo { get; set; }
         public string? TipoApoyo { get; set; }
         public string? TipoClasificacion { get; set; }
         public int ClaveTipoClasificacion { get; set; }

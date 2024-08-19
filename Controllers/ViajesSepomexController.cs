@@ -28,6 +28,7 @@ namespace ConectDB.Controllers
                 model = menu.RegresMenu(desusuario, descontraseña, cveEmp, url, XT);
                 model.Token = XT;
                 ViewData["UsuarioModel"] = model;
+                ViewData["TextoPrueba"] = "Prueba de textoServidor";
                 var oLista = con.ListarRutas();
                 //var oLista = con.listarReclu(usuario, contraseña, cveEmp);
                 return View("Index", oLista);
@@ -38,7 +39,17 @@ namespace ConectDB.Controllers
                 return View("Index");
             }
         }
+        public ActionResult Prueba(int cveEmp, string XT)
+        {
+            try
+            {
+                return View("Index");
+            }
+            catch
+            {
+                throw;
+            }
 
-
+        }
     }
 }

@@ -4,8 +4,8 @@
     string? title = ViewData["Title"] as string;
     Layout = "~/Views/Shared/_Layout_ControlReparaciones.cshtml";
     var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
-}
 
+}
 <div class="container-fluid">
     <br />
     <div class="row">
@@ -39,6 +39,7 @@
                     <h3>@ViewData["Title"]</h3>
                     <input type="hidden" value="@TempData["Mensaje"]" id="mensaje"></input>
                     <input type="hidden" value="@TempData["guardado"]" id="guarda"></input>
+                    <input type="hidden" value="@TempData["ShowModal"]" id="showModal"></input>
                 </div>
                 <br />
                 <form method="post" asp-controller="ControlReparaciones" asp-action="BuscarReparacion">
@@ -88,27 +89,27 @@
                                 <caption>@ViewData["Title"]</caption>
                                 <thead>
                                     <tr>
-                                        <th scope = "col" ># Ticket</th>
-                                        <th scope = "col" >FechaCreacion</th>
-                                        <th scope = "col" >Fecha Asignacion</th>
-                                        <th scope = "col" >Tipo Ticket</th>
-                                        <th scope = "col" >Falla</th>
-                                        <th scope = "col" >Comentario</th>
-                                        <th scope = "col" >Envio Reparación</th>
-                                        <th scope = "col" >Tipo Apoyo</th>
-                                        <th scope = "col" >Usuario Asignado</th>
-                                        <th scope = "col" >Tiempo Estimado Reparacion</th>
-                                        <th scope = "col" ></th>
-                                        <th scope = "col" >Motivo de Reprogramación de tiempo estimado</th>
-                                        <th scope = "col" ></th>
-                                        <th scope = "col" ></th>
+                                        <th scope="col"># Ticket</th>
+                                        <th scope="col">FechaCreacion</th>
+                                        <th scope="col">Fecha Asignacion</th>
+                                        <th scope="col">Tipo Ticket</th>
+                                        <th scope="col">Falla</th>
+                                        <th scope="col">Comentario</th>
+                                        <th scope="col">Envio Reparación</th>
+                                        <th scope="col">Tipo Apoyo</th>
+                                        <th scope="col">Usuario Asignado</th>
+                                        <th scope="col">Tiempo Estimado Reparacion</th>
+                                        <th scope="col"></th>
+                                        <th scope="col">Motivo de Reprogramación de tiempo estimado</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var solicitude in Model.Solicitudes)
                                     {
                                         <tr>
-                                            <form method="post" asp-controller="ControlReparaciones" asp-action="AsigRepa">
+                                            <form id="form-@solicitude.NumTicket" method="post" asp-controller="ControlReparaciones" asp-action="AsigRepa">
                                             <td class="text-center">
                                                 <p>@solicitude.NumTicket</p>
                                             </td>
@@ -135,6 +136,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <p>@solicitude.Usuario</p>
+                                                <input value="@solicitude.TipoEquipo" type="hidden" id="TipoEquipo" name="TipoEquipo" />
                                             </td>
                                                 @if (DateTime.Now >= @solicitude.FechaHoraVencimiento)
                                                 {
@@ -158,7 +160,10 @@
                                                     <textarea class="form-control ComeMotvAsig" aria-label="With textarea" id="ComeMotvAsig" name="ComeMotvAsig"></textarea>
                                                 </td>
                                                 <td class="text-center">
-                                                    <button type="submit" id="asigna" class="btn btn-sm ">
+                                                        @* <button type="submit" id="asigna-@solicitude.NumTicket" class="btn btn-sm carga" onclick="mosModal('@solicitude.NumTicket')">
+                                            <img src="~/imag/cheque.png" alt="Agregar" />
+                                            </button> *@
+                                                    <button type="submit" id="asignarTicketBtn" class="btn btn-sm carga">
                                                         <img src="~/imag/cheque.png" alt="Agregar" />
                                                     </button>
                                                 </td>
@@ -185,7 +190,10 @@
                                                     <textarea class="form-control ComeMotvAsig" aria-label="With textarea" id="ComeMotvAsig" name="ComeMotvAsig"></textarea>
                                                 </td>
                                                 <td class="text-center">
-                                                    <button type="submit" id="asigna" class="btn btn-sm carga">
+                                                        @* <button type="submit" id="asigna-@solicitude.NumTicket" class="btn btn-sm carga" onclick="mosModal('@solicitude.NumTicket')">
+                                            <img src="~/imag/cheque.png" alt="Agregar" />
+                                            </button> *@
+                                                    <button type="submit" id="asignarTicketBtn" class="btn btn-sm carga">
                                                         <img src="~/imag/cheque.png" alt="Agregar" />
                                                     </button>
                                                 </td>
@@ -196,12 +204,15 @@
                                             <input type="hidden" value="@usuarioModel.idsub" id="idsub" name="idsub" />
                                             <input type="hidden" value="@solicitude.Diesel" id="Diesel" name="Diesel" />
                                             <input type="hidden" value="@solicitude.Grua" id="Grua" name="Grua" />
+                                            <input type="hidden" value="@solicitude.ClaveTipoApoyo" id="ClaveTipoApoyo" name="ClaveTipoApoyo" />
+                                                @* <input type="hidden" value="@solicitude.TipoApoyo" id="TipoApoyo" name="TipoApoyo" /> *@
                                             </form>
                                             <td>
                                                 <button type="button" class="btn btn-light btn-sm" id="mostrar" onclick="mostrar(@solicitude.NumTicket)">
                                                     <img src="~/imag/mas.png" alt="Agregar" />
                                                 </button>
                                             </td>
+                                            
                                         </tr>
                                         <tr>
                                             <td colspan="15">
@@ -364,6 +375,69 @@
                                     }
                                 </tbody>
                             </table>
+                        </div>
+                        <!--aqui tengo declarado el modal -->
+                        <div id="myModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Relacion de Ordenes con Tikcet - @TempData["NumTicket"]</h5>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                                                <table class="table table-bordered table-hover table-sm table-info">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col"># Orden</th>
+                                                                            <th scope="col">Proveedor</th>
+                                                                            <th scope="col">Folio</th>
+                                                                            <th scope="col">Costo</th>
+                                                                            <th scope="col">Equipo</th>
+                                                                            <th scope="col">Seleccionar</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach (var or in Model.OrdenesMtto)
+                                                                        {
+                                                                            <tr>
+                                                                                <td class="text-center">@or.OrdenMtto</td>
+                                                                                <td class="text-center">@or.Proveedor</td>
+                                                                                <td class="text-center">@or.Folio</td>
+                                                                                <td class="text-center">@or.Costo</td>
+                                                                                <td class="text-center">@or.Equipo</td>
+                                                                                <td class="text-center">
+                                                                                    <input type="hidden" value="@or.Seleccionar" id="SelOrder-@or.OrdenMtto" name="SelOrder" />
+                                                                                    <input class="form-check-input" type="checkbox" id="chSelOrder-@or.OrdenMtto" name="chSelOrder" onclick="clicOrden('@or.OrdenMtto')" />
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 justify-content-center align-content-center">
+                                                            <h7>Tipo de Equipo: @TempData["TipoEquipo"]</h7>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-primary" type="submit" id="btnGuarOrd" data-bs-dismiss="modal">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="pagination">
                             @for (int i = 1; i <= ViewBag.TotalPages; i++)

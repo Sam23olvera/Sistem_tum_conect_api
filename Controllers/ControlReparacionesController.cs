@@ -3,6 +3,7 @@ using ConectDB.Models;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System.Net.Http;
 
 namespace ConectDB.Controllers
 {
@@ -150,7 +151,7 @@ namespace ConectDB.Controllers
                 DateTime FehAsignatiempo = DateTime.Now;
                 if (Asigna != "[Selecciona]")
                 {
-                    controlFal = con.ModificadorFall(1, 2, model.Data[0].EmpS[0].cveEmp.ToString(), ticket, Asigna, 0, 0, "", "", model.Data[0].idus, FehAsignatiempo.ToString("yyyy-MM-dd"), 0, idsub, pagina, pageSize, Diesel, Grua, "", "", "", 0,false);
+                    controlFal = con.ModificadorFall(1, 2, model.Data[0].EmpS[0].cveEmp.ToString(), ticket, Asigna, 0, 0, "", "", model.Data[0].idus, FehAsignatiempo.ToString("yyyy-MM-dd"), 0, idsub, pagina, pageSize, Diesel, Grua, "", "", "", 0, false);
                     if (controlFal.status == 200)
                     {
                         TempData["guardado"] = controlFal.status + "¡ \r\n" + controlFal.message + "\r\n!";
@@ -332,7 +333,7 @@ namespace ConectDB.Controllers
                             return RedirectToAction("BuscarAsignados", new { Token = XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
                         }
                     }
-                    controlFal = con.ModificadorFall(2, 4, model.Data?[0].EmpS?[0].cveEmp.ToString(), NumTicket.ToString(), 0.ToString(), Convert.ToInt32(Apooyo_Asigna), Clasif_Asigna, TiempAsig?.ToString("yyyy-MM-dd HH:mm"), "", model.Data[0].idus, TiempAsig?.ToString("yyyy-MM-dd HH:mm"), 0, idsub, pagina, pageSize, CheckDisel, CheckGrua, Dot, Marca, Medida, Posis,false);
+                    controlFal = con.ModificadorFall(2, 4, model.Data?[0].EmpS?[0].cveEmp.ToString(), NumTicket.ToString(), 0.ToString(), Convert.ToInt32(Apooyo_Asigna), Clasif_Asigna, TiempAsig?.ToString("yyyy-MM-dd HH:mm"), "", model.Data[0].idus, TiempAsig?.ToString("yyyy-MM-dd HH:mm"), 0, idsub, pagina, pageSize, CheckDisel, CheckGrua, Dot, Marca, Medida, Posis, false);
                     if (controlFal.status == 200)
                     {
                         TempData["FehTick"] = DateTime.Now.ToString("yyyy-MM-dd");
@@ -467,7 +468,7 @@ namespace ConectDB.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AsigRepa(string Tok, string cveEmp, string NumTicket, DateTime FechEstima, DateTime FechEstimaComparar, bool AttPar, string ComeMotvAsig, int idsub, int pagina, int Diesel, int Grua)
+        public IActionResult AsigRepa(string Tok, string cveEmp, string NumTicket, DateTime FechEstima, DateTime FechEstimaComparar, bool AttPar, string ComeMotvAsig, int idsub, int pagina, int Diesel, int Grua, int ClaveTipoApoyo,string TipoApoyo, string TipoEquipo)
         {
             try
             {
@@ -479,9 +480,19 @@ namespace ConectDB.Controllers
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
 
+                if (ClaveTipoApoyo == 2) 
+                {
+                    controlFal = con.Primer_ordenes(4, model.Data[0].EmpS[0].cveEmp.ToString(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, 0, 0, model.Data[0].idus, 0, idsub, pagina, pageSize);
+                    ViewData["Title"] = "Reparacion";
+                    TempData["ShowModal"] = "True";
+                    TempData["FehTick"] = FechEstima;
+                    TempData["NumTicket"] = NumTicket;
+                    TempData["TipoEquipo"] = TipoEquipo;
+                    return View("Reparacion", controlFal);
+                }
                 if (FechEstima > FechEstimaComparar && FechEstima > DateTime.Now)
                 {
-                    controlFal = con.ModificadorFall(4, 5, model.Data[0].EmpS[0].cveEmp.ToString(), NumTicket, "0", 0, 0, FechEstima.ToString("yyyy-MM-dd HH:mm:ss"), ComeMotvAsig, model.Data[0].idus, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, idsub, pagina, pageSize, Diesel, Grua, "", "", "", 0,AttPar);
+                    controlFal = con.ModificadorFall(4, 5, model.Data[0].EmpS[0].cveEmp.ToString(), NumTicket, "0", 0, 0, FechEstima.ToString("yyyy-MM-dd HH:mm:ss"), ComeMotvAsig, model.Data[0].idus, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, idsub, pagina, pageSize, Diesel, Grua, "", "", "", 0, AttPar);
                     if (controlFal.status == 200)
                     {
                         TempData["Buscar"] = 0;
@@ -500,7 +511,7 @@ namespace ConectDB.Controllers
                 }
                 if (FechEstima == FechEstimaComparar)
                 {
-                    controlFal = con.ModificadorFall(4, 5, model.Data[0].EmpS[0].cveEmp.ToString(), NumTicket, "0", 0, 0, FechEstima.ToString("yyyy-MM-dd HH:mm:ss"), ComeMotvAsig, model.Data[0].idus, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, idsub, pagina, pageSize, Diesel, Grua, "", "", "", 0,AttPar);
+                    controlFal = con.ModificadorFall(4, 5, model.Data[0].EmpS[0].cveEmp.ToString(), NumTicket, "0", 0, 0, FechEstima.ToString("yyyy-MM-dd HH:mm:ss"), ComeMotvAsig, model.Data[0].idus, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, idsub, pagina, pageSize, Diesel, Grua, "", "", "", 0, AttPar);
                     if (controlFal.status == 200)
                     {
                         TempData["Buscar"] = 0;

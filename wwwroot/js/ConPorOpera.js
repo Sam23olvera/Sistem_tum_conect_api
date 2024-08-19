@@ -141,6 +141,79 @@ $(document).ready(function () {
     });
 });
 
+function filterBusca() {
+    var input = document.getElementById("searchInput");
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("myTable");
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < tr.length; i++) {
+        var tdArray = tr[i].getElementsByTagName("td");
+        var rowMatch = false;
+
+        for (var j = 0; j < tdArray.length; j++) {
+            var td = tdArray[j];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    rowMatch = true;
+                    break;
+                }
+            }
+        }
+
+        if (rowMatch) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}
+
+function filterTable(columnIndex) {
+    var input = document.getElementById("filter" + getColumnName(columnIndex));
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("myTable");
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < tr.length; i++) {
+        var td = tr[i].getElementsByTagName("td")[columnIndex];
+        if (td) {
+            var cellText = td.textContent || td.innerText;
+            if (cellText.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+function filterEstatusTable(columnIndex)
+{
+    var sele = document.getElementById("filterEstatus");
+    var filter = sele.options[sele.selectedIndex].text;
+    if (filter == '[Seleccionar]')
+    {
+        filter = ''; 
+    }
+    var table = document.getElementById("myTable");
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < tr.length; i++) {
+        var td = tr[i].getElementsByTagName("td")[columnIndex];
+        if (td) {
+            var cellText = td.textContent || td.innerText;
+            if (cellText.indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+function getColumnName(index) {
+    var columnNames = ["UNE", "TipoOperacion", "NumTicket","Estatus"];
+    return columnNames[index];
+}
 function llenar(ClaveUNE) {
     var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
     var myHeaders = new Headers();

@@ -18,6 +18,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+$(document).ready(function () {
+    var showModal = document.getElementById('showModal').value;
+    if (showModal === 'True') {
+        $('#myModal').modal('show'); // Mostrar el modal
+    }
+    else if (showModal === 'false') {
+        $('#myModal').hide();
+    }
+});
 $(document).ready(function () {
     var ctx = $('#barChart').get(0).getContext('2d');
 
@@ -73,6 +83,7 @@ $(document).ready(function () {
         }
     });
 });
+
 $(document).ready(function () {
     $('#FehTick').datetimepicker({
         //format: 'm/d/Y'
@@ -208,15 +219,15 @@ $(document).ready(function () {
             autoplayHoverPause: true,
             center: true,
             video: true,
-            responsive:{
-                0:{
-                    items:1
+            responsive: {
+                0: {
+                    items: 1
                 },
-                600:{
-                    items:2
+                600: {
+                    items: 2
                 },
-                1000:{
-                    items:3
+                1000: {
+                    items: 3
                 }
             }
         });
@@ -278,8 +289,7 @@ function pinta() {
     var MenFin = document.getElementById('MenFin');
 }
 
-function cambio(numTicket)
-{
+function cambio(numTicket) {
     var ch = "ChekAttPar-" + numTicket;
     var atp = "AttPar-" + numTicket;
     var ChekAttPar = document.getElementById(ch);
@@ -288,8 +298,7 @@ function cambio(numTicket)
         if (this.checked) {
             AttPar.value = ChekAttPar.checked;
         }
-        else
-        {
+        else {
             AttPar.value = ChekAttPar.checked;
         }
     });

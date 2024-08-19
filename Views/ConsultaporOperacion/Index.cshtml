@@ -68,12 +68,12 @@
                         {
                             <option value="@est.ClaveEstatus">@est.Descripcion</option>
                         }
-                        
+
                     }
                 </select>
             </div>
             <div class="col-auto">
-                <br/>
+                <br />
                 <button class="btn btn-primary" type="submit" id="btnConsultar" onclick="BtnConsultar()">Consultar</button>
                 <input type="hidden" id="cveEmp" value="@usuarioModel.Data[0].EmpS[0].cveEmp" name="cveEmp" />
                 <input type="hidden" id="XT" value="@usuarioModel.Token" name="XT" />
@@ -86,17 +86,41 @@
         </div>
     </form>
     <br />
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar en la tabla..." onkeyup="filterBusca()">
+        </div>
+    </div>
+    <br />
     <div class="row justify-content-start align-items-start">
         <div class="col-12">
             <div class="container table-responsive container-fluid">
-                <table class="table table-bordered table-sm ticket-porasigna-table">
+                <table class="table table-bordered table-sm ticket-porasigna-table" id="myTable">
                     <caption>@ViewData["Title"]</caption>
                     <thead>
                         <tr>
-                            <th scope="col"> Unidad de Negocio            </th>
-                            <th scope="col"> Tipo Operación               </th>
+                            @* <th scope="col"> Unidad de Negocio            </th> *@
+                            <th scope="col">
+                                Unidad de Negocio
+                                <input type="text" class="input-group-sm" id="filterUNE" onkeyup="filterTable(0)" placeholder="Buscar">
+                            </th>
+                            @* <th scope="col"> Tipo Operación               </th> *@
+                            <th scope="col">
+                                Tipo Operación
+                                <input type="text" class="input-group-sm" id="filterTipoOperacion" onkeyup="filterTable(1)" placeholder="Buscar">
+                            </th>
                             <th scope="col"> NumTicket                    </th>
-                            <th scope="col"> Estatus                      </th>
+                            @* <th scope="col"> Estatus                      </th> *@
+                            <th scope="col"> Estatus
+                                @* <input type="text" class="input-group-sm" id="filterEstatus" onkeyup="filterTable(3)" placeholder="Buscar"> *@
+                                <select class="form-select" id="filterEstatus" onchange="filterEstatusTable(3)" name="clvEstatus">
+                                    <option value="" selected>[Seleccionar]</option>
+                                    @foreach (var est in Model.TBCAT_Estatus)
+                                    {
+                                        <option value="@est.ClaveEstatus">@est.Descripcion</option>
+                                    }
+                                </select>
+                            </th>
                             <th scope="col"> Fecha Alta                   </th>
                             <th scope="col"> Usuario Asignado             </th>
                             <th scope="col"> Fecha Asignado               </th>
@@ -123,7 +147,7 @@
                                     <td class="text-center"> <p> @op.UNE </p></td>
                                     <td class="text-center"> <p> @op.TipoOperacion </p></td>
                                     <td class="text-center"> <p> @op.NumTicket </p></td>
-                                    <td class="text-center"> <p> @op.Estatus </p></td>
+                                    <td class="text-center"> <p> @op.Estatus  </p></td>
                                     <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p></td>
                                     <td class="text-center"> <p> @op.UsuarioAsignado</p> </td>
                                     <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>

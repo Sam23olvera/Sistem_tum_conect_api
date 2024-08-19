@@ -26,6 +26,10 @@
     <PackageReference Include="System.IO" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Views\ControlReparaciones\_Reparacion_Modal.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Update="Views\Shared\_Layout_ConporOpe.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
