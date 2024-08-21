@@ -480,16 +480,16 @@ namespace ConectDB.Controllers
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
 
-                if (ClaveTipoApoyo == 2) 
-                {
-                    controlFal = con.Primer_ordenes(4, model.Data[0].EmpS[0].cveEmp.ToString(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, 0, 0, model.Data[0].idus, 0, idsub, pagina, pageSize);
-                    ViewData["Title"] = "Reparacion";
-                    TempData["ShowModal"] = "True";
-                    TempData["FehTick"] = FechEstima;
-                    TempData["NumTicket"] = NumTicket;
-                    TempData["TipoEquipo"] = TipoEquipo;
-                    return View("Reparacion", controlFal);
-                }
+                //if (ClaveTipoApoyo == 2)
+                //{
+                //    controlFal = con.Primer_ordenes(4, model.Data[0].EmpS[0].cveEmp.ToString(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, 0, 0, model.Data[0].idus, 0, idsub, pagina, pageSize);
+                //    ViewData["Title"] = "Reparacion";
+                //    TempData["ShowModal"] = "True";
+                //    TempData["FehTick"] = FechEstima;
+                //    TempData["NumTicket"] = NumTicket;
+                //    TempData["TipoEquipo"] = TipoEquipo;
+                //    return View("Reparacion", controlFal);
+                //}
                 if (FechEstima > FechEstimaComparar && FechEstima > DateTime.Now)
                 {
                     controlFal = con.ModificadorFall(4, 5, model.Data[0].EmpS[0].cveEmp.ToString(), NumTicket, "0", 0, 0, FechEstima.ToString("yyyy-MM-dd HH:mm:ss"), ComeMotvAsig, model.Data[0].idus, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, idsub, pagina, pageSize, Diesel, Grua, "", "", "", 0, AttPar);
@@ -543,6 +543,45 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
+        //[HttpPost,HttpGet]
+        //public IActionResult OrdenesMtto(string Tok, string cveEmp, string NumTicket, DateTime FechEstima, DateTime FechEstimaComparar, bool AttPar, string ComeMotvAsig, int idsub, int pagina, int Diesel, int Grua, int ClaveTipoApoyo, string TipoApoyo, string TipoEquipo)
+        //{
+        //    try 
+        //    {
+        //        if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
+        //            return RedirectToAction("Index", "Loging");
+
+        //        model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Tok);
+        //        model.Token = Tok;
+        //        model.idsub = idsub;
+        //        ViewData["UsuarioModel"] = model;
+
+        //        if (ClaveTipoApoyo == 2)
+        //        {
+        //            controlFal = con.Primer_ordenes(4, model.Data[0].EmpS[0].cveEmp.ToString(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 0, 0, 0, model.Data[0].idus, 0, idsub, pagina, pageSize);
+        //            ViewData["Title"] = "Reparacion";
+        //            TempData["ShowModal"] = "True";
+        //            TempData["FehTick"] = FechEstima;
+        //            TempData["NumTicket"] = NumTicket;
+        //            TempData["TipoEquipo"] = TipoEquipo;
+        //            return View("Reparacion", controlFal);
+        //        }
+        //        else
+        //        {
+        //            TempData["Buscar"] = 0;
+        //            ViewData["Title"] = "Reparacion";
+        //            TempData["guardado"] = controlFal.status + "\r\n¡" + controlFal.message + "!";
+        //            TempData["FehTick"] = FechEstima;
+        //            return RedirectToAction("BuscarReparacion", new { Token = Tok, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        msj.status = 400;
+        //        msj.message = "Error de Conexion | Erorr Desconocido Notificar a Sistemas Desarrollo" + e.Message.ToString();
+        //        return View("Error", msj);
+        //    }
+        //}
 
         public IActionResult Fin(int pagina, string Token, string cveEmp, string Buscar, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int idsub)
         {

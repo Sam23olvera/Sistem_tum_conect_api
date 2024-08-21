@@ -16,18 +16,34 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("spinner-overlay").style.display = "block";
         });
     });
+
+    var highlightRowId = localStorage.getItem('highlightRowId');
+    if (highlightRowId) {
+        var renglor = document.getElementById('renglon-'+highlightRowId);
+        if (renglor) {
+            renglor.classList.add('ResaltaRenglon');
+            setTimeout(function () {
+                renglor.classList.remove('ResaltaRenglon');
+                localStorage.removeItem('highlightRowId');
+            }, 5000);
+        }
+    }
+
+
 });
 
 
-$(document).ready(function () {
-    var showModal = document.getElementById('showModal').value;
-    if (showModal === 'True') {
-        $('#myModal').modal('show'); // Mostrar el modal
-    }
-    else if (showModal === 'false') {
-        $('#myModal').hide();
-    }
-});
+
+//$(document).ready(function () {
+//    var showModal = document.getElementById('showModal').value;
+//    if (showModal === 'True') {
+//        $('#myModal').modal('show'); // Mostrar el modal
+//    }
+//    else if (showModal === 'false') {
+//        $('#myModal').hide();
+//    }
+//});
+
 $(document).ready(function () {
     var ctx = $('#barChart').get(0).getContext('2d');
 
@@ -126,6 +142,157 @@ $(document).ready(function () {
     //    }
     //});
 });
+
+function mostrarModalOrdenes(cveEmp, NumTicket, TipoEquipo, idus) {
+    document.getElementById('modalTitle').innerText = `Relacion de Ordenes con Tikcet - ${NumTicket}`;
+    document.getElementById('TpEqui').innerText = `Tipo de Equipo: ${TipoEquipo}`;
+
+    LLeModOrd(cveEmp, NumTicket, idus);
+
+    $('#myModal').modal('show');
+}
+
+function LLeModOrd(cveEmp, NumTicket, idus) {
+
+    var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+        data: {
+            "bdCc": 5,
+            "bdSch": "dbo",
+            "bdSp": "SPQRY_OrdenesMtto"
+        },
+        "filter": [
+            {
+                "property": "ClaveEmpresa",
+                "value": cveEmp
+            }]
+    });
+
+    var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+    };
+
+    fetch(url, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            const obj = JSON.parse(result);
+            //console.log(obj);
+            if (obj.data == null) {
+                var mensaje = document.getElementById('mensaje').value;
+                mensaje = obj;
+                if (mensaje !== '') {
+                    toastr.error(mensaje);
+                }
+                $("#cuerpo").html("");
+            }
+            else if (obj.data.length == 0) {
+                $("#cuerpo").html("");
+            }
+            else {
+                $("#cuerpo").html("");
+                for (let i = 0; i < obj.data[0]["OrdenesMtto"].length; i++) {
+                    //console.log(obj.data[0]["OrdenesMtto"][i]["OrdenMtto"]);
+                    const orden = obj.data[0]["OrdenesMtto"][i];
+                    // Establece el estado del checkbox basado en "Seleccionar"
+                    let isChecked = orden["Seleccionar"] ? ' checked' : '';
+                    var tr = '<tr> '
+                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["OrdenMtto"] + '</td>'
+                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Folio"] + '</td>'
+                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Costo"] + '</td>'
+                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Equipo"] + '</td>'
+                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Proveedor"] + '</td>'
+                        + ' <td>'
+                        + '<input class=\"form-check-input\" type=\"checkbox\" id="chSelOrder" name="chSelOrder"' + isChecked + ' /> </td>'
+                        + '<input type="hidden" value="' + NumTicket +'" id="NumTicketModOr" name="NumTicketModOr" />'
+                        + '<input type="hidden" value="' + idus +'" id="idusModOr" name="idusModOr" />'
+                        + '</tr>';
+                    $("#cuerpo").append(tr)
+                }
+            }
+        })
+        .catch(error => console.log("error", error));
+}
+
+function GuardarOrden(cveEmp)
+{
+    const checkboxes = document.querySelectorAll('#cuerpo .form-check-input');
+    let osTicketArray = [];
+
+    var nutick = document.getElementById('NumTicketModOr').value;
+    var idusModOr = document.getElementById('idusModOr').value;
+
+    checkboxes.forEach((checkbox, index) => {
+        if (checkbox.checked) {
+            let row = checkbox.closest('tr');
+            let orderID = row.querySelector('td:first-child').innerText;
+
+            osTicketArray.push(
+                {
+                    "ClaveTicket": nutick,
+                    "ClaveOrden": orderID,
+                    "ClaveUsuario": idusModOr,
+                    "Vinculado": true,
+                    "CveEmpresa": cveEmp
+                });
+            // Guardar el ID del renglón para resaltarlo después
+            localStorage.setItem('highlightRowId', nutick);
+        }
+    });
+    var rawGuardar = JSON.stringify({ "OS_Ticket": osTicketArray });
+    var enviojsonGuarda = JSON.stringify({
+        "data": {
+            "bdCc": 5,
+            "bdSch": "dbo",
+            "bdSp": "SPINS_RelTicketOrdMtto"
+        },
+        "filter": [
+            {
+                "property": "OrdenesRel",
+                "value": rawGuardar.trim()
+            }
+        ]
+    });
+    GuardOrd(enviojsonGuarda);
+    //setTimeout(function () { renglor.classList.remove('ResaltaRenglon'); }, 2000);
+    //location.reload();    
+    //var renglor = document.getElementById('renglon-' + nutick);
+    //renglor.classList.add('ResaltaRenglon');
+}
+function GuardOrd(jsonGuarda) {
+
+    var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: jsonGuarda,
+        redirect: "follow"
+    };
+
+    fetch(url, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            const obj = JSON.parse(result);
+            console.log(obj);
+            if (obj.data == null || obj.data == 0) {
+                var guarda = document.getElementById('guarda').value;
+                guarda = obj.message;
+                if (guarda !== '') {
+                    toastr.success(guarda);
+                }
+                location.reload();
+            }
+        })
+        .catch(error => console.log("error", error));
+}
+
 function cal(numTicket) {
     var Inp = "FechEstima-" + numTicket;
     var expand = document.getElementById(Inp);

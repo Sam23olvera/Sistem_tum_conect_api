@@ -203,6 +203,16 @@ body {
     height: 45pt;
     width: 160pt;
 }
+.orderExist {
+    display: block;
+    justify-content: start;
+    font-size: small;
+    width: 160pt;
+    padding: 5px;
+}
+    .orderExist p {
+        margin: 0;
+    }
 .selectTableUser {
     display: block;
     width: 230pt;
@@ -359,4 +369,8 @@ body {
 .modal-body .item-video video {
     max-width: 10dp;
     height: 10dp;
+}
+
+.ResaltaRenglon {
+    background-color: aliceblue;
 }

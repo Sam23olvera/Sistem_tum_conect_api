@@ -14,18 +14,11 @@
         <input type="hidden" value="@TempData["guardado"]" id="guarda" />
     </div>
     <div class="container">
-        <p>
-            Ejemplo para abrir una ventana con JavaScript, mostrar datos de la ventana abierta y el
-            navegador, redimensionar la ventana abierta y cerrarla.<br><br>En este ejemplo también se
-            comprueba si la ventana emergente ha sido abierta o no, para
-            avisar en caso necesario.
-        </p>
-        <p>Pulsa en los botones siguientes para probar el código HTML y JavaScript.</p>
-        <button onclick="abrirVentana()">Crear ventana</button>
-        <button onclick="modificarVentana()">Cambiar tamaño de la ventana</button>
-        <button onclick="imprimirPagina()">Imprimir la página actual</button>
-        <button onclick="mostrarDatosEnVentana()">Mostrar datos</button>
-        <button onclick="modificarTextoVentanaSegunSelectorID()">Modificar datos en ventana</button>
+        <button class="btn btn-primary" onclick="abrirVentana()">Crear ventana</button>
+        <button class="btn btn-primary" onclick="modificarVentana()">Cambiar tamaño de la ventana</button>
+        <button class="btn btn-primary" onclick="imprimirPagina()">Imprimir la página actual</button>
+        <button class="btn btn-primary" onclick="mostrarDatosEnVentana()">Mostrar datos</button>
+        <button class="btn btn-primary" onclick="modificarTextoVentanaSegunSelectorID()">Modificar datos en ventana</button>
         <button class="btn btn-primary" onclick="cerrarVentana()">Cerrar ventana</button>
         <input type="text" value="@ViewData["TextoPrueba"]" id="Texto" name="Texto" />
         <p id="aviso"></p>

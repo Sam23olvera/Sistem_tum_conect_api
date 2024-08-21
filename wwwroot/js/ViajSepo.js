@@ -44,19 +44,18 @@ function modificarVentana() {
 function mostrarDatosEnVentana() {
 	if (ventanaEmergenteAbierta()) {
 		var h = document.getElementById('Texto').value;
-		ventana.document.write(''
-			+ '<style> body { background-color: powderblue; } h1 { color: blue; } p { color: red; } prueba { background-color: blue; color: white; } </style>'
-			+ '<body> '
-			+ h + '<p style=\"color: blue;\">este es un dato del servidor </p>'
-			+ '<a class=\"prueba\">Inicio</a>'
-		+ '<p>Tamaño de la ventana: ' + screen.width + ' x ' + screen.height + '</p>'
-		+ '<p>El Path de la página es: ' + window.location.pathname + '</p>'
-		+ '<p>La URL de la página es: ' + window.location.href + '</p> '
-		+ '<p>El idioma del navegador es: ' + navigator.language + '</p>'
+		ventana.document.write('<html> <head> <title>Prueba</title> <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel="stylesheet"> <script src= \"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js\" ></script > <link rel="stylesheet" type="text/css" href="https://webportal.tum.com.mx/sismod/css/log.css"> </head> '
+		+ '<body> '
+		+ h + '<p style=\"color: blue;\">este es un dato del servidor </p>'
+		+ '<a class=\"prueba\">Inicio</a>'
+		+ ' <p>Tamaño de la ventana: ' + screen.width + ' x ' + screen.height + '</p>'
+		+ ' <p>El Path de la página es: ' + window.location.pathname + '</p>'
+		+ ' <p>La URL de la página es: ' + window.location.href + '</p> '
+		+ ' <p>El idioma del navegador es: ' + navigator.language + '</p>'
 		+ ' <p>Navegador: ' + navigator.userAgent + '</p> '
 		+ ' <p id=\"textoModificar\">Ejemplo para modificar texto</p> '
-		+ ' <button class= "btn btn-primary" onclick =\"{ window.close(); } \">Cerrar ventana</button> '
-		+ ' </body>');
+		+ ' <button class= \"btn btn-primary\" onclick =\"{ window.close(); } \">Cerrar ventana</button> '
+		+ ' </body> </html>');
 		aviso("Mostrados los datos en la ventana emergente.");
 	}
 }

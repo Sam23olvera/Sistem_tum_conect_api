@@ -10,10 +10,14 @@ namespace ConectDB.DB
         private readonly string url = "https://webportal.tum.com.mx/wsstmdv/api/execsp";
         private readonly DataApi hh = new DataApi();
         ControlFalla? controlFalla = new ControlFalla();
-        List<Ordenes> order = new List<Ordenes>();
+        List<Ordenes>? order = new List<Ordenes>();
         JObject jsdat = new JObject();
         JObject json = new JObject();
         JArray? data = new JArray();
+        JObject Jhs = new JObject();
+        JObject JrMot = new JObject();
+        JArray? JsoOrd = new JArray();
+
         public ControlFalla PrimerCarga_sin_catlog(int CveEstatus, string empresa, string CveUser, string fecha, int UserFiltro, int IdSubmodulo)
         {
             try
@@ -235,78 +239,78 @@ namespace ConectDB.DB
                 return controlFalla;
             }
         }
-        public ControlFalla Primer_ordenes(int CveEstatus, string empresa, string? FehTick, int NumTicket, int TipoTicket, int TipoFalla, int CveUser, int UserFiltro, int IdSubmodulo, int pagina, int tamañomuestra)
-        {
-            try
-            {
-                jsdat = JObject.Parse("{\"data\":{\"bdCc\":5,\"bdSch\":\"dbo\",\"bdSp\":\"SPQRY_CatalogosMantto\"},\"filter\":[{\"property\": \"ClaveEmpresa\",\"value\":\"" + empresa + "\"}]}");
-                if (CarCata(jsdat, CveEstatus).status == 200)
-                {
-                    if (string.IsNullOrEmpty(FehTick))
-                    {
-                        FehTick = null;
-                    }
-                    jsdat = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\": \"SPQRY_ControlReparaciones\"},\"filter\": [{ \"property\": \"cveEmpresa\",\"value\":\"" + empresa + "\"},{\"property\":\"CveEstatus\",\"value\": " + CveEstatus + "},{\"property\":\"Fecha\",\"value\": \"" + FehTick + "\"},{\"property\":\"NumTicket\",\"value\":" + NumTicket + "},{\"property\":\"TipoTicket\",\"value\":" + TipoTicket + "},{\"property\":\"TipoFalla\",\"value\": " + TipoFalla + "},{\"property\":\"CveUser\",\"value\":" + CveUser + "},{\"property\":\"UserFiltro\",\"value\":" + UserFiltro + "},{\"property\":\"IdSubmodulo\",\"value\":" + IdSubmodulo + "}]}");
-                    json = JObject.Parse(hh.HttpWebRequest("POST", url, jsdat));
-                    data = json["data"] as JArray;
-                    pagina = (pagina - 1) * tamañomuestra;
-                    if (data != null && data.Count > 0)
-                    {
-                        JObject Jhs = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\": \"SPQRY_OrdenesMtto\"},\"filter\": [{\"property\": \"ClaveEmpresa\",\"value\": \"1\"}]}");
-                        JObject JrMot = JObject.Parse(hh.HttpWebRequest("POST", url, Jhs));
-                        JArray JsoOrd = JrMot["data"] as JArray;
-                        controlFalla.Solicitudes = JsonConvert.DeserializeObject<ControlFalla>(data[0].ToString()).Solicitudes;
-                        controlFalla.OrdenesMtto = JsonConvert.DeserializeObject<ControlFalla>(JsoOrd[0].ToString()).OrdenesMtto;
-                        controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
-                        controlFalla.Solicitudes = controlFalla.Solicitudes.Skip(pagina).Take(tamañomuestra).ToList();
-                        controlFalla.status = Convert.ToInt32(json["status"]);
-                    }
-                    else
-                    {
-                        controlFalla.Solicitudes = new List<Solicitude>();
-                        controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
-                        controlFalla.status = Convert.ToInt32(json["status"]);
-                        controlFalla.message = json["message"].ToString();
-                    }
-                }
-                else
-                {
-                    controlFalla.Solicitudes = new List<Solicitude>();
-                }
-                return controlFalla;
-            }
-            catch (Exception e)
-            {
-                controlFalla.status = 400;
-                controlFalla.message = e.Message.ToString();
-                return controlFalla;
-            }
-        }
-        public List<Ordenes> PrimerCargaBusc(int CveEstatus, string empresa, string? FehTick, int NumTicket, int TipoTicket, int TipoFalla, int CveUser, int UserFiltro, int IdSubmodulo, int pagina, int tamañomuestra)
-        {
-            try
-            {
-                JObject Jhs = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\": \"SPQRY_OrdenesMtto\"},\"filter\": [{\"property\": \"ClaveEmpresa\",\"value\": \"1\"}]}");
-                JObject JrMot = JObject.Parse(hh.HttpWebRequest("POST", url, Jhs));
-                JArray? data = JrMot["data"] as JArray;
-                if (data != null && data.Count > 0)
-                {
-                    order = JsonConvert.DeserializeObject<ControlFalla>(data[0].ToString()).OrdenesMtto;
-                }
-                else
-                {
+        //public ControlFalla Primer_ordenes(int CveEstatus, string empresa, string? FehTick, int NumTicket, int TipoTicket, int TipoFalla, int CveUser, int UserFiltro, int IdSubmodulo, int pagina, int tamañomuestra)
+        //{
+        //    try
+        //    {
+        //        jsdat = JObject.Parse("{\"data\":{\"bdCc\":5,\"bdSch\":\"dbo\",\"bdSp\":\"SPQRY_CatalogosMantto\"},\"filter\":[{\"property\": \"ClaveEmpresa\",\"value\":\"" + empresa + "\"}]}");
+        //        if (CarCata(jsdat, CveEstatus).status == 200)
+        //        {
+        //            if (string.IsNullOrEmpty(FehTick))
+        //            {
+        //                FehTick = null;
+        //            }
+        //            jsdat = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\": \"SPQRY_ControlReparaciones\"},\"filter\": [{ \"property\": \"cveEmpresa\",\"value\":\"" + empresa + "\"},{\"property\":\"CveEstatus\",\"value\": " + CveEstatus + "},{\"property\":\"Fecha\",\"value\": \"" + FehTick + "\"},{\"property\":\"NumTicket\",\"value\":" + NumTicket + "},{\"property\":\"TipoTicket\",\"value\":" + TipoTicket + "},{\"property\":\"TipoFalla\",\"value\": " + TipoFalla + "},{\"property\":\"CveUser\",\"value\":" + CveUser + "},{\"property\":\"UserFiltro\",\"value\":" + UserFiltro + "},{\"property\":\"IdSubmodulo\",\"value\":" + IdSubmodulo + "}]}");
+        //            json = JObject.Parse(hh.HttpWebRequest("POST", url, jsdat));
+        //            data = json["data"] as JArray;
+        //            pagina = (pagina - 1) * tamañomuestra;
+        //            if (data != null && data.Count > 0)
+        //            {
+        //                Jhs = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\": \"SPQRY_OrdenesMtto\"},\"filter\": [{\"property\": \"ClaveEmpresa\",\"value\": \"1\"}]}");
+        //                JrMot = JObject.Parse(hh.HttpWebRequest("POST", url, Jhs));
+        //                JsoOrd = JrMot["data"] as JArray;
+        //                controlFalla.Solicitudes = JsonConvert.DeserializeObject<ControlFalla>(data[0].ToString()).Solicitudes;
+        //                //controlFalla.OrdenesMtto = JsonConvert.DeserializeObject<ControlFalla>(JsoOrd[0].ToString()).OrdenesMtto;
+        //                controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
+        //                controlFalla.Solicitudes = controlFalla.Solicitudes.Skip(pagina).Take(tamañomuestra).ToList();
+        //                controlFalla.status = Convert.ToInt32(json["status"]);
+        //            }
+        //            else
+        //            {
+        //                controlFalla.Solicitudes = new List<Solicitude>();
+        //                controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
+        //                controlFalla.status = Convert.ToInt32(json["status"]);
+        //                controlFalla.message = json["message"].ToString();
+        //            }
+        //        }
+        //        else
+        //        {
+        //            controlFalla.Solicitudes = new List<Solicitude>();
+        //        }
+        //        return controlFalla;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        controlFalla.status = 400;
+        //        controlFalla.message = e.Message.ToString();
+        //        return controlFalla;
+        //    }
+        //}
+        //public List<Ordenes> PrimerCargaBusc(int CveEstatus, string empresa, string? FehTick, int NumTicket, int TipoTicket, int TipoFalla, int CveUser, int UserFiltro, int IdSubmodulo, int pagina, int tamañomuestra)
+        //{
+        //    try
+        //    {
+        //        JObject Jhs = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\": \"SPQRY_OrdenesMtto\"},\"filter\": [{\"property\": \"ClaveEmpresa\",\"value\": \"1\"}]}");
+        //        JObject JrMot = JObject.Parse(hh.HttpWebRequest("POST", url, Jhs));
+        //        JArray? data = JrMot["data"] as JArray;
+        //        if (data != null && data.Count > 0)
+        //        {
+        //            order = JsonConvert.DeserializeObject<ControlFalla>(data[0].ToString()).OrdenesMtto;
+        //        }
+        //        else
+        //        {
 
-                    order[0].status = Convert.ToInt32(json["status"]);
-                    order[0].message = json["message"].ToString();
-                }
-                return order;
-            }
-            catch (Exception e)
-            {
-                order[0].status = 400;
-                order[0].message = e.Message.ToString();
-                return order;
-            }
-        }
+        //            order[0].status = Convert.ToInt32(json["status"]);
+        //            order[0].message = json["message"].ToString();
+        //        }
+        //        return order;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        order[0].status = 400;
+        //        order[0].message = e.Message.ToString();
+        //        return order;
+        //    }
+        //}
     }
 }

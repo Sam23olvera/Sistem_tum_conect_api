@@ -226,7 +226,7 @@ function EnvioUbica() {
     var Alias = document.getElementById('Alias').value;
     var ClOp = document.getElementById('ClOp').value;
     var cvEmp = document.getElementById('cvEmp').value;
-    var inputLng = document.getElementById('inputLng');
+    var inputLng = document.getElementById('inputLng');  
     var inputLat = document.getElementById('inputLat');
     var DirGPS = document.getElementById('DirGPS');
     var FechGPS = document.getElementById('FechGPS');

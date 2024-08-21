@@ -39,7 +39,7 @@
                     <h3>@ViewData["Title"]</h3>
                     <input type="hidden" value="@TempData["Mensaje"]" id="mensaje"></input>
                     <input type="hidden" value="@TempData["guardado"]" id="guarda"></input>
-                    <input type="hidden" value="@TempData["ShowModal"]" id="showModal"></input>
+                    @* <input type="hidden" value="@TempData["ShowModal"]" id="showModal"></input> *@
                 </div>
                 <br />
                 <form method="post" asp-controller="ControlReparaciones" asp-action="BuscarReparacion">
@@ -99,6 +99,7 @@
                                         <th scope="col">Tipo Apoyo</th>
                                         <th scope="col">Usuario Asignado</th>
                                         <th scope="col">Tiempo Estimado Reparacion</th>
+                                        <th scope="col">Ordenes Mantenimiento</th>
                                         <th scope="col"></th>
                                         <th scope="col">Motivo de Reprogramación de tiempo estimado</th>
                                         <th scope="col"></th>
@@ -108,7 +109,7 @@
                                 <tbody>
                                     @foreach (var solicitude in Model.Solicitudes)
                                     {
-                                        <tr>
+                                        <tr id="renglon-@solicitude.NumTicket">
                                             <form id="form-@solicitude.NumTicket" method="post" asp-controller="ControlReparaciones" asp-action="AsigRepa">
                                             <td class="text-center">
                                                 <p>@solicitude.NumTicket</p>
@@ -151,18 +152,36 @@
                                                         </label>
                                                     </div>
                                                 </td>
+                                                <td class="text-start">
+                                                    <div class="container-fluid">
+                                                        <div class="row orderExist">
+                                                                @foreach (var or in @solicitude.OrdenesMtto)
+                                                                {
+                                                                    @if (@or.OrdenMtto != 0) 
+                                                                    {
+                                                                    <p># Orden: @or.OrdenMtto</p>
+                                                                    <p>Fecha Registro: @or.FechaRegistro?.ToString("yyyy/MM/dd HH:mm:ss")</p>
+                                                                    }
+                                                                }
+                                                        </div>
+                                                    </div>
+                                                </td>
                                                 <td class="text-center">
                                                     <div class="container" style="background:red">
                                                         <p>Caduco</p>
                                                     </div>
+                                                        @if (@solicitude.ClaveTipoApoyo == 14)
+                                                        {
+                                                        <button type="button" class="btn btn-default btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#myModal" id="AgregarOrder" onclick="mostrarModalOrdenes('@usuarioModel.Data[0].EmpS[0].cveEmp','@solicitude.NumTicket','@solicitude.TipoEquipo','@usuarioModel.Data[0].idus')">
+                                                            <img src="~/imag/plus-pequeno.png" alt="AgregarOrder" class="me-2" />
+                                                            <span>Ord.Mtto</span>
+                                                        </button>
+                                                        }
                                                 </td>
                                                 <td class="text-center">
                                                     <textarea class="form-control ComeMotvAsig" aria-label="With textarea" id="ComeMotvAsig" name="ComeMotvAsig"></textarea>
                                                 </td>
                                                 <td class="text-center">
-                                                        @* <button type="submit" id="asigna-@solicitude.NumTicket" class="btn btn-sm carga" onclick="mosModal('@solicitude.NumTicket')">
-                                            <img src="~/imag/cheque.png" alt="Agregar" />
-                                            </button> *@
                                                     <button type="submit" id="asignarTicketBtn" class="btn btn-sm carga">
                                                         <img src="~/imag/cheque.png" alt="Agregar" />
                                                     </button>
@@ -170,6 +189,7 @@
                                                 }
                                                 else
                                                 {
+
                                                 <td class="text-center">
                                                     <input type="text" class="form-control FechEstima" value="@solicitude.FechaHoraVencimiento?.ToString("yyyy/MM/dd HH:mm:ss")" id="FechEstima-@solicitude.NumTicket" name="FechEstima" onclick="cal(@solicitude.NumTicket)" />
                                                     <input type="hidden" class="form-control FechEstima" value="@solicitude.FechaHoraVencimiento?.ToString("yyyy/MM/dd HH:mm:ss")" id="FechEstima-@solicitude.NumTicket" name="FechEstimaComparar" />
@@ -181,18 +201,36 @@
                                                         </label>
                                                     </div>
                                                 </td>
+                                                <td class="text-start">
+                                                    <div class="container-fluid">
+                                                        <div class="row orderExist">
+                                                                @foreach (var or in @solicitude.OrdenesMtto)
+                                                                {
+                                                                    @if (@or.OrdenMtto != 0)
+                                                                    {
+                                                                    <p># Orden: @or.OrdenMtto</p>
+                                                                    <p>Fecha Registro: @or.FechaRegistro?.ToString("yyyy/MM/dd HH:mm:ss")</p>
+                                                                    }
+                                                                }
+                                                        </div>
+                                                    </div>
+                                                </td>
                                                 <td class="text-center">
                                                     <div class="container" style="background:green;">
                                                         <p>Activo</p>
                                                     </div>
+                                                        @if (@solicitude.ClaveTipoApoyo == 14)
+                                                        {
+                                                        <button type="button" class="btn btn-default btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#myModal" id="AgregarOrder" onclick="mostrarModalOrdenes('@usuarioModel.Data[0].EmpS[0].cveEmp','@solicitude.NumTicket','@solicitude.TipoEquipo','@usuarioModel.Data[0].idus')">
+                                                            <img src="~/imag/plus-pequeno.png" alt="AgregarOrder" class="me-2" />
+                                                            <span>Ord.Mtto</span>
+                                                        </button>
+                                                        }
                                                 </td>
                                                 <td class="text-center">
                                                     <textarea class="form-control ComeMotvAsig" aria-label="With textarea" id="ComeMotvAsig" name="ComeMotvAsig"></textarea>
                                                 </td>
                                                 <td class="text-center">
-                                                        @* <button type="submit" id="asigna-@solicitude.NumTicket" class="btn btn-sm carga" onclick="mosModal('@solicitude.NumTicket')">
-                                            <img src="~/imag/cheque.png" alt="Agregar" />
-                                            </button> *@
                                                     <button type="submit" id="asignarTicketBtn" class="btn btn-sm carga">
                                                         <img src="~/imag/cheque.png" alt="Agregar" />
                                                     </button>
@@ -204,7 +242,7 @@
                                             <input type="hidden" value="@usuarioModel.idsub" id="idsub" name="idsub" />
                                             <input type="hidden" value="@solicitude.Diesel" id="Diesel" name="Diesel" />
                                             <input type="hidden" value="@solicitude.Grua" id="Grua" name="Grua" />
-                                            <input type="hidden" value="@solicitude.ClaveTipoApoyo" id="ClaveTipoApoyo" name="ClaveTipoApoyo" />
+                                                @* <input type="hidden" value="@solicitude.ClaveTipoApoyo" id="ClaveTipoApoyo" name="ClaveTipoApoyo" /> *@
                                                 @* <input type="hidden" value="@solicitude.TipoApoyo" id="TipoApoyo" name="TipoApoyo" /> *@
                                             </form>
                                             <td>
@@ -212,7 +250,7 @@
                                                     <img src="~/imag/mas.png" alt="Agregar" />
                                                 </button>
                                             </td>
-                                            
+
                                         </tr>
                                         <tr>
                                             <td colspan="15">
@@ -377,64 +415,44 @@
                             </table>
                         </div>
                         <!--aqui tengo declarado el modal -->
-                        <div id="myModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog">
-                            <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal" id="myModal">
+                            <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Relacion de Ordenes con Tikcet - @TempData["NumTicket"]</h5>
-                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <h5 class="modal-title" id="modalTitle">Relacion de Ordenes con Tikcet</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="container-fluid">
                                             <div class="row">
-                                                <div class="container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                                                                <table class="table table-bordered table-hover table-sm table-info">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th scope="col"># Orden</th>
-                                                                            <th scope="col">Proveedor</th>
-                                                                            <th scope="col">Folio</th>
-                                                                            <th scope="col">Costo</th>
-                                                                            <th scope="col">Equipo</th>
-                                                                            <th scope="col">Seleccionar</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach (var or in Model.OrdenesMtto)
-                                                                        {
-                                                                            <tr>
-                                                                                <td class="text-center">@or.OrdenMtto</td>
-                                                                                <td class="text-center">@or.Proveedor</td>
-                                                                                <td class="text-center">@or.Folio</td>
-                                                                                <td class="text-center">@or.Costo</td>
-                                                                                <td class="text-center">@or.Equipo</td>
-                                                                                <td class="text-center">
-                                                                                    <input type="hidden" value="@or.Seleccionar" id="SelOrder-@or.OrdenMtto" name="SelOrder" />
-                                                                                    <input class="form-check-input" type="checkbox" id="chSelOrder-@or.OrdenMtto" name="chSelOrder" onclick="clicOrden('@or.OrdenMtto')" />
-                                                                                </td>
-                                                                            </tr>
-                                                                        }
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
+                                                <div class="col-12">
+                                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                                        <table class="table table-bordered table-hover table-sm table-info">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col"># Orden</th>
+                                                                    <th scope="col">Proveedor</th>
+                                                                    <th scope="col">Folio</th>
+                                                                    <th scope="col">Costo</th>
+                                                                    <th scope="col">Equipo</th>
+                                                                    <th scope="col">Seleccionar</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="cuerpo">
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-12 justify-content-center align-content-center">
-                                                            <h7>Tipo de Equipo: @TempData["TipoEquipo"]</h7>
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 justify-content-center align-content-center">
+                                                    <h7 id="TpEqui">Tipo de Equipo: </h7>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn btn-primary" type="submit" id="btnGuarOrd" data-bs-dismiss="modal">Guardar</button>
+                                        <button type="submit" class="btn btn-primary" id="btnGuarOrd" data-bs-dismiss="modal" onclick="GuardarOrden('@usuarioModel.Data[0].EmpS[0].cveEmp')">Guardar</button>
                                     </div>
                                 </div>
                             </div>
