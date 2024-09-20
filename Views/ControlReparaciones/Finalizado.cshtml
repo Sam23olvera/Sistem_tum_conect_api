@@ -15,19 +15,19 @@
                     <a asp-action="Index" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link active seccion carga">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="PorAsig" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Por Asignar</a>
+                    <a asp-action="PorAsig" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Por Asignar</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="Asignacion" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Asignados</a>
+                    <a asp-action="Asignacion" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Asignados</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="Repara" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">En Reparación</a>
+                    <a asp-action="Repara" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">En Reparación</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="Fin" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link activo carga">Finalizado</a>
+                    <a asp-action="Fin" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link activo carga">Finalizado</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="Consul" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Consulta</a>
+                    <a asp-action="Consul" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Consulta</a>
                 </li>
             </ul>
         </div>
@@ -76,7 +76,7 @@
                             <button class="btn btn-primary carga" type="submit" id="btnBusFalReg">Buscar</button>
                         </div>
                         <input type="hidden" name="idsub" id="idsub" value="@usuarioModel.idsub" />
-                        <input type="hidden" name="Token" id="Token" value="@usuarioModel.Token" />
+                        <input type="hidden" name="XT" id="Token" value="@usuarioModel.Token" />
                         <input type="hidden" name="cveEmp" id="cveEmp" value="@usuarioModel.Data[0].EmpS?[0].cveEmp" />
                     </div>
                 </form>
@@ -323,7 +323,7 @@
                                     else
                                     {
                                         <li class="page-item">
-                                            <a class="page-link" href="BuscarFinalizados?pagina=@i&Token=@usuarioModel.Token&cveEmp=@usuarioModel.Data[0].EmpS[0].cveEmp&Buscar=@TempData["Buscar"]&NumTicket=@TempData["NumTicket"]&TipTicket=@TempData["TipTicket"]&TipFalla=@TempData["TipTicket"]&FehTick=@Convert.ToDateTime(@TempData["FehTick"]).ToString("yyyy/MM/dd")&idsub=@usuarioModel.idsub">
+                                            <a class="page-link" href="BuscarFinalizados?pagina=@i&XT=@usuarioModel.Token&cveEmp=@usuarioModel.Data[0].EmpS[0].cveEmp&Buscar=@TempData["Buscar"]&NumTicket=@TempData["NumTicket"]&TipTicket=@TempData["TipTicket"]&TipFalla=@TempData["TipTicket"]&FehTick=@Convert.ToDateTime(@TempData["FehTick"]).ToString("yyyy/MM/dd")&idsub=@usuarioModel.idsub">
                                                 @i
                                             </a>
                                         </li>

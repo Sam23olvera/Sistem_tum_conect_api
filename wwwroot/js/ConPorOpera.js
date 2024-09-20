@@ -144,6 +144,8 @@ $(document).ready(function () {
 function filterBusca() {
     var input = document.getElementById("searchInput");
     var filter = input.value.toUpperCase();
+    var cards = document.getElementById("cards");
+    
     var table = document.getElementById("myTable");
     var tr = table.getElementsByTagName("tr");
 

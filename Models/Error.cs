@@ -1,4 +1,6 @@
-﻿namespace ConectDB.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ConectDB.Models
 {
     public class Error
     {

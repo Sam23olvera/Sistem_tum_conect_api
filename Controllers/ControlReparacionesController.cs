@@ -13,7 +13,7 @@ namespace ConectDB.Controllers
         private readonly ConectMenuUser menu = new ConectMenuUser();
         private readonly DataApi data = new DataApi();
         private readonly ConectApiContrRep con = new ConectApiContrRep();
-        private const int pageSize = 20;
+        private const int pageSize = 5;
         ControlFalla? controlFal = new ControlFalla();
         UsuarioModel? model = new UsuarioModel();
         Error msj = new Error();
@@ -43,15 +43,15 @@ namespace ConectDB.Controllers
             }
         }
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult PorAsig(int pagina, string Token, string cveEmp, DateTime FehTick, int idsub)
+        public IActionResult PorAsig(int pagina, string XT, string cveEmp, DateTime FehTick, int idsub)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
 
@@ -71,17 +71,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpGet, HttpPost]
-        public IActionResult BuscarPorAsig(string Token, string cveEmp, int NumTicket, int ClaveTipoFalla, DateTime? FehTick, int pagina, int idsub)
+        public IActionResult BuscarPorAsig(string XT, string cveEmp, int NumTicket, int ClaveTipoFalla, DateTime? FehTick, int pagina, int idsub)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
                 if (NumTicket == 0)
@@ -123,7 +123,7 @@ namespace ConectDB.Controllers
                     if (controlFal.Solicitudes.Count != 0)
                     {
                         TempData["Mensaje"] = controlFal.status + ' ' + controlFal.message;
-                        return RedirectToAction("PorAsig", new { pagina, Token, cveEmp, FehTick, idsub });
+                        return RedirectToAction("PorAsig", new { pagina, XT, cveEmp, FehTick, idsub });
                     }
                 }
                 ViewData["Title"] = "Por Asignar";
@@ -136,16 +136,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-
-        public IActionResult AsignacionTicket(string Token, string cveEmp, string Asigna, string ticket, int pagina, int idsub, int Diesel, int Grua)
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost, HttpGet]
+        public IActionResult AsignacionTicket(string XT, string cveEmp, string Asigna, string ticket, int pagina, int idsub, int Diesel, int Grua)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
                 DateTime FehAsignatiempo = DateTime.Now;
@@ -155,18 +156,18 @@ namespace ConectDB.Controllers
                     if (controlFal.status == 200)
                     {
                         TempData["guardado"] = controlFal.status + "¡ \r\n" + controlFal.message + "\r\n!";
-                        return RedirectToAction("BuscarPorAsig", new { Token, cveEmp, ticket, ClaveTipoFalla = 0, DateTime.Now, pagina, idsub, });
+                        return RedirectToAction("BuscarPorAsig", new { XT, cveEmp, ticket, ClaveTipoFalla = 0, DateTime.Now, pagina, idsub, });
                     }
                     else
                     {
                         TempData["Mensaje"] = controlFal.status + " ¡" + controlFal.message + "\r\n Intenta mas Tarde! \r\n ";
-                        return RedirectToAction("PorAsig", new { pagina, Token, cveEmp, DateTime.Now, idsub, });
+                        return RedirectToAction("PorAsig", new { pagina, XT, cveEmp, DateTime.Now, idsub, });
                     }
                 }
                 else
                 {
                     TempData["Mensaje"] = "Debes de Seleccionar un persona";
-                    return RedirectToAction("PorAsig", new { pagina, Token, cveEmp, DateTime.Now, idsub, });
+                    return RedirectToAction("PorAsig", new { pagina, XT, cveEmp, DateTime.Now, idsub, });
 
                 }
             }
@@ -177,16 +178,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-
-        public IActionResult Asignacion(int pagina, string Token, string cveEmp, string Buscar, int NumTicket, DateTime FehTick, int UsAsignado, int idsub)
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost, HttpGet]
+        public IActionResult Asignacion(int pagina, string XT, string cveEmp, string Buscar, int NumTicket, DateTime FehTick, int UsAsignado, int idsub)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
                 if (FehTick == null || FehTick == DateTime.MinValue)
@@ -215,7 +217,7 @@ namespace ConectDB.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("BuscarAsignados", new { Token, cveEmp, UsAsignado, NumTicket, FehTick, pagina, idsub });
+                    return RedirectToAction("BuscarAsignados", new { XT, cveEmp, UsAsignado, NumTicket, FehTick, pagina, idsub });
                 }
                 return View("Asignados", controlFal);
             }
@@ -226,16 +228,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpGet, HttpPost]
-        public IActionResult BuscarAsignados(string Token, string cveEmp, int UsAsignado, int NumTicket, DateTime FehTick, int pagina, int idsub)
+        public IActionResult BuscarAsignados(string XT, string cveEmp, int UsAsignado, int NumTicket, DateTime FehTick, int pagina, int idsub)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
                 if (NumTicket == 0)
@@ -277,8 +280,8 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-
-        [HttpPost]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost, HttpGet]
         public IActionResult AsigTiempApoyClasif(string XT, string cveEmp, DateTime? TiempAsig, int Apooyo_Asigna, int Clasif_Asigna, int NumTicket, int pagina, int idsub, int CheckDisel, int CheckGrua, string Dot, string Marca, string Medida, int Posis)
         {
             try
@@ -294,12 +297,12 @@ namespace ConectDB.Controllers
                 if (Apooyo_Asigna == 0)
                 {
                     TempData["Mensaje"] = "¡Seleccione un Apoyo!";
-                    return RedirectToAction("BuscarAsignados", new { Token = XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
+                    return RedirectToAction("BuscarAsignados", new { XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
                 }
                 if (!TiempAsig.HasValue || TiempAsig <= DateTime.Now)
                 {
                     TempData["Mensaje"] = "¡La fecha de asignación no puede ser nulla o anterior.!";
-                    return RedirectToAction("BuscarAsignados", new { Token = XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
+                    return RedirectToAction("BuscarAsignados", new { XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
                 }
                 else
                 {
@@ -315,22 +318,22 @@ namespace ConectDB.Controllers
                         if (string.IsNullOrEmpty(Dot))
                         {
                             TempData["Mensaje"] = "¡Debes de llenar el Dot!";
-                            return RedirectToAction("BuscarAsignados", new { Token = XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
+                            return RedirectToAction("BuscarAsignados", new { XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
                         }
                         else if (string.IsNullOrEmpty(Marca))
                         {
                             TempData["Mensaje"] = "¡Debes de llenar la Marca!";
-                            return RedirectToAction("BuscarAsignados", new { Token = XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
+                            return RedirectToAction("BuscarAsignados", new { XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
                         }
                         else if (string.IsNullOrEmpty(Medida))
                         {
                             TempData["Mensaje"] = "¡Debes de llenar el Medida!";
-                            return RedirectToAction("BuscarAsignados", new { Token = XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
+                            return RedirectToAction("BuscarAsignados", new { XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
                         }
                         else if (Posis == 0)
                         {
                             TempData["Mensaje"] = "¡Debes de tener una Posición!";
-                            return RedirectToAction("BuscarAsignados", new { Token = XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
+                            return RedirectToAction("BuscarAsignados", new { XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
                         }
                     }
                     controlFal = con.ModificadorFall(2, 4, model.Data?[0].EmpS?[0].cveEmp.ToString(), NumTicket.ToString(), 0.ToString(), Convert.ToInt32(Apooyo_Asigna), Clasif_Asigna, TiempAsig?.ToString("yyyy-MM-dd HH:mm"), "", model.Data[0].idus, TiempAsig?.ToString("yyyy-MM-dd HH:mm"), 0, idsub, pagina, pageSize, CheckDisel, CheckGrua, Dot, Marca, Medida, Posis, false);
@@ -338,7 +341,7 @@ namespace ConectDB.Controllers
                     {
                         TempData["FehTick"] = DateTime.Now.ToString("yyyy-MM-dd");
                         TempData["guardado"] = "¡Se Guardado Correctamenre!" + controlFal.status + " " + controlFal.message;
-                        return RedirectToAction("BuscarAsignados", new { Token = XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
+                        return RedirectToAction("BuscarAsignados", new { XT, cveEmp, UsAsignado = 0, NumTicket = 0, FehTick = DateTime.Now, pagina, idsub });
                     }
                     else
                     {
@@ -364,16 +367,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-
-        public IActionResult Repara(int pagina, string Token, string cveEmp, string Buscar, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int idsub)
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost, HttpGet]
+        public IActionResult Repara(int pagina, string XT, string cveEmp, string Buscar, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int idsub)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
                 if (FehTick == null || FehTick == DateTime.MinValue)
@@ -392,7 +396,7 @@ namespace ConectDB.Controllers
                 }
                 else if (Convert.ToInt32(Buscar) == 1)
                 {
-                    return RedirectToAction("BuscarReparacion", new { Token, cveEmp, FehTick, TipTicket, TipFalla, NumTicket, pagina, pageSize, idsub });
+                    return RedirectToAction("BuscarReparacion", new { XT, cveEmp, FehTick, TipTicket, TipFalla, NumTicket, pagina, pageSize, idsub });
                 }
                 ViewData["Title"] = "Reparacion";
                 return View("Reparacion", controlFal);
@@ -404,17 +408,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpGet, HttpPost]
-        public IActionResult BuscarReparacion(string Token, string cveEmp, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int pagina, int idsub)
+        public IActionResult BuscarReparacion(string XT, string cveEmp, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int pagina, int idsub)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
 
@@ -467,16 +471,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-        [HttpPost]
-        public IActionResult AsigRepa(string Tok, string cveEmp, string NumTicket, DateTime FechEstima, DateTime FechEstimaComparar, bool AttPar, string ComeMotvAsig, int idsub, int pagina, int Diesel, int Grua, int ClaveTipoApoyo,string TipoApoyo, string TipoEquipo)
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost,HttpGet]
+        public IActionResult AsigRepa(string XT, string cveEmp, string NumTicket, DateTime FechEstima, DateTime FechEstimaComparar, bool AttPar, string ComeMotvAsig, int idsub, int pagina, int Diesel, int Grua, int ClaveTipoApoyo,string TipoApoyo, string TipoEquipo)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Tok);
-                model.Token = Tok;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
 
@@ -499,14 +504,14 @@ namespace ConectDB.Controllers
                         ViewData["Title"] = "Reparacion";
                         TempData["guardado"] = controlFal.status + "\r\n¡" + controlFal.message + "!";
                         TempData["FehTick"] = FechEstima;
-                        return RedirectToAction("BuscarReparacion", new { Token = Tok, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
+                        return RedirectToAction("BuscarReparacion", new { XT, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
                     }
                     else
                     {
                         TempData["Mensaje"] = controlFal.status + " ¡" + controlFal.message + "\r\n Intenta mas Tarde! \r\n ";
                         ViewData["Title"] = "Reparacion";
                         TempData["FehTick"] = FechEstima;
-                        return RedirectToAction("BuscarReparacion", new { Token = Tok, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
+                        return RedirectToAction("BuscarReparacion", new { XT, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
                     }
                 }
                 if (FechEstima == FechEstimaComparar)
@@ -518,14 +523,14 @@ namespace ConectDB.Controllers
                         ViewData["Title"] = "Reparacion";
                         TempData["guardado"] = controlFal.status + "\r\n¡" + controlFal.message + "!";
                         TempData["FehTick"] = FechEstima;
-                        return RedirectToAction("BuscarReparacion", new { Token = Tok, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
+                        return RedirectToAction("BuscarReparacion", new { XT, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
                     }
                     else
                     {
                         TempData["Mensaje"] = controlFal.status + " ¡" + controlFal.message + "\r\n Intenta mas Tarde! \r\n ";
                         ViewData["Title"] = "Reparacion";
                         TempData["FehTick"] = FechEstima;
-                        return RedirectToAction("BuscarReparacion", new { Token = Tok, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
+                        return RedirectToAction("BuscarReparacion", new { XT, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
                     }
                 }
                 else
@@ -533,7 +538,7 @@ namespace ConectDB.Controllers
                     TempData["Buscar"] = 0;
                     TempData["FehTick"] = DateTime.Now;
                     TempData["Mensaje"] = "¡Seleccione una fecha mayor que la registrada " + FechEstima.ToString("yyyy-MM-dd HH:mm:ss") + " !";
-                    return RedirectToAction("BuscarReparacion", new { Token = Tok, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
+                    return RedirectToAction("BuscarReparacion", new { XT, cveEmp, FehTick = DateTime.Now, TipTicket = 0, TipFalla = 0, NumTicket = 0, pagina, idsub });
                 }
             }
             catch (Exception e)
@@ -582,16 +587,17 @@ namespace ConectDB.Controllers
         //        return View("Error", msj);
         //    }
         //}
-
-        public IActionResult Fin(int pagina, string Token, string cveEmp, string Buscar, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int idsub)
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost, HttpGet]
+        public IActionResult Fin(int pagina, string XT, string cveEmp, string Buscar, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int idsub)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
 
@@ -615,16 +621,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpGet, HttpPost]
-        public IActionResult BuscarFinalizados(string Token, string cveEmp, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int pagina, int idsub)
+        public IActionResult BuscarFinalizados(string XT, string cveEmp, DateTime FehTick, int TipTicket, int TipFalla, int NumTicket, int pagina, int idsub)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
                 if (FehTick == null || FehTick == DateTime.MinValue)
@@ -674,16 +681,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-
-        public IActionResult Consul(string Token, string cveEmp, int NumTicket, DateTime FehInicio, DateTime FehFin, int idsub, int pagina)
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost, HttpGet]
+        public IActionResult Consul(string XT, string cveEmp, int NumTicket, DateTime FehInicio, DateTime FehFin, int idsub, int pagina)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
 
                 if (NumTicket == 0)
@@ -727,17 +735,17 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpGet, HttpPost]
-        public IActionResult BusConsul(string Token, DateTime FehInicio, DateTime FehFin, int NumTicket, string cveEmp, int idsub, int pagina)
+        public IActionResult BusConsul(string XT, DateTime FehInicio, DateTime FehFin, int NumTicket, string cveEmp, int idsub, int pagina)
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
 
-                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, Token);
-                model.Token = Token;
+                model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), Convert.ToInt32(cveEmp), url, XT);
+                model.Token = XT;
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
                 if (NumTicket == 0)
@@ -801,9 +809,9 @@ namespace ConectDB.Controllers
             }
             return listarch;
         }
-
-        [HttpPost]
-        public async Task<ActionResult> SubirArchivo(List<IFormFile> Files, int pagina, string Token, string cveEmp, DateTime FehInicio, DateTime FehFin, int NumTicket, int idsub)
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost, HttpGet]
+        public async Task<ActionResult> SubirArchivo(List<IFormFile> Files, int pagina, string XT, string cveEmp, DateTime FehInicio, DateTime FehFin, int NumTicket, int idsub)
         {
             try
             {
@@ -848,7 +856,7 @@ namespace ConectDB.Controllers
                     }
                 }
                 TempData["guardado"] = "Se subieron correctamente las imagenes";
-                return RedirectToAction("BusConsul", new { Token, FehInicio, FehFin, NumTicket = 0, cveEmp, idsub, pagina });
+                return RedirectToAction("BusConsul", new { XT, FehInicio, FehFin, NumTicket = 0, cveEmp, idsub, pagina });
             }
             catch (Exception e)
             {

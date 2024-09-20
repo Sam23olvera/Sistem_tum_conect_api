@@ -15,25 +15,25 @@
                     <a asp-action="Index" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link active seccion carga">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="PorAsig" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Por Asignar</a>
+                    <a asp-action="PorAsig" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Por Asignar</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="Asignacion" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Asignados</a>
+                    <a asp-action="Asignacion" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Asignados</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="Repara" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link activo carga">En Reparación</a>
+                    <a asp-action="Repara" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link activo carga">En Reparación</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="Fin" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Finalizado</a>
+                    <a asp-action="Fin" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Finalizado</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-action="Consul" asp-controller="ControlReparaciones" asp-route-Token="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Consulta</a>
+                    <a asp-action="Consul" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Consulta</a>
                 </li>
             </ul>
         </div>
 
         <div class="col-md-10">
-            <div class="container">
+            <div class="container small">
                 <br />
                 <div class="row-cols-auto text-lg-start">
                     <h3>@ViewData["Title"]</h3>
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <input type="hidden" name="idsub" id="idsub" value="@usuarioModel.idsub" />
-                    <input type="hidden" name="Token" id="Token" value="@usuarioModel.Token" />
+                    <input type="hidden" name="XT" id="Token" value="@usuarioModel.Token" />
                     <input type="hidden" name="cveEmp" id="cveEmp" value="@usuarioModel.Data[0].EmpS?[0].cveEmp" />
                 </form>
                 <br />
@@ -157,7 +157,7 @@
                                                         <div class="row orderExist">
                                                                 @foreach (var or in @solicitude.OrdenesMtto)
                                                                 {
-                                                                    @if (@or.OrdenMtto != 0) 
+                                                                    @if (@or.OrdenMtto != 0)
                                                                     {
                                                                     <p># Orden: @or.OrdenMtto</p>
                                                                     <p>Fecha Registro: @or.FechaRegistro?.ToString("yyyy/MM/dd HH:mm:ss")</p>
@@ -166,17 +166,17 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="text-center">
-                                                    <div class="container" style="background:red">
-                                                        <p>Caduco</p>
-                                                    </div>
-                                                        @if (@solicitude.ClaveTipoApoyo == 14)
-                                                        {
-                                                        <button type="button" class="btn btn-default btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#myModal" id="AgregarOrder" onclick="mostrarModalOrdenes('@usuarioModel.Data[0].EmpS[0].cveEmp','@solicitude.NumTicket','@solicitude.TipoEquipo','@usuarioModel.Data[0].idus')">
+                                                    <td class="text-center">
+                                                        <div class="container" style="background:red">
+                                                            <p>Caduco</p>
+                                                        </div>
+                                                        @if (@solicitude.ClaveTipoApoyo == 2) 
+                                                        { 
+                                                        <button type="button" class="btn btn-default btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#myModal" id="AgregarOrder" onclick="mostrarModalOrdenes('@usuarioModel.Data[0].EmpS[0].cveEmp','@solicitude.NumTicket','@solicitude.TipoEquipo','@usuarioModel.Data[0].idus','@solicitude.ClaveTipoTicket','@solicitude.ClaveEquipo')">
                                                             <img src="~/imag/plus-pequeno.png" alt="AgregarOrder" class="me-2" />
                                                             <span>Ord.Mtto</span>
                                                         </button>
-                                                        }
+                                                        } 
                                                 </td>
                                                 <td class="text-center">
                                                     <textarea class="form-control ComeMotvAsig" aria-label="With textarea" id="ComeMotvAsig" name="ComeMotvAsig"></textarea>
@@ -215,18 +215,18 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="text-center">
-                                                    <div class="container" style="background:green;">
-                                                        <p>Activo</p>
-                                                    </div>
-                                                        @if (@solicitude.ClaveTipoApoyo == 14)
+                                                    <td class="text-center">
+                                                        <div class="container" style="background:green;">
+                                                            <p>Activo</p>
+                                                        </div>
+                                                        @if (@solicitude.ClaveTipoApoyo == 2)
                                                         {
-                                                        <button type="button" class="btn btn-default btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#myModal" id="AgregarOrder" onclick="mostrarModalOrdenes('@usuarioModel.Data[0].EmpS[0].cveEmp','@solicitude.NumTicket','@solicitude.TipoEquipo','@usuarioModel.Data[0].idus')">
-                                                            <img src="~/imag/plus-pequeno.png" alt="AgregarOrder" class="me-2" />
-                                                            <span>Ord.Mtto</span>
-                                                        </button>
+                                                            <button type="button" class="btn btn-default btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#myModal" id="AgregarOrder" onclick="mostrarModalOrdenes('@usuarioModel.Data[0].EmpS[0].cveEmp','@solicitude.NumTicket','@solicitude.TipoEquipo','@usuarioModel.Data[0].idus','@solicitude.ClaveTipoTicket','@solicitude.ClaveEquipo')">
+                                                                <img src="~/imag/plus-pequeno.png" alt="AgregarOrder" class="me-2" />
+                                                                <span>Ord.Mtto</span>
+                                                            </button>
                                                         }
-                                                </td>
+                                                    </td>
                                                 <td class="text-center">
                                                     <textarea class="form-control ComeMotvAsig" aria-label="With textarea" id="ComeMotvAsig" name="ComeMotvAsig"></textarea>
                                                 </td>
@@ -237,7 +237,7 @@
                                                 </td>
                                                 }
                                             <input type="hidden" value="@solicitude.NumTicket" id="NumTicket" name="NumTicket" />
-                                            <input type="hidden" value="@usuarioModel.Token" id="Tok" name="Tok" />
+                                            <input type="hidden" value="@usuarioModel.Token" id="Tok" name="XT" />
                                             <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
                                             <input type="hidden" value="@usuarioModel.idsub" id="idsub" name="idsub" />
                                             <input type="hidden" value="@solicitude.Diesel" id="Diesel" name="Diesel" />
@@ -431,10 +431,10 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col"># Orden</th>
-                                                                    <th scope="col">Proveedor</th>
-                                                                    <th scope="col">Folio</th>
+                                                                    <th scope="col">ComentariosOrden</th>
                                                                     <th scope="col">Costo</th>
                                                                     <th scope="col">Equipo</th>
+                                                                    <th scope="col">Proveedor</th>
                                                                     <th scope="col">Seleccionar</th>
                                                                 </tr>
                                                             </thead>
@@ -470,7 +470,7 @@
                                     else
                                     {
                                         <li class="page-item">
-                                            <a class="page-link" href="BuscarReparacion?pagina=@i&k=si&Token=@usuarioModel.Token&cveEmp=@usuarioModel.Data[0].EmpS[0].cveEmp&Buscar=@TempData["Buscar"]&NumTicket=@TempData["NumTicket"]&ClaveTipoFalla=@TempData["ClaveTipoFalla"]&TipTicket=@TempData["TipTicket"]&FehTick=@Convert.ToDateTime(@TempData["FehTick"]).ToString("yyyy/MM/dd")&idsub=@usuarioModel.idsub">
+                                            <a class="page-link" href="BuscarReparacion?pagina=@i&k=si&XT=@usuarioModel.Token&cveEmp=@usuarioModel.Data[0].EmpS[0].cveEmp&Buscar=@TempData["Buscar"]&NumTicket=@TempData["NumTicket"]&ClaveTipoFalla=@TempData["ClaveTipoFalla"]&TipTicket=@TempData["TipTicket"]&FehTick=@Convert.ToDateTime(@TempData["FehTick"]).ToString("yyyy/MM/dd")&idsub=@usuarioModel.idsub">
                                                 @i
                                             </a>
                                         </li>

@@ -2,7 +2,7 @@
     ViewData["Title"] = "Puestos";
     Layout = "~/Views/Shared/_LayoutLog.cshtml";
 }
-@using ConectDB.Models;
+@using ConectDB.Models; 
 @model UsuarioModel
 <div class="container">
     <main role="main">
@@ -14,12 +14,12 @@
             <br>
             <div class="row">
                 <div class="col-4">
-                    <label>Descripcion</label>
-                    <input type="text" id="zDescripcion" autocomplete="off">
+                    <label for="zDescripcion">Descripcion</label>
+                    <input type="text" id="zDescripcion" class="form-control" autocomplete="off">
                 </div>
                 <div class="col-4">
-                    <label>Tipo de Empleado</label>
-                    <input type="text" id="zTipoempleado" autocomplete="off">
+                    <label for="zTipoempleado">Tipo de Empleado</label>
+                    <input type="text" id="zTipoempleado" class="form-control" autocomplete="off">
                 </div>
                 <div class="col-4 ">
                     <div class="form-check">
@@ -28,16 +28,16 @@
                             Hab/Desab
                         </label>
                     </div>
-                    <label>Descripcion</label>
-                    <input type="text" id="zDescripcion" autocomplete="off">
+                    <label for="zDescripcion">Descripcion</label>
+                    <input type="text" id="zDescripcion" class="form-control" autocomplete="off">
                 </div>
             </div>
             <br>
             <br>
             <div class="row">
                 <div class="col-sm-6 d-flex align-items-center justify-content-start">
-                    <label>Total de Plazas </label>
-                    <input type="text" id="zTotalPlazas" autocomplete="off">
+                    <label for="zTotalPlazas">Total de Plazas </label>
+                    <input type="text" id="zTotalPlazas" class="form-control" autocomplete="off">
                 </div>
                 <div class="col-sm-6 d-flex align-items-center justify-content-end">
                     <button type="button" class="btn btn-outline-primary">Nuevo</button>

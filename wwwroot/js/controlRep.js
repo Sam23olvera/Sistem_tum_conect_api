@@ -143,23 +143,23 @@ $(document).ready(function () {
     //});
 });
 
-function mostrarModalOrdenes(cveEmp, NumTicket, TipoEquipo, idus) {
+function mostrarModalOrdenes(cveEmp, NumTicket, TipoEquipo, idus, ClaveTipoTicket, ClaveEquipo) {
     document.getElementById('modalTitle').innerText = `Relacion de Ordenes con Tikcet - ${NumTicket}`;
     document.getElementById('TpEqui').innerText = `Tipo de Equipo: ${TipoEquipo}`;
 
-    LLeModOrd(cveEmp, NumTicket, idus);
+    LLeModOrd(cveEmp, NumTicket, idus, ClaveTipoTicket, ClaveEquipo);
 
     $('#myModal').modal('show');
 }
 
-function LLeModOrd(cveEmp, NumTicket, idus) {
+function LLeModOrd(cveEmp, NumTicket, idus, ClaveTipoTicket, ClaveEquipo) {
 
     var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-        data: {
+        "data": {
             "bdCc": 5,
             "bdSch": "dbo",
             "bdSp": "SPQRY_OrdenesMtto"
@@ -168,9 +168,22 @@ function LLeModOrd(cveEmp, NumTicket, idus) {
             {
                 "property": "ClaveEmpresa",
                 "value": cveEmp
-            }]
+            },
+            {
+                "property": "ClaveTipoTicket",
+                "value": ClaveTipoTicket
+            },
+            {
+                "property": "ClaveTicket",
+                "value": NumTicket
+            },
+            {
+                "property": "ClaveEquipo",
+                "value": ClaveEquipo
+            }
+        ]
     });
-
+    
     var requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -190,12 +203,20 @@ function LLeModOrd(cveEmp, NumTicket, idus) {
                     toastr.error(mensaje);
                 }
                 $("#cuerpo").html("");
+                document.getElementById('btnGuarOrd').disabled = true;
             }
             else if (obj.data.length == 0) {
                 $("#cuerpo").html("");
+                var mensaje = document.getElementById('mensaje').value;
+                mensaje = 'No se encuentran Ordenes';
+                if (mensaje !== '') {
+                    toastr.error(mensaje);
+                    document.getElementById('btnGuarOrd').disabled = true;
+                }
             }
             else {
                 $("#cuerpo").html("");
+                document.getElementById('btnGuarOrd').disabled = false;
                 for (let i = 0; i < obj.data[0]["OrdenesMtto"].length; i++) {
                     //console.log(obj.data[0]["OrdenesMtto"][i]["OrdenMtto"]);
                     const orden = obj.data[0]["OrdenesMtto"][i];
@@ -203,7 +224,7 @@ function LLeModOrd(cveEmp, NumTicket, idus) {
                     let isChecked = orden["Seleccionar"] ? ' checked' : '';
                     var tr = '<tr> '
                         + ' <td>' + obj.data[0]["OrdenesMtto"][i]["OrdenMtto"] + '</td>'
-                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Folio"] + '</td>'
+                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["ComentariosOrden"] + '</td>'
                         + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Costo"] + '</td>'
                         + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Equipo"] + '</td>'
                         + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Proveedor"] + '</td>'
@@ -243,6 +264,21 @@ function GuardarOrden(cveEmp)
             // Guardar el ID del renglón para resaltarlo después
             localStorage.setItem('highlightRowId', nutick);
         }
+        else
+        {
+            let row = checkbox.closest('tr');
+            let orderID = row.querySelector('td:first-child').innerText;
+
+            osTicketArray.push(
+                {
+                    "ClaveTicket": nutick,
+                    "ClaveOrden": orderID,
+                    "ClaveUsuario": idusModOr,
+                    "Vinculado": false,
+                    "CveEmpresa": cveEmp
+                });
+            localStorage.setItem('highlightRowId', nutick);
+        }
     });
     var rawGuardar = JSON.stringify({ "OS_Ticket": osTicketArray });
     var enviojsonGuarda = JSON.stringify({
@@ -280,7 +316,7 @@ function GuardOrd(jsonGuarda) {
         .then(response => response.text())
         .then(result => {
             const obj = JSON.parse(result);
-            console.log(obj);
+            //console.log(obj);
             if (obj.data == null || obj.data == 0) {
                 var guarda = document.getElementById('guarda').value;
                 guarda = obj.message;

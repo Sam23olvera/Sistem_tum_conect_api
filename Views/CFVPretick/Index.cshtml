@@ -1,0 +1,157 @@
+﻿@using ConectDB.Models;
+@using Newtonsoft.Json;
+@model CFVPretickDatum;
+@{
+    string? title = ViewData["Title"] as string;
+    Layout = "~/Views/Shared/_Layout_CFVPretick.cshtml";
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+}
+<div class="container">
+    <div class="row text-center">
+        <h2>@ViewData["Title"]</h2>
+        <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
+        <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+    </div>
+    <br />
+    <div class="container-fluid">
+        <form method="post" asp-action="buscarcfvpretick" asp-controller="CFVPretick" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-XT="@usuarioModel.Token">
+            <div class="d-flex justify-content-evenly">
+                <div class="p-3">
+                    <label for="FechCrePreTick" class="form-label">Fecha Creacion:</label>
+                    <input type="text" class="form-control input-sm" value="@DateTime.Now.ToString("yyyy/MM/dd")" id="FechCrePreTick" name="FechCrePreTick" required />
+                </div>
+                <div class="p-3">
+                    <div class="d-flex flex-row bd-highlight mb-3 cuadroimag">
+                        <div class="p-2 bd-highlight border">
+                            <img id="unidadcfvPretick" src="~/imag/unidad.png" />
+                            <p>Unidad</p>
+                        </div>
+                        <div class="p-2 bd-highlight border">
+                            <img id="remolcfvPretick" src="~/imag/remolque.png" />
+                            <p>Remolque</p>
+                        </div>
+                        <div class="p-2 bd-highlight border">
+                            <img id="dolycfvPretick" src="~/imag/dolly.png" />
+                            <p>Dolly</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3">
+                    <button type="submit" class="btn btn-primary carga" id="BusPretick" name="BusPretick">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="row justify-content-start align-items-start">
+            <div class="col-12">
+                <div class="container table-responsive container-fluid">
+
+                    <table class="table table-bordered table-sm ticket-porasigna-table align-content-sm-center" id="myTable">
+                        <caption>@ViewData["Title"]</caption>
+                        <thead>
+                            <tr>
+                                <th class="align-content-center text-center"># Pre-Ticket</th>
+                                <th class="align-content-center text-center">Fecha Creacion</th>
+                                <th class="align-content-center text-center"># Operador</th>
+                                <th class="align-content-center text-center">Equipo</th>
+                                <th class="align-content-center text-center">Tipo Falla</th>
+                                <th class="align-content-center text-center">Tipo clasificacion</th>
+                                <th class="align-content-center text-center">Fecha Entra Patio</th>
+                                <th class="align-content-center text-center">Usuario Alta Preticket</th>
+                                <th class="align-content-center text-center">Notas Falla</th>
+                                <th class="align-content-center text-center"># Ticket</th>
+                                <th class="align-content-center text-center">Usuario Alta Ticket</th>
+                                <th class="align-content-center text-center">Estatus Ticket</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cfv in Model.CFVPretick)
+                            {
+                                <tr>
+                                    <td class="align-content-center text-center">
+                                        <p>@cfv.ClavePreTicket</p>
+                                    </td>
+                                    <td class="align-content-center text-center">
+                                        <p>@cfv.FechaCreaPreTicket.ToString("yyyy/MM/dd HH:mm:ss")</p>
+                                    </td>
+                                    <td class="align-content-center text-center">
+                                        <p>@cfv.NumOperador</p>
+                                    </td>
+                                    <td class="align-content-center text-center">
+                                        @if (@cfv.Unidad != 0)
+                                        {
+                                            <img id="unidadcfvPretick" src="~/imag/unidad.png" />
+                                            <label for="unidadcfvPretick" class="form-label"><p>@cfv.Unidad</p></label>
+                                        }
+                                        else if (!string.IsNullOrEmpty(@cfv.Remolque))
+                                        {
+                                            <img id="remolcfvPretick" src="~/imag/remolque.png" />
+                                            <label for="remolcfvPretick" class="form-label"><p>@cfv.Remolque</p></label>
+                                        }
+                                        else if (!string.IsNullOrEmpty(@cfv.Dolly))
+                                        {
+                                            <img id="dolycfvPretick" src="~/imag/dolly.png" />
+                                            <label for="dolycfvPretick" class="form-label"><p>@cfv.Dolly</p></label>
+                                        }
+                                    </td>
+                                    <td class="align-content-center text-center">
+                                        <p>@cfv.Tipo_Falla</p>
+                                    </td>
+                                    <td class="align-content-center text-center">
+                                        <p>@cfv.Tipo_clasificacion</p>
+                                    </td>
+                                    <td class="align-content-center text-center">
+                                        <p>@cfv.FechaEntroPatio.ToString("yyyy/MM/dd HH:mm:ss")</p>
+                                    </td>
+                                    <td class="align-content-center text-center">
+                                        <p>@cfv.UsuarioCreoPreticket</p>
+                                    </td>
+                                    <td class="align-content-between">
+                                        <p>@cfv.observaciones</p>
+                                    </td>
+                                    @if (@cfv.NumTicket == 0)
+                                    {
+                                        <td class="align-content-center text-center">
+                                            <p style="color:red;">Sin Ticket Asignado</p>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="align-content-center text-center">
+                                            <p>@cfv.NumTicket</p>
+                                        </td>
+                                    }
+                                    @if (string.IsNullOrEmpty(@cfv.UserTicket))
+                                    {
+                                        <td class="align-content-center text-center">
+                                            <p style="color:red;">Sin Usuario Asignado</p>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="align-content-center text-center">
+                                            <p>@cfv.UserTicket</p>
+                                        </td>
+                                    }
+                                    @if (string.IsNullOrEmpty(@cfv.Estatus))
+                                    {
+                                        <td class="align-content-center text-center">
+                                            <p style="color:red;">Sin Estatus</p>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="align-content-center text-center">
+                                            <p>@cfv.Estatus </p>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

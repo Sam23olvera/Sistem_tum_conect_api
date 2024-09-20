@@ -1,0 +1,256 @@
+﻿@using ConectDB.Models;
+@model PreTicketMod;
+@{
+
+    Layout = "~/Views/Shared/_Layout_PreTicket.cshtml";
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+}
+<div class="container">
+    <div class="row text-center">
+        <h2>@ViewData["Title"]</h2>
+        <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
+        <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+    </div>
+    <br />
+    <div class="container-fluid">
+        <form method="post" asp-action="Buscar" asp-controller="PreTicket">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <label for="FechCreTick" class="form-label">Fecha Creacion:</label>
+                    <input type="text" class="form-control input-sm " value="@DateTime.Now.ToString("yyyy/MM/dd")" id="FechCreTick" name="FechCreTick" />
+                </div>
+                <div class="col-md-3">
+                    <label for="Tipotick" class="form-label">Tipo de Ticket:</label>
+                    <select class="form-select input-sm" aria-label="Default select example" id="Tipotick" name="Tipotick">
+                        <option selected value="0">[Selecciona]</option>
+                        @foreach (var tipfalla in Model.TBCAT_TipoTicket)
+                        {
+                            <option value="@tipfalla.ClaveTipoTicket">@tipfalla.Descripcion</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary carga" id="BusPretick" name="BusPretick">Buscar</button>
+                </div>
+
+            </div>
+            <input type="hidden" value="@usuarioModel.Token" id="XT" name="XT" />
+            <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
+        </form>
+        <br />
+        @* <div class="row">
+            <div class="col-md-4">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar..." onkeyup="filterBusca()">
+            </div>
+        </div> *@
+        <div class="row">
+            <div class="col-md-6">
+                <div class="container align-content-center" style="max-height: 400px; overflow-y: scroll;">
+                    <table id="TablePretickets" class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th><label for="selectAll" class="form-label">Todos</label><input type="checkbox" id="selectAll" onclick="checkall()"></th>
+                                <th>#</th>
+                                <th>Fecha de Creacion</th>
+                                <th>Falla</th>
+                                <th>Ticket</th>
+                                <th>Clasificacion</th>
+                                <th>Fallas Reportadas</th>
+                                <th>Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var pre in Model.PreTickets)
+                            {
+                                <tr class="align-bottom">
+                                    <td>
+                                        <input type="checkbox" class="preticket-checkbox" id="checkpre-@pre.ClavePreTicket" onclick="checkpretick('@pre.ClavePreTicket')">
+                                    </td>
+                                    <td>
+                                        <p class="text-start">@pre.ClavePreTicket</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-start">@pre.FechaCreacionPreticket.ToString("yyyy/MM/dd")</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-start">@pre.TipoFalla</p>
+                                    </td>
+                                    @if (@pre.Unidad != 0)
+                                    {
+                                        <td>
+                                            <img src="~/imag/unidad.png" />
+                                        </td>
+                                    }
+                                    @if (!string.IsNullOrEmpty(@pre.Remolque))
+                                    {
+                                        <td>
+                                            <img src="~/imag/remolque.png" />
+                                        </td>
+                                    }
+                                    @if (!string.IsNullOrEmpty(@pre.NumeroDolly))
+                                    {
+                                        <td>
+                                            <img src="~/imag/dolly.png" />
+                                        </td>
+                                    }
+                                    <td>
+                                        <p class="text-start">@pre.TipoClasificacion</p>
+                                    </td>
+                                    <td class="align-top">
+                                        <p>@pre.ObsOperacion</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-start">
+                                            <img src="~/imag/avatar-de-usuario.png" />@pre.Usuario
+                                        </p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <form method="post" asp-action="Cretick" asp-controller="PreTicket">
+                    <input type="hidden" value="@usuarioModel.Token" id="XT" name="XT" />
+                    <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
+                    <input type="hidden" value="" id="SelClvTick" name="SelClvTick" />
+                    <button type="submit" class="btn btn-primary carga" id="createTickets">Crear Tickets</button>
+                </form>
+            </div>
+            <div id="cards" class="col-md-6" style="max-height: 400px; overflow-y: scroll;">
+                <div class="container-fluid">
+                    @foreach (var pre in Model.PreTickets)
+                    {
+                        <div class="container cartas" id="preticketDetails-@pre.ClavePreTicket" style="display:none" role="navigation">
+                            <div class="card w-90">
+                                <div class="card-header">
+                                    <h4>Preticket # @pre.ClavePreTicket</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex flex-wrap">
+                                        <div class="flex-fill">
+                                            <p class="card-text">
+                                                <strong>Empresa: </strong>
+                                                @pre.NameEmpresa
+                                            </p>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="card-text">
+                                                <strong>Nombre Operador:</strong>
+                                                @pre.NameOpe
+                                            </p>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="card-text">
+                                                <strong>Tel_Operador: </strong>
+                                                @pre.Tel_Operador
+                                            </p>
+                                        </div>
+                                        @if (@pre.Unidad != 0)
+                                        {
+                                            <div class="flex-fill">
+                                                <p class="card-text">
+                                                    <strong>Unidad:</strong>
+                                                    @pre.Unidad
+                                                </p>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(@pre.Remolque))
+                                        {
+                                            <div class="flex-fill">
+                                                <p class="card-text">
+                                                    <strong>Remolque:</strong>
+                                                    @pre.Remolque
+                                                </p>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(@pre.NumeroDolly))
+                                        {
+                                            <div class="flex-fill">
+                                                <p class="card-text">
+                                                    <strong>Numero de Dolly:</strong>
+                                                    @pre.NumeroDolly
+                                                </p>
+                                            </div>
+                                        }
+                                        @if (@pre.Cargado == true)
+                                        {
+
+                                            <div class="flex-fill">
+                                                <h9 class="card-subtitle mb-2 text-muted"><strong>Cargado:</strong></h9>
+                                                <input type="checkbox" class="checkbox" id="" disabled checked />
+                                            </div>
+                                            <br />
+                                        }
+                                        @if (@pre.Cargado == false)
+                                        {
+                                            <div class="flex-fill">
+                                                <h9 class="card-subtitle mb-2 text-muted"><strong>Cargado:</strong></h9>
+                                                <input type="checkbox" class="checkbox" id="" disabled />
+                                            </div>
+                                            <br />
+                                        }
+                                        @if (@pre.DOT != null)
+                                        {
+                                            <div class="flex-fill">
+                                                <p class="card-text">
+                                                    <strong>DOT: </strong>
+                                                    @pre.DOT
+                                                </p>
+                                            </div>
+                                        }
+                                        @if (@pre.MARCA != null)
+                                        {
+                                            <div class="flex-fill">
+                                                <p class="card-text">
+                                                    <strong>Marca: </strong>
+                                                    @pre.MARCA
+                                                </p>
+                                            </div>
+                                        }
+                                        @if (@pre.MEDIDA != null)
+                                        {
+                                            <div class="flex-fill">
+                                                <p class="card-text">
+                                                    <strong>Medida: </strong>
+                                                    @pre.MEDIDA
+                                                </p>
+                                            </div>
+                                        }
+                                        @if (@pre.POSICION != 0)
+                                        {
+                                            <div class="flex-fill">
+                                                <p class="card-text">
+                                                    <strong>Posicion: </strong>
+                                                    @pre.POSICION
+                                                </p>
+                                            </div>
+                                        }
+                                        <div class="flex-fill">
+                                            <p class="card-text">
+                                                <strong>Fecha de la Ultima Posicion: </strong>
+                                                @pre.FechaUltPosicion.ToString("yyyy/MM/dd")
+                                            </p>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="card-text">
+                                                <strong>Ultima Posicion Gps: </strong>
+                                                @pre.UltimaPosicionGps
+                                            </p>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="card-text">
+                                                <strong>Fecha Entro Patio: </strong>
+                                                @pre.FechaEntroPatio.ToString("yyyy/MM/dd")
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -313,13 +313,20 @@ namespace ConectDB.Controllers
                 }
                 if (js["status"]?.ToString() == "200")
                 {
-                    if (envio.EnvioCorreo(model.Data[0].nom, model.Data[0].nomrol, js))
+                    if (js["data"] == null)
                     {
-                        TempData["guardado"] = js["message"]?.ToString() + " true";
+                        TempData["guardado"] = js["message"]?.ToString() + " true \n" + "\nNo se pudo Avisar a Mantenimiento por Correo";
                     }
                     else 
                     {
-                        TempData["guardado"] = js["message"]?.ToString() + " false";
+                        if (envio.EnvioCorreo(model.Data[0].nom, model.Data[0].nomrol, js))
+                        {
+                            TempData["guardado"] = js["message"]?.ToString() + " true";
+                        }
+                        else
+                        {
+                            TempData["guardado"] = js["message"]?.ToString() + " false";
+                        }
                     }
                     return View("Index", oLista);
                 }

@@ -76,6 +76,7 @@
         public string? TipoClasificacion { get; set; }
         public int ClaveTipoClasificacion { get; set; }
         public string? TipoEquipo { get; set; }
+        public int ClaveEquipo { get; set; }
         public DateTime? FechaHoraVencimiento { get; set; }
         public string? MotivoVencimiento { get; set; }
         public string? Tel_Operador { get; set; }
