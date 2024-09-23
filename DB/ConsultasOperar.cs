@@ -61,9 +61,12 @@ namespace ConectDB.DB
                 else 
                 {
                     JArray JA2 = JR2["data"] as JArray;
-                    zTipoOper.CSxTipoOeracion = JsonConvert.DeserializeObject<ConsulTipoOpera>(JA2[0].ToString()).CSxTipoOeracion;
-                    zTipoOper.TotalSolicitudes = zTipoOper.CSxTipoOeracion.Count;
-                    zTipoOper.CSxTipoOeracion = zTipoOper.CSxTipoOeracion.Skip(pagina).Take(tamañomuestra).ToList();
+                    if (JA2.Count != 0)
+                    {
+                        zTipoOper.CSxTipoOeracion = JsonConvert.DeserializeObject<ConsulTipoOpera>(JA2[0].ToString()).CSxTipoOeracion;
+                        zTipoOper.TotalSolicitudes = zTipoOper.CSxTipoOeracion.Count;
+                        zTipoOper.CSxTipoOeracion = zTipoOper.CSxTipoOeracion.Skip(pagina).Take(tamañomuestra).ToList();
+                    }
                 }
                 
             }

@@ -1,207 +1,4 @@
-﻿
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-using ConectDB.DB;
+﻿using ConectDB.DB;
 using ConectDB.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -233,7 +30,15 @@ namespace ConectDB.Controllers
                 model.Token = XT;
                 ViewData["UsuarioModel"] = model;
                 ViewData["Title"] = "Pre-Ticket";
-                CFVPreticketDB = Premod.ConsultaPreticket(DateTime.Now, cveEmp);
+                CFVPreticketDB = Premod.ConsultaPreticket(DateTime.Now.ToString("yyyy-MM-dd HH:mm"), null, cveEmp);
+                if (CFVPreticketDB.Errors[0].status == 400)
+                {
+                    TempData["Mensaje"] = CFVPreticketDB.Errors[0].message;
+                }
+                else
+                {
+                    TempData["guardado"] = CFVPreticketDB.Errors[0].message;
+                }
                 return View("Index", CFVPreticketDB);
             }
             catch (Exception e)
@@ -244,7 +49,7 @@ namespace ConectDB.Controllers
             }
         }
         [HttpPost,HttpGet]
-        public ActionResult buscarcfvpretick(int cveEmp, DateTime FechCrePreTick, string XT)
+        public ActionResult buscarcfvpretick(int cveEmp, DateTime FechCrePreTickIn, DateTime FechCrePreTickFin, string XT)
         {
             try
             {
@@ -258,8 +63,16 @@ namespace ConectDB.Controllers
                 model.Token = XT;
                 ViewData["UsuarioModel"] = model;
                 ViewData["Title"] = "Pre-Ticket";
-                CFVPreticketDB = Premod.ConsultaPreticket(FechCrePreTick, cveEmp);
-                return View("Index", CFVPreticketDB);
+                CFVPreticketDB = Premod.ConsultaPreticket(FechCrePreTickIn.ToString("yyyy-MM-dd HH:mm:ss"), FechCrePreTickFin.ToString("yyyy-MM-dd HH:mm:ss"), cveEmp);
+                if (CFVPreticketDB.Errors[0].status == 400)
+                {
+                    TempData["Mensaje"] = CFVPreticketDB.Errors[0].message;
+                }
+                else 
+                {
+                    TempData["guardado"] = CFVPreticketDB.Errors[0].message;
+                }
+                    return View("Index", CFVPreticketDB);
             }
             catch (Exception e)
             {

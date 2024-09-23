@@ -93,5 +93,9 @@ namespace ConectDB.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Error()
+        {
+            return View("Error_Pag");
+        }
     }
 }

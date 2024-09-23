@@ -85,57 +85,57 @@
             </div>
         </div>
     </form>
-    <br />
+    @* <br />
     <div class="row">
         <div class="col-md-4">
             <input type="text" id="searchInput" class="form-control" placeholder="Buscar en la tabla..." onkeyup="filterBusca()">
         </div>
-    </div>
+    </div> *@
     <br />
     <div class="row justify-content-start align-items-start">
         <div class="col-12">
             <div class="container table-responsive container-fluid">
-                <table class="table table-bordered table-sm ticket-porasigna-table" id="myTable">
+                <table class="table table-bordered table-sm ticket-porasigna-table align-content-sm-center" id="myTable">
                     <caption>@ViewData["Title"]</caption>
                     <thead>
                         <tr>
-                            @* <th scope="col"> Unidad de Negocio            </th> *@
-                            <th scope="col">
+                            <th class="align-content-center text-center"> Unidad de Negocio            </th>
+                            @* <th scope="col">
                                 Unidad de Negocio
                                 <input type="text" class="input-group-sm" id="filterUNE" onkeyup="filterTable(0)" placeholder="Buscar">
-                            </th>
-                            @* <th scope="col"> Tipo Operación               </th> *@
-                            <th scope="col">
+                            </th> *@
+                            <th class="align-content-center text-center"> Tipo Operación               </th>
+                            @* <th scope="col">
                                 Tipo Operación
                                 <input type="text" class="input-group-sm" id="filterTipoOperacion" onkeyup="filterTable(1)" placeholder="Buscar">
-                            </th>
-                            <th scope="col"> NumTicket                    </th>
+                            </th> *@
+                            <th class="align-content-center text-center"> NumTicket                    </th>
                             @* <th scope="col"> Estatus                      </th> *@
-                            <th scope="col"> Estatus
+                            <th class="align-content-center text-center"> Estatus
                                 @* <input type="text" class="input-group-sm" id="filterEstatus" onkeyup="filterTable(3)" placeholder="Buscar"> *@
-                                <select class="form-select" id="filterEstatus" onchange="filterEstatusTable(3)" name="clvEstatus">
+                                @* <select class="form-select" id="filterEstatus" onchange="filterEstatusTable(3)" name="clvEstatus">
                                     <option value="" selected>[Seleccionar]</option>
                                     @foreach (var est in Model.TBCAT_Estatus)
                                     {
                                         <option value="@est.ClaveEstatus">@est.Descripcion</option>
                                     }
-                                </select>
+                                </select> *@
                             </th>
-                            <th scope="col"> Fecha Alta                   </th>
-                            <th scope="col"> Usuario Asignado             </th>
-                            <th scope="col"> Fecha Asignado               </th>
-                            <th scope="col"> Fecha Termino                </th>
-                            <th scope="col"> Tiempo de Reparacion         </th>
-                            <th scope="col"> Equipo                       </th>
-                            <th scope="col"> Diesel                       </th>
-                            <th scope="col"> Grua                         </th>
-                            <th scope="col"> Tipo Ticket                  </th>
-                            <th scope="col"> Tipo Falla                   </th>
-                            <th scope="col"> Comentario de Reprogramacion </th>
-                            <th scope="col"> Operador                     </th>
-                            <th scope="col"> Ruta                         </th>
-                            <th scope="col"> Telefono Operador            </th>
-                            <th scope="col"> Atencion Parcial           </th>
+                            <th class="align-content-center text-center"> Fecha Alta                   </th>
+                            <th class="align-content-center text-center"> Usuario Asignado             </th>
+                            <th class="align-content-center text-center"> Fecha Asignado               </th>
+                            <th class="align-content-center text-center"> Fecha Termino                </th>
+                            <th class="align-content-center text-center"> Tiempo de Reparacion         </th>
+                            <th class="align-content-center text-center"> Equipo                       </th>
+                            <th class="align-content-center text-center"> Diesel                       </th>
+                            <th class="align-content-center text-center"> Grua                         </th>
+                            <th class="align-content-center text-center"> Tipo Ticket                  </th>
+                            <th class="align-content-center text-center"> Tipo Falla                   </th>
+                            <th class="align-content-center text-center"> Comentario de Reprogramacion </th>
+                            <th class="align-content-center text-center"> Operador                     </th>
+                            <th class="align-content-center text-center"> Ruta                         </th>
+                            <th class="align-content-center text-center"> Telefono Operador            </th>
+                            <th class="align-content-center text-center"> Atencion Parcial           </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,121 +144,121 @@
                             @if (@op.ClaveEstatus == 1)
                             {
                                 <tr id="fila" style="background-color: #F1948A;width: 12rem;">
-                                    <td class="text-center"> <p> @op.UNE </p></td>
-                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
-                                    <td class="text-center"> <p> @op.NumTicket </p></td>
-                                    <td class="text-center"> <p> @op.Estatus  </p></td>
-                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p></td>
-                                    <td class="text-center"> <p> @op.UsuarioAsignado</p> </td>
-                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
-                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p></td>
-                                    <td class="text-center"> <p> @op.TimerReparacion </p></td>
-                                    <td class="text-center"> <p> @op.Equipo</p></td>
-                                    <td class="text-center"> <p> @op.Diesel </p></td>
-                                    <td class="text-center"> <p> @op.Grua </p></td>
-                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
-                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
-                                    <td class="text-center"> <p> @op.NotasMonitoreo </p></td>
-                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
-                                    <td class="text-center"> <p> @op.Ruta </p> </td>
-                                    <td class="text-center"> <p> @op.Tel_Operador </p> </td>
-                                    <td class="text-center"> <p> @op.AtencionParcial </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.UNE </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NumTicket </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Estatus  </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.UsuarioAsignado</p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TimerReparacion </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Equipo</p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Diesel </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Grua </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NotasMonitoreo </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Tel_Operador </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.AtencionParcial </p> </td>
                                 </tr>
                             }
                             @if (@op.ClaveEstatus == 2)
                             {
                                 <tr id="fila" style="background-color: #85C1E9; width: 12rem;">
-                                    <td class="text-center"> <p> @op.UNE </p></td>
-                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
-                                    <td class="text-center"> <p> @op.NumTicket </p></td>
-                                    <td class="text-center"> <p> @op.Estatus </p></td>
-                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.UsuarioAsignado </p> </td>
-                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
-                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p></td>
-                                    <td class="text-center"> <p> @op.TimerReparacion </p></td>
-                                    <td class="text-center"> <p> @op.Equipo </p></td>
-                                    <td class="text-center"> <p> @op.Diesel </p></td>
-                                    <td class="text-center"> <p> @op.Grua </p></td>
-                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
-                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
-                                    <td class="text-center"> <p> @op.NotasMonitoreo </p></td>
-                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
-                                    <td class="text-center"> <p> @op.Ruta </p> </td>
-                                    <td class="text-center"> <p> @op.Tel_Operador </p></td>
-                                    <td class="text-center"> <p> @op.AtencionParcial </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.UNE </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NumTicket </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Estatus </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.UsuarioAsignado </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TimerReparacion </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Equipo </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Diesel </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Grua </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NotasMonitoreo </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Tel_Operador </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.AtencionParcial </p></td>
                                 </tr>
                             }
                             @if (@op.ClaveEstatus == 3)
                             {
                                 <tr id="fila" style="background-color: #F8C471; width: 12rem;">
-                                    <td class="text-center"> <p> @op.UNE </p></td>
-                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
-                                    <td class="text-center"> <p> @op.NumTicket </p> </td>
-                                    <td class="text-center"> <p> @op.Estatus </p> </td>
-                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.UsuarioAsignado </p> </td>
-                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.TimerReparacion </p> </td>
-                                    <td class="text-center"> <p> @op.Equipo </p> </td>
-                                    <td class="text-center"> <p> @op.Diesel </p> </td>
-                                    <td class="text-center"> <p> @op.Grua </p></td>
-                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
-                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
-                                    <td class="text-center"> <p> @op.NotasMonitoreo </p></td>
-                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
-                                    <td class="text-center"> <p> @op.Ruta </p> </td>
-                                    <td class="text-center"> <p> @op.Tel_Operador </p> </td>
-                                    <td class="text-center"> <p> @op.AtencionParcial </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.UNE </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NumTicket </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Estatus </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.UsuarioAsignado </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.TimerReparacion </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Equipo </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Diesel </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Grua </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NotasMonitoreo </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.ClaveOperador|@op.NombOperador </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Tel_Operador </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.AtencionParcial </p> </td>
                                 </tr>
                             }
                             @if (@op.ClaveEstatus == 4)
                             {
                                 <tr id="fila" style="background-color: #73C6B6; width: 12rem;">
-                                    <td class="text-center"> <p> @op.UNE </p></td>
-                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
-                                    <td class="text-center"> <p> @op.NumTicket </p></td>
-                                    <td class="text-center"> <p> @op.Estatus </p></td>
-                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.UsuarioAsignado </p></td>
-                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.TimerReparacion </p></td>
-                                    <td class="text-center"> <p> @op.Equipo </p></td>
-                                    <td class="text-center"> <p> @op.Diesel </p></td>
-                                    <td class="text-center"> <p> @op.Grua </p></td>
-                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
-                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
-                                    <td class="text-center"> <p> @op.NotasMonitoreo </p> </td>
-                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p> </td>
-                                    <td class="text-center"> <p> @op.Ruta </p> </td>
-                                    <td class="text-center"> <p> @op.Tel_Operador </p> </td>
-                                    <td class="text-center"> <p> @op.AtencionParcial </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.UNE </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NumTicket </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Estatus </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.UsuarioAsignado </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.TimerReparacion </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Equipo </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Diesel </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Grua </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NotasMonitoreo </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.ClaveOperador|@op.NombOperador </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Tel_Operador </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.AtencionParcial </p> </td>
                                 </tr>
                             }
                             @if (@op.ClaveEstatus == 5)
                             {
                                 <tr id="fila" style="background-color: #B2BABB;width: 12rem;">
-                                    <td class="text-center"> <p> @op.UNE </p></td>
-                                    <td class="text-center"> <p> @op.TipoOperacion </p></td>
-                                    <td class="text-center"> <p> @op.NumTicket </p> </td>
-                                    <td class="text-center"> <p> @op.Estatus </p> </td>
-                                    <td class="text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.UsuarioAsignado </p> </td>
-                                    <td class="text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
-                                    <td class="text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
-                                    <td class="text-center"> <p> @op.TimerReparacion </p> </td>
-                                    <td class="text-center"> <p> @op.Equipo </p> </td>
-                                    <td class="text-center"> <p> @op.Diesel </p></td>
-                                    <td class="text-center"> <p> @op.Grua </p></td>
-                                    <td class="text-center"> <p> @op.TipoTicket </p></td>
-                                    <td class="text-center"> <p> @op.TipoFalla </p></td>
-                                    <td class="text-center"> <p> @op.NotasMonitoreo </p> </td>
-                                    <td class="text-center"> <p> @op.ClaveOperador|@op.NombOperador </p> </td>
-                                    <td class="text-center"> <p> @op.Ruta </p> </td>
-                                    <td class="text-center"> <p> @op.Tel_Operador </p></td>
-                                    <td class="text-center"> <p> @op.AtencionParcial </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.UNE </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoOperacion </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NumTicket </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Estatus </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Alta?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.UsuarioAsignado </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Asignado?.ToString("yyyy/MM/dd HH:mm") </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.FechaTermino?.ToString("yyyy/MM/dd HH:mm") </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.TimerReparacion </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Equipo </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Diesel </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.Grua </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoTicket </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.TipoFalla </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.NotasMonitoreo </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.ClaveOperador|@op.NombOperador </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Ruta </p> </td>
+                                    <td class="align-content-center text-center"> <p> @op.Tel_Operador </p></td>
+                                    <td class="align-content-center text-center"> <p> @op.AtencionParcial </p> </td>
                                 </tr>
                             }
                         }

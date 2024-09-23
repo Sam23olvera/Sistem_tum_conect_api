@@ -12,17 +12,35 @@ namespace ConectDB.DB
         JObject jsquerun = new JObject();
         JObject jsqueresponse = new JObject();
         JArray? data = null;
-        public CFVPretickDatum ConsultaPreticket(DateTime Fech_cre,int cvemp) 
+        public CFVPretickDatum ConsultaPreticket(string Fech_Pretickin, string? Fech_PretickFin, int cvemp) 
         {
-            jsquerun = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\":\"SPQRY_PreTicket\"},\"filter\": [{\"property\": \"fechPretick\",\"value\": \"" + Fech_cre.ToString("yyyy-MM-dd HH:mm") + "\"},{\"property\": \"cvempresa\",\"value\":" + cvemp +"}]}");
+            if (Fech_PretickFin == null) 
+            {
+                jsquerun = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\":\"SPQRY_PreTicket\"},\"filter\": [{\"property\": \"fechPretickin\",\"value\": \"" + Fech_Pretickin + "\"},{\"property\":\"fechPretickFin\",\"value\": null },{\"property\": \"cvempresa\",\"value\":" + cvemp + "}]}");
+            }
+            else
+            {
+                jsquerun = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\":\"SPQRY_PreTicket\"},\"filter\": [{\"property\": \"fechPretickin\",\"value\": \"" + Fech_Pretickin + "\"},{\"property\":\"fechPretickFin\",\"value\": \"" + Fech_PretickFin +"\"},{\"property\": \"cvempresa\",\"value\":" + cvemp + "}]}");
+            }            
             jsqueresponse = JObject.Parse(hh.HttpWebRequest("POST", url, jsquerun));
             data = jsqueresponse["data"] as JArray;
-            if (Convert.ToInt16(jsqueresponse["status"]) == 200) 
+            if (Convert.ToInt16(jsqueresponse["status"]) == 200)
             {
                 CFVPreticketDB = JsonConvert.DeserializeObject<CFVPretickDatum>(data[0].ToString());
                 CFVPreticketDB.Errors = new List<Error> { new Error { status = 200, message = jsqueresponse["message"].ToString() } };
             }
-                return CFVPreticketDB;
+            else  if(Convert.ToInt16(jsqueresponse["status"]) == 400)
+            {
+                if (data.Count == 0)
+                {
+                    CFVPreticketDB.Errors = new List<Error> { new Error { status = 200, message = jsqueresponse["message"].ToString() + "No hay Datos" } };
+                }
+                else 
+                {
+                    CFVPreticketDB.Errors = new List<Error> { new Error { status = 400, message = jsqueresponse["message"].ToString() } };
+                }
+            }
+            return CFVPreticketDB;
         }
     }
 }

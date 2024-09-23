@@ -38,9 +38,9 @@ app.MapControllerRoute(
     name: "Loging",
     pattern: "{controller=Loging}/{action=Index}/{id?}");
 
-//app.MapControllerRoute(
-//    name: "Presenta",
-//    pattern: "{controller=Presenta}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "RegistroFallas",
+    pattern: "{controller=RegistroFallas}/{action=Index}");
 
 
 app.Run();

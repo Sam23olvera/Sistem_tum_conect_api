@@ -45,8 +45,8 @@
         </div> *@
         <div class="row">
             <div class="col-md-6">
-                <div class="container align-content-center" style="max-height: 400px; overflow-y: scroll;">
-                    <table id="TablePretickets" class="table table-hover table-sm">
+                <div class="container" style="max-height: 400px; overflow-y: scroll;">
+                    <table id="TablePretickets" class="table table-responsive table-bordered table-sm align-content-sm-center tbpretick">
                         <thead>
                             <tr>
                                 <th><label for="selectAll" class="form-label">Todos</label><input type="checkbox" id="selectAll" onclick="checkall()"></th>
@@ -78,19 +78,22 @@
                                     @if (@pre.Unidad != 0)
                                     {
                                         <td>
-                                            <img src="~/imag/unidad.png" />
+                                            <img id="uni_imag" src="~/imag/unidad.png" />
+                                            <label for="uni_imag">@pre.Unidad</label>
                                         </td>
                                     }
                                     @if (!string.IsNullOrEmpty(@pre.Remolque))
                                     {
                                         <td>
-                                            <img src="~/imag/remolque.png" />
+                                            <img id="remol_imag" src="~/imag/remolque.png" />
+                                            <label for="remol_imag">@pre.Remolque</label>
                                         </td>
                                     }
                                     @if (!string.IsNullOrEmpty(@pre.NumeroDolly))
                                     {
                                         <td>
-                                            <img src="~/imag/dolly.png" />
+                                            <label for="ima_dolly">@pre.NumeroDolly</label>
+                                            <img id="ima_dolly" src="~/imag/dolly.png" />
                                         </td>
                                     }
                                     <td>

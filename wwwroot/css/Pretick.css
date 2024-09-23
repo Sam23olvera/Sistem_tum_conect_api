@@ -68,6 +68,11 @@ strong {
 /*p {
     color: white;
 }*/
+.tbpretick th {
+    background-color: #5c8b91;
+    color: #f2f2f2;
+    font-size: small;
+}
 .kill {
     color: red;
 }

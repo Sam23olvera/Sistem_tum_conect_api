@@ -21,8 +21,13 @@ $(document).ready(function () {
     }
 });
 $(document).ready(function () {
-    $('#FechCrePreTick').datetimepicker({
+    $('#FechCrePreTickIn').datetimepicker({
         //format: 'm/d/Y'
         format: 'Y/m/d'
     });
+    $('#FechCrePreTickFin').datetimepicker({
+        //format: 'm/d/Y'
+        format: 'Y/m/d'
+    });
+    
 });

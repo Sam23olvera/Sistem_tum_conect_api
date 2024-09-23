@@ -46,13 +46,13 @@ namespace ConectDB.Controllers
             }
         }
         [HttpPost,HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public IActionResult Busca(int NumTicket, DateTime FehInicio, DateTime FehFin,int ClaveUnidadNegocio, int ClaveTipoOperacion,int clvEstatus, bool Excel, int cveEmp, string XT, int pagina) 
         {
             try
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
-
                 //model = JsonConvert.DeserializeObject <UsuarioModel>(menu.ToString());
                 model = menu.RegresMenu(UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]), UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]), cveEmp, url, XT);
                 model.Token = XT;
