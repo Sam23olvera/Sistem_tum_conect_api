@@ -87,15 +87,15 @@ namespace ConectDB.Controllers
         public IActionResult Salir()
         {
             HttpContext.Session.Clear();
-            HttpContext.Response.Cookies.Delete("usuario", new CookieOptions { Path = "/" });
-            HttpContext.Response.Cookies.Delete("contra", new CookieOptions { Path = "/" });
+            HttpContext.Response.Cookies.Delete("usuario", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1),Path = "/" });
+            HttpContext.Response.Cookies.Delete("contra", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1), Path = "/" });
             TempData["Mensaje"] = "Se Cerro la Sesion";
             return RedirectToAction("Index");
         }
-
         public IActionResult Error()
         {
-            return View("Error_Pag");
+            Error errors = new Error();
+            return View("Error_Pag",errors);
         }
     }
 }

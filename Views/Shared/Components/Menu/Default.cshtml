@@ -61,13 +61,17 @@
                     }
 
                 </ul>
-                <form class="d-flex">
-                    <img src="~/imag/log_icon.png" alt="Bootstrap" width="30" height="24" />
-                    <br />
-                    <a><p>@Model.Data[0].nom</p></a>
-                    <br />
-                    <a style="color: white;" id="btnSalir" class="butonsalir" asp-action="Salir" asp-controller="Loging" asp-route-cveEmp="0" asp-route-UfS="null" asp-route-xPa="null" asp-route-XT="null">Salir</a>
-                </form>
+                <div class="d-flex">
+                    <div class="btn-group iconouser">
+                        <button type="button" class="btn iconouser dropdown-toggle" data-bs-toggle="dropdown">
+                            <img src="~/imag/log_icon.png" width="30" height="24">
+                            @Model.Data[0].nom
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-action="Salir" asp-controller="Loging">Salir</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
     </nav>
 </header>

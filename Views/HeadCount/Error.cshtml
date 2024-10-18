@@ -1,8 +1,8 @@
 @using ConectDB.Models;
 @model Error;
 @{
-    ViewData["Title"] = "Loging";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_Layout_HeadCount.cshtml";
 }
 <main role="main">
     <div class="container-fluid ">
@@ -13,7 +13,7 @@
         <div class="row kill">
             <h1>ERROR </h1>
             <h2>@Model.status</h2>
-            <h2>@Model.message</h2>
+            <h2 style="color:">@Model.message</h2>
         </div>
     </div>
 </main>

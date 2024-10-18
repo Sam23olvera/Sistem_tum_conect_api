@@ -1,0 +1,27 @@
+﻿@using ConectDB.Models;
+@model Organizacion
+@{
+    ViewData["Title"] = "Puestos";
+    Layout = "~/Views/Shared/_LayoutOrgani.cshtml";
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+}
+<input type="hidden" value="@Html.Raw(Json.Serialize(Model.Organigrama)).ToString()" id="datosload" />
+<main role="main">
+    <div class="container">
+        <div id="editForm" class="detalleForm">
+            <div class="titulo">Detalle</div>
+            <div class="renglo">
+                <label for="Area">Area: </label>
+                <p id="Area"></p>
+            </div>
+            <div class="renglo">
+                <label for="Plazas">Plazas: </label>
+                <p id="Plazas"></p>
+            </div>
+            <div class="renglo">
+                <button type="button" class="btn-primary" id="cancel">Cerrar</button>
+            </div>
+        </div>
+        <div id="tree"></div>
+    </div>
+</main>

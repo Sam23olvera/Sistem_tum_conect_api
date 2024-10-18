@@ -1,4 +1,4 @@
-@using ConectDB.Models;
+﻿@using ConectDB.Models;
 @model Error;
 @{
     ViewData["Title"] = "Loging";
@@ -10,10 +10,10 @@
             <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
             <input type="hidden" value="@TempData["guardado"]" id="guarda" />
         </div>
-        <div class="row kill">
-            <h1>ERROR </h1>
-            <h2>@Model.status</h2>
-            <h2>@Model.message</h2>
+        <div class="row">
+            <h1 style="color:white">ERROR </h1>
+            <h2 style="color:white">@Model.status</h2>
+            <h2 style="color:white">@Model.message</h2>
         </div>
     </div>
 </main>

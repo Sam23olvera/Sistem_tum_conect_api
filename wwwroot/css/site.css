@@ -13,11 +13,6 @@ html {
     min-height: 100%;
 }
 
-.barramenu {
-    background-color: #007588;
-    font-size: small;
-}
-
 .CVEM {
     display: block;
     background-color: #007588;
@@ -49,23 +44,21 @@ body {
 
 .custom-input {
     border: none;
-    border-bottom: 1px solid #fff; /* Color de las líneas abajo (blanco en este caso) */
-    background-color: transparent; /* Fondo transparente */
-    color: #fff; /* Color del texto (blanco en este caso) */
+    border-bottom: 1px solid #fff; 
+    background-color: transparent; 
+    color: #fff;
 }
 
 .custom-input {
     border: none;
-    border-bottom: 1px solid #fff; /* Color de las líneas abajo (negro en este caso) */
-    background-color: transparent; /* Fondo transparente */
-    outline: none; /* Quita el contorno al hacer clic */
-    box-shadow: none; /* Quita la sombra al hacer clic */
-    color: #fff; /* Color del texto (negro en este caso) */
+    border-bottom: 1px solid #fff; 
+    background-color: transparent; 
+    outline: none; 
+    box-shadow: none; 
+    color: #fff;
 }
-
-    /* Estilo personalizado para el placeholder */
     .custom-input::placeholder {
-        color: #fff; /* Color del placeholder (negro en este caso) */
+        color: #fff; 
     }
 
 input[type="text"]:disabled {
@@ -75,23 +68,14 @@ input[type="text"]:disabled {
 input[type="password"]:disabled {
     background-color: transparent;
 }
-/* Estilo para el foco (cuando se hace clic) */
 .custom-input:focus {
-    background-color: transparent; /* Hacer transparente al hacer clic */
+    background-color: transparent;
 }
 
 .oval-button {
-    /*width: 95%;  Ancho del botón (ajusta según tus necesidades) */
-    /*height: 65%;  Altura del botón (ajusta según tus necesidades) */
-    border-radius: 45%; /* Hace que el botón sea ovalado */
+    border-radius: 45%;
 }
 
-/*.left-bg {
-  background-image: url('../imag/banner.png');
-  background-position: left;
-  background-repeat: no-repeat;
-  background-size: cover;
-}*/
 .right-bg {
     background-image: url('../imag/baner_camiones.png');
     background-position: right;
