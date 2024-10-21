@@ -81,6 +81,74 @@ $(document).ready(function () {
     displayPage(1);
 
 });
+
+function clic(ClaveHeadCount,idus) {
+    var check = document.getElementById('checkSustituible-' + ClaveHeadCount);
+    //console.log(check.checked);
+    var sus = check.checked;
+
+    var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+        "data": {
+            "bdCc": 6,
+            "bdSch": "dbo",
+            "bdSp": "SPUPD_HC_Sustituible"
+        },
+        "filter": [
+            {
+                "property": "claveHeadCount",
+                "value": ClaveHeadCount
+            },
+            {
+                "property": "Sustituible",
+                "value": sus
+            },
+            {
+                "property": "ClaveUsuario",
+                "value": idus
+            }
+        ]
+    });
+
+    var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+    };
+
+    fetch(url, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            const obj = JSON.parse(result);
+            
+            if (obj.data == null) {
+                var mensaje = document.getElementById('mensaje').value;
+                mensaje = obj;
+                if (mensaje !== '') {
+                    toastr.error(mensaje);
+                }
+            }
+            else if (obj.status == 200) {
+                var guarda = document.getElementById('guarda').value;
+                guarda = obj.success + ' , ' + obj.status + ' , ' + obj.message;
+                if (guarda !== '') {
+                    toastr.success(guarda);
+                }
+            }
+            else {
+                var mensaje = document.getElementById('mensaje').value;
+                mensaje = obj;
+                if (mensaje !== '') {
+                    toastr.error(mensaje);
+                }
+            }
+        })
+        .catch(error => console.log("error", error));
+}
 function regresar(page) {
     const rowsPerPage = 10;
     const table = document.getElementById("TabHeadCount");
@@ -100,6 +168,7 @@ function regresar(page) {
     // Actualiza los botones de paginación
     updatePagination(page);
 }
+
 function filterBusca() {
     var input = document.getElementById("searchInput");
     var filter = input.value.toUpperCase();
@@ -110,28 +179,6 @@ function filterBusca() {
 
     var table = document.getElementById("TabHeadCount");
     var tr = table.getElementsByTagName("tr");
-
-    //for (var i = 1; i < tr.length; i++) {
-    //    var tdArray = tr[i].getElementsByTagName("td");
-    //    var rowMatch = false;
-    //    tr[i].style.display = "";
-
-    //    for (var j = 0; j < tdArray.length; j++) {
-    //        var td = tdArray[j];
-    //        if (td) {
-    //            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-    //                rowMatch = true;
-    //                break;
-    //            }
-    //        }
-    //    }
-
-    //    if (rowMatch) {
-    //        tr[i].style.display = "";
-    //    } else {
-    //        tr[i].style.display = "none";
-    //    }
-    //}
 
     for (var i = 1; i < tr.length; i += 2) {  // i+=2 ya que tienes un tr seguido por un tr con detalles
         var tdArray = tr[i].getElementsByTagName("td");

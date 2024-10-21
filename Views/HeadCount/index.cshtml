@@ -39,77 +39,46 @@
                     <tbody>
                         @foreach (var cabeza in Model.HeadCount)
                         {
-                            @if (@cabeza.Estatus == "Vacante")
-                            {
-                                <tr style="background-color: #E8f6f3;">
-                                    <td>
-                                        <button class="btn btn-sm" id="btnEditar" onclick="mostrar('@cabeza.ClaveHeadCount')">
-                                            <img src="~/imag/sort-down.png" />
-                                        </button>
-                                        @cabeza.Estatus
-                                    </td>
-                                    <td>@cabeza.Puesto</td>
-                                    <td>@cabeza.AgenciaBase</td>
-                                    <td>@cabeza.TipoPersona</td>
-                                    <td>@cabeza.NumEmpleado</td>
-                                    <td>@cabeza.FechaIngreso</td>
-                                    <td>
-                                        @if (@cabeza.Sustituible == true)
-                                        {
-                                            <input id="checkSustituible" type="checkbox" value="" name="checkSustituible" checked="checked" />
-                                        }
-                                        else if (cabeza.Sustituible == false)
-                                        {
-                                            <input id="checkSustituible" type="checkbox" value="" name="checkSustituible" />
-                                        }
-                                        
-                                    </td>
-                                    <td>@cabeza.TipoOperacion</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" id="btneditar" disabled>Baja</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td>
-                                        <button class="btn btn-sm" id="btnEditar" onclick="mostrar('@cabeza.ClaveHeadCount')">
-                                            <img src="~/imag/sort-down.png" />
-                                        </button>
-                                        @cabeza.Estatus
-                                    </td>
-                                    <td>@cabeza.Puesto</td>
-                                    <td>@cabeza.AgenciaBase</td>
-                                    <td>@cabeza.TipoPersona</td>
-                                    <td>@cabeza.NumEmpleado</td>
-                                    <td>@cabeza.FechaIngreso</td>
-                                    <td>
-                                        @if (@cabeza.Sustituible == true)
-                                        {
-                                            <input id="checkSustituible" type="checkbox" value="" name="checkSustituible" checked="checked"  disabled/>
-                                        }
-                                        else if (cabeza.Sustituible == false)
-                                        {
-                                            <input id="checkSustituible" type="checkbox" value="" name="checkSustituible" disabled />
-                                        }
-                                    </td>
-                                    <td>@cabeza.TipoOperacion</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button>
-                                            <div class="dropdown-menu">
+                            <tr style="background-color: @(cabeza.Estatus == "Vacante" ? "#E8f6f3" : "inherit");">
+                                <td>
+                                    <button class="btn btn-sm" id="btnEditar" onclick="mostrar('@cabeza.ClaveHeadCount')">
+                                        <img src="~/imag/sort-down.png" />
+                                    </button>
+                                    @cabeza.Estatus
+                                </td>
+                                <td>@cabeza.Puesto</td>
+                                <td>@cabeza.AgenciaBase</td>
+                                <td>@cabeza.TipoPersona</td>
+                                <td>@cabeza.NumEmpleado</td>
+                                <td>@cabeza.FechaIngreso</td>
+                                <td>
+                                    @if (@cabeza.Estatus == "Vacante")
+                                    {
+                                        <input id="checkSustituible-@cabeza.ClaveHeadCount" type="checkbox" name="checkSustituible" checked="@cabeza.Sustituible" onclick="clic('@cabeza.ClaveHeadCount','@usuarioModel.Data[0].idus')" />
+                                    }
+                                    else
+                                    {
+                                        <input id="checkSustituible-@cabeza.ClaveHeadCount" type="checkbox" name="checkSustituible" checked="@cabeza.Sustituible" disabled/>
+                                    }
+
+                                </td>
+                                <td>@cabeza.TipoOperacion</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button>
+                                        <div class="dropdown-menu">
+                                            @if (@cabeza.Estatus == "Vacante")
+                                            {
+                                                <a class="dropdown-item" id="btneditar" disabled >Baja</a>
+                                            }
+                                            else
+                                            {
                                                 <a class="dropdown-item" id="btneditar" onclick="openModalBaja('@cabeza.ClaveHeadCount','@cabeza.ClaveEmpleado')">Baja</a>
-                                            </div>
+                                            }
                                         </div>
-                                    </td>
-                                </tr>
-                            }
+                                    </div>
+                                </td>
+                            </tr>
                             <tr>
                                 <td colspan="11">
                                     <div class="row">
@@ -176,38 +145,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="modal fade" id="editModalPromo" tabindex="-1" aria-labelledby="editModalPromoLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editModalPromoLabel">Promosiones de Personal</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="editForm" method="post" asp-controller="HeadCount" asp-action="GuardarPromocion">
-                                <input type="hidden" id="editClaveHeadCountPromo" name="editClaveHeadCountPromo" />
-                                <input type="hidden" id="editClaveEmpleadoProm" name="editClaveEmpleadoProm" />
-                                <input type="hidden" id="cveEmp" value="@usuarioModel.Data[0].EmpS[0].cveEmp" name="cveEmp" />
-                                <input type="hidden" id="XT" value="@usuarioModel.Token" name="XT" />
-                                <div class="mb-3">
-                                    <label for="selectPromo" class="form-label">Puestos:</label>
-                                    <select id="selectPromo" class="form-select form-select-sm" name="selectPromo" required>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Puedes escribir algo aqui" id="txtObaservaProm" name="txtObaservaProm" maxlength="90"></textarea>
-                                        <label for="txtObaservaProm">Observaciones:</label>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </div>        
     </div>
 </div>
