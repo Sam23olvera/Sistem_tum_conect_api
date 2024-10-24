@@ -44,8 +44,13 @@ document.addEventListener("DOMContentLoaded", function () {
         this.editForm.style.display = "none";
     };
 
+    OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.olivia);
+    OrgChart.templates.myTemplate.field_0 = '<text data-width="230" data-text-overflow="multiline" style="font-size: 18px;" fill="#000000" x="125" y="65" text-anchor="middle">{val}</text>';
+    OrgChart.templates.myTemplate.field_1 = '<text data-width="230" data-text-overflow="ellipsis" style="font-size: 14px;" fill="#000000" x="125" y="25" text-anchor="middle">{val}</text>';
+
+
     let chart = new OrgChart(document.getElementById("tree"), {
-        template: "ula",
+        template: "myTemplate",
         filterBy: ["agencia", "departamento"],
         mouseScrool: OrgChart.none,
         layout: OrgChart.mixed,
@@ -57,8 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         nodeBinding: {
             field_0: "area",
-            field_1: "plazas",
-            img_0: "photo"
+            field_1: "plazas"
         },
         editUI: new editForm(),
         menu: {

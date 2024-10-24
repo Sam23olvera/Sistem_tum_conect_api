@@ -246,7 +246,7 @@ function llenar(ClaveUNE) {
         .then(response => response.text())
         .then(result => {
             const obj = JSON.parse(result);
-            console.log(obj);
+            //console.log(obj);
             var select = document.getElementById("ClaveTipoOperacion");
             select.innerHTML = "";
 

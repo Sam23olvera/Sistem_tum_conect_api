@@ -1,0 +1,246 @@
+@using ConectDB.Models;
+@model RequierePersonas;
+@{
+    ViewData["Title"] = "HeadCount";
+    Layout = "~/Views/Shared/_Layout_RequiPersonal.cshtml";
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+}
+<div class="container-fluid">
+    <form method="post" class="form" id="solicitude">
+        <div class="container-fluid mt-5">
+            <div class="row">
+                <div class="col">
+                    <img src="imag/logo_difuminado.png" alt="Logo">
+                </div>
+                <div class="col-6 text-center">
+                    <h3>Requisición de Personal</h3>
+                </div>
+                <div class="col">
+                    <div class="container border border-primary rounded p-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <h6>Código:</h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>FO-REA-01.1</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <h6>Versión: </h6>
+                            </div>
+                            <div class="col-6">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <h6>Fecha de vigencia:</h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>@DateTime.Now.ToString("yyyy/MM/dd")</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="container">
+                    <div class="row border border-primary rounded text-center">
+                        <h3>DATOS GENERALES DEL PUESTO</h3>
+                    </div>
+                    <div class="row p-3">
+                        <div class="col-3">
+                            <label for="fechaSolicitud">Fecha de Solicitud:</label>
+                            <input type="date" class="form-control" id="fechaSolicitud">
+                        </div>
+                        <div class="col-3">
+                            <label for="nombrePuesto">Nombre del Puesto a Cubrir:</label>
+                            <select class="form-select form-select" id="nombrePuesto" onchange="fun()">
+                                <option value="0">[Selecciona]</option>
+                                @foreach (var p in Model.Puestos)
+                                {
+                                    <option value="@p.ClavePuesto">@p.Puesto</option>
+                                }
+                            </select>
+                            <input type="hidden" value="@Html.Raw(Json.Serialize(@Model)).ToString()" id="jsonsub" />
+                        </div>
+                        <div class="col-3">
+                            <label for="jefeInmediato">Jefe(a) Inmediato:</label>
+                            <input type="text" class="form-control" id="jefeInmediato">
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="subdept">Sub Departamento</label>
+                            <select id="subdept" class="form-select form-select-sm" onchange="selectDep()">
+                                <option value="0">[Selecciona]</option>
+                            </select>
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="cantidadVacantes">Cantidad de Vacantes a Cubrir:</label>
+                            <input type="number" class="form-control" id="cantidadVacantes">
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="seledepa">Departamento:</label>
+                            <select id="seledepa" class="form-select form-select-sm" onchange="selectlocal()">
+                                <option value="0">[Selecciona]</option>
+                            </select>
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="unidadNegocio">Unidad de Negocio:</label>
+                            <select id="unidadNegocio" class="form-select form-select-sm">
+                                <option value="0">[Selecciona]</option>
+                                @foreach (var un in Model.CatUNE)
+                                {
+                                    <option value="@un.ClaveUnidadNegocio">@un.Descripcion</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="localidad">Localidad:</label>
+                            <select id="localidad" class="form-select form-select-sm">
+                                <option value="0">[Selecciona]</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="container">
+                    <div class="row border border-primary rounded text-center">
+                        <h3>JUSTIFICACIÓN DEL PUESTO DE NUEVA CREACIÓN</h3>
+                    </div>
+                    <div class="row border p-3">
+                        <div class="col-12">
+                            <label for="justificacion">Justificación:</label>
+                            <textarea class="form-control" id="justificacion" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="container">
+                    <div class="row border border-primary rounded text-center">
+                        <h3>REQUISITOS DEL PUESTO</h3>
+                    </div>
+                    <div class="row p-3">
+                        <div class="col-3">
+                            <label>Sexo:</label>
+                            <div>
+                                <input type="radio" id="masculino" name="sexo" value="Masculino">
+                                <label for="masculino">Masculino</label>
+                                <input type="radio" id="femenino" name="sexo" value="Femenino">
+                                <label for="femenino">Femenino</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <label>Edad:</label>
+                            <div class="d-flex">
+                                <input type="number" class="form-control me-2" placeholder="Mínima">
+                                <input type="number" class="form-control" placeholder="Máxima">
+                            </div>
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="residencia">Lugar de Residencia Deseable:</label>
+                            <input type="text" class="form-control" id="residencia">
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="experienciaNecesaria">Experiencia Necesaria en:</label>
+                            <input type="text" class="form-control" id="experienciaNecesaria">
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="experienciaDeseable">Experiencia Deseable en:</label>
+                            <input type="text" class="form-control" id="experienciaDeseable">
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="escolaridad">Escolaridad:</label>
+                            <input type="text" class="form-control" id="escolaridad">
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="idiomas">Idiomas:</label>
+                            <input type="text" class="form-control" id="idiomas">
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="diasLaborables">Días laborables:</label>
+                            <div class="d-flex">
+                                <input type="text" class="form-control me-2" placeholder="De">
+                                <input type="text" class="form-control" placeholder="A">
+                            </div>
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="horario">En un horario:</label>
+                            <div class="d-flex">
+                                <input type="text" class="form-control me-2" placeholder="De">
+                                <input type="text" class="form-control" placeholder="A">
+                            </div>
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="selectviajar">Requiere Viajar:</label>
+                            <select id="selectviajar" class="form-select form-select-sm">
+                                @foreach (var v in Model.CatRequiereViajar)
+                                {
+                                    <option value="@v.ClaveRequiereViajar"> @v.Descripcion</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div class="col-3 mt-2">
+                            <label for="sueldo">Sueldo Neto Mensual:</label>
+                            <input type="text" class="form-control" id="sueldo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="container">
+                    <div class="row border border-primary rounded text-center">
+                        <h3>USO EXCLUSIVO DE RECLUTAMIENTO Y SELECCIÓN</h3>
+                    </div>
+                    <div class="row text-center  p-3">
+                        <div class="col-3">
+                            <label for="fechaRecibo">Fecha de Recibo:</label>
+                            <input type="date" class="form-control" id="fechaRecibo">
+                        </div>
+                        <div class="col-3">
+                            <label for="personaRecibe">Persona que Recibe:</label>
+                            <input type="text" class="form-control" id="personaRecibe">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="container">
+                    <div class="row border border-primary rounded text-center">
+                        <h3>Autorizaciones</h3>
+                    </div>
+                    <div class="row  p-3">
+                        <div class="col-2">
+                            <label for="solis">Solicitantes</label>
+                            <input id="solis" type="checkbox"  />
+                        </div>
+                        <div class="col-2">
+                            <label for="jdinmed">AUTORIZA (JEFE INMEDIATO) </label>
+                            <input id="jdinmed" type="checkbox"  />
+                        </div>
+                        <div class="col-2">
+                            <label for="chRH">AUTORIZA (DIRECTOR DE R.H ) </label>
+                            <input id="chRH" type="checkbox"  />
+                        </div>
+                        <div class="col-2">
+                            <label for="vice">AUTORIZA (VICEPRESIDENCIA) </label>
+                            <input id="vice" type="checkbox"  />
+                        </div>
+                        <div class="col-2">
+                            <label for="cal">VERIFICA CALIDAD </label>
+                            <input id="cal" type="checkbox" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button id="imprimirimprimir" type="button" class="btn btn-info" >imprimir</button>
+                <button id="btnguardar" type="submit" class="btn btn-info" >Guardar</button>
+            </div>
+    </form>
+</div>
