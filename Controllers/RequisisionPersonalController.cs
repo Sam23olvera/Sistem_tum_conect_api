@@ -1,6 +1,9 @@
 ﻿using ConectDB.DB;
 using ConectDB.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace ConectDB.Controllers
 {
@@ -38,7 +41,7 @@ namespace ConectDB.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Guardar(int cveEmp, string XT)
+        public IActionResult Guardar(int cveEmp, string XT, RequierePersonas RQP)
         {
             try
             {
@@ -51,11 +54,43 @@ namespace ConectDB.Controllers
                 model = menu.RegresMenu(desusuario, descontraseña, cveEmp, url, XT);
                 ViewData["UsuarioModel"] = model;
                 model.Token = XT;
-
-
-                return View("index", RequiPer);
+                if (!ModelState.IsValid)
+                {
+                    if (RQP.selnombrePuesto == 0) 
+                    {
+                        TempData["Mensaje"] = "selecione un puesto";
+                    }
+                    if (RQP.localidad == 0) 
+                    {
+                        TempData["Mensaje"] = "selecione un localidad";
+                    }
+                    if (RQP.unidadNegocio == 0) 
+                    {
+                        TempData["Mensaje"] = "selecione un Unida de Negocio";
+                    }
+                    if (RQP.seledepa == 0) 
+                    {
+                        TempData["Mensaje"] = "selecione un departamento";
+                    }
+                    if (RQP.subdept == 0) 
+                    {
+                        TempData["Mensaje"] = "selecione un subdepartamento";
+                    }
+                        return RedirectToAction("Index", new { cveEmp, XT });
+                }
+                JObject JRespuesta = dbRePer.guardarReqPerson(RQP);
+                JArray data = JRespuesta["data"] as JArray;
+                if (Convert.ToInt16(JRespuesta["status"]) == 200)
+                {
+                    TempData["guardado"] = JRespuesta["message"].ToString();
+                }
+                else
+                {
+                    TempData["Mensaje"] = JRespuesta["message"].ToString();
+                }
+                return View("index");
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 msj.status = 400;
                 msj.message = ex.Message;
