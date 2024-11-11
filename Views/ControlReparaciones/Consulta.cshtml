@@ -5,232 +5,185 @@
     Layout = "~/Views/Shared/_Layout_ControlReparaciones.cshtml";
     var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
 }
-<div class="container-fluid">
-    <br />
-    <div class="row">
-        <div class="col-md-2">
-            <ul class="nav flex-column border tamancla">
-                <li class="nav-item">
-                    <a asp-action="Index" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link active seccion carga">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-action="PorAsig" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Por Asignar</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-action="Asignacion" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Asignados</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-action="Repara" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">En Reparación</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-action="Fin" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link seccion carga">Finalizado</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-action="Consul" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link activo carga">Consulta</a>
-                </li>
-            </ul>
+<div class="col-md-10">
+    <div class="container">
+        <br />
+        <div class="row-cols-auto text-lg-start">
+            <h3>@ViewData["Title"]</h3>
+            <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
+            <input type="hidden" value="@TempData["guardado"]" id="guarda" />
         </div>
-        <div class="col-md-10">
-            <div class="container">
-                <br />
-                <div class="row-cols-auto text-lg-start">
-                    <h3>@ViewData["Title"]</h3>
-                    <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
-                    <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+        <br />
+        <form method="post" asp-action="BusConsul" asp-controller="ControlReparaciones">
+            <div class="row justify-content-start align-items-start">
+                <div class="col-md-2">
+                    @if (@TempData["FehInicio"] == null || @Convert.ToDateTime(@TempData["FehInicio"]) == DateTime.MinValue)
+                    {
+                        <label for="FehInicio" class="form-label">Fecha Inicio:</label>
+                        <input type="text" class="form-control input-sm filtros" value="" id="FehInicio" name="FehInicio" />
+                    }
+                    else
+                    {
+                        <label for="FehInicio" class="form-label">Fecha Inicio:</label>
+                        <input type="text" class="form-control input-sm filtros" value="@Convert.ToDateTime(@TempData["FehInicio"]).ToString("yyyy/MM/dd")" id="FehInicio" name="FehInicio" />
+                    }
                 </div>
-                <br />
-                <form method="post" asp-action="BusConsul" asp-controller="ControlReparaciones">
-                    <div class="row justify-content-start align-items-start">
-                        <div class="col-md-2">
-                            @if (@TempData["FehInicio"] == null || @Convert.ToDateTime(@TempData["FehInicio"]) == DateTime.MinValue)
+                <div class="col-md-2">
+                    @if (@TempData["FehInicio"] == null || @Convert.ToDateTime(@TempData["FehInicio"]) == DateTime.MinValue)
+                    {
+                        <label for="FehFin" class="form-label">Fecha Fin:</label>
+                        <input type="text" class="form-control input-sm filtros" value="@DateTime.Now.ToString("yyyy/MM/dd")" id="FehFin" name="FehFin" />
+                    }
+                    else
+                    {
+                        <label for="FehFin" class="form-label">Fecha Fin:</label>
+                        <input type="text" class="form-control input-sm filtros" value="@Convert.ToDateTime(@TempData["FehFin"]).ToString("yyyy/MM/dd")" id="FehFin" name="FehFin" />
+                    }
+                </div>
+                <div class="col-md-2">
+                    <label for="NumTicket" class="form-label"># Ticket:</label>
+                    <input type="number" class="form-control input-sm filtros" placeholder="# Ticket" id="NumTicket" name="NumTicket" />
+                </div>
+                <div class="col-md-2">
+                    <br />
+                    <button class="btn btn-primary carga" type="submit" id="btnBusFalReg">Buscar</button>
+                </div>
+                <div class="col-md-4">
+                    <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
+                    <input type="hidden" value="@usuarioModel.idsub" id="idsub" name="idsub" />
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="row justify-content-start align-items-start">
+            <div class="col-12">
+                <div class="container table-responsive container-fluid">
+                    <table class="table table-bordered table-sm ticket-porasigna-table" id="TabDatos">
+                        <caption>@ViewData["Title"]</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">NumTicket</th>
+                                <th scope="col">Unidad</th>
+                                <th scope="col">Alias</th>
+                                <th scope="col">Remolque</th>
+                                <th scope="col">TipoFalla</th>
+                                <th scope="col">TipoTicket</th>
+                                <th scope="col">Estatus</th>
+                                <th scope="col">FechaCreacion</th>
+                                <th scope="col">Atencion Parcial</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var solicitude in Model.Solicitudes)
                             {
-                                <label for="FehInicio" class="form-label">Fecha Inicio:</label>
-                                <input type="text" class="form-control input-sm filtros" value="" id="FehInicio" name="FehInicio" />
-                            }
-                            else
-                            {
-                                <label for="FehInicio" class="form-label">Fecha Inicio:</label>
-                                <input type="text" class="form-control input-sm filtros" value="@Convert.ToDateTime(@TempData["FehInicio"]).ToString("yyyy/MM/dd")" id="FehInicio" name="FehInicio" />
-                            }
-                        </div>
-                        <div class="col-md-2">
-                            @if (@TempData["FehInicio"] == null || @Convert.ToDateTime(@TempData["FehInicio"]) == DateTime.MinValue)
-                            {
-                                <label for="FehFin" class="form-label">Fecha Fin:</label>
-                                <input type="text" class="form-control input-sm filtros" value="@DateTime.Now.ToString("yyyy/MM/dd")" id="FehFin" name="FehFin" />
-                            }
-                            else
-                            {
-                                <label for="FehFin" class="form-label">Fecha Fin:</label>
-                                <input type="text" class="form-control input-sm filtros" value="@Convert.ToDateTime(@TempData["FehFin"]).ToString("yyyy/MM/dd")" id="FehFin" name="FehFin" />
-                            }
-                        </div>
-                        <div class="col-md-2">
-                            <label for="NumTicket" class="form-label"># Ticket:</label>
-                            <input type="number" class="form-control input-sm filtros" placeholder="# Ticket" id="NumTicket" name="NumTicket" />
-                        </div>
-                        <div class="col-md-2">
-                            <br />
-                            <button class="btn btn-primary carga" type="submit" id="btnBusFalReg">Buscar</button>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
-                            <input type="hidden" value="@usuarioModel.idsub" id="idsub" name="idsub" />
-                        </div>
-                    </div>
-                </form>
-                <br />
-                <div class="row justify-content-start align-items-start">
-                    <div class="col-12">
-                        <div class="container table-responsive container-fluid">
-                            <table class="table table-bordered table-sm ticket-porasigna-table">
-                                <caption>@ViewData["Title"]</caption>
-                                <thead>
-                                    <tr>
-                                        <th scope = "col" >NumTicket</th>
-                                        <th scope = "col" >Unidad</th>
-                                        <th scope = "col" >Alias</th>
-                                        <th scope = "col" >Remolque</th>
-                                        <th scope = "col" >TipoFalla</th>
-                                        <th scope = "col" >TipoTicket</th>
-                                        <th scope = "col" >Estatus</th>
-                                        <th scope = "col" >FechaCreacion</th>
-                                        <th scope = "col" >Atencion Parcial</th>
-                                        <th scope = "col" ></th>
-                                        <th scope = "col" ></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var solicitude in Model.Solicitudes)
-                                    {
-                                        <tr id="fila-@solicitude.NumTicket">
-                                            <form asp-action="SubirArchivo" method="post" enctype="multipart/form-data">
-                                            <td class="text-center">
-                                                    @solicitude.NumTicket
-                                                <input type="hidden" value="@solicitude.NumTicket" id="NumTicket" name="NumTicket" />
-                                            </td>
-                                            <td class="text-center"><p>@solicitude.Unidad</p></td>
-                                            <td class="text-center"><p>@solicitude.Alias</p></td>
-                                            <td class="text-center"><p>@solicitude.Remolque</p></td>
-                                            <td class="text-center"><p>@solicitude.TipoFalla</p></td>
-                                            <td class="text-center"><p>@solicitude.TipoTicket</p></td>
-                                            <td class="text-center"><p>@solicitude.Estatus</p></td>
-                                            <td class="text-center"><p>@solicitude.FechaCreacion?.ToString("yyyy/MM/dd HH:mm")</p></td>
-                                            <td class="text-center">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" checked="@solicitude.AtencionParcial" id="ChekAttPar" name="ChekAttPar" disabled>
-                                                    <label class="form-check-label" for="AttPar"></label>
+                                <tr id="fila-@solicitude.NumTicket">
+                                    <form asp-action="SubirArchivo" method="post" enctype="multipart/form-data">
+                                    <td class="text-center">
+                                            @solicitude.NumTicket
+                                        <input type="hidden" value="@solicitude.NumTicket" id="NumTicket" name="NumTicket" />
+                                    </td>
+                                    <td class="text-center"><p>@solicitude.Unidad</p></td>
+                                    <td class="text-center"><p>@solicitude.Alias</p></td>
+                                    <td class="text-center"><p>@solicitude.Remolque</p></td>
+                                    <td class="text-center"><p>@solicitude.TipoFalla</p></td>
+                                    <td class="text-center"><p>@solicitude.TipoTicket</p></td>
+                                    <td class="text-center"><p>@solicitude.Estatus</p></td>
+                                    <td class="text-center"><p>@solicitude.FechaCreacion?.ToString("yyyy/MM/dd HH:mm")</p></td>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" checked="@solicitude.AtencionParcial" id="ChekAttPar" name="ChekAttPar" disabled>
+                                            <label class="form-check-label" for="AttPar"></label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="continer">
+                                            <div class="col-4">
+                                                <label class="custom-file-upload inputUploadFile">
+                                                    <input type="file" name="Files" id="Files-@solicitude.NumTicket" accept="image/*, video/*" multiple="5" />
+                                                </label>
+                                            </div>
+                                            <div class="col-6">
+                                                <div id="carousel-@solicitude.NumTicket" class="owl-carousel owl-theme">
+                                                    <!-- Carousel items -->
                                                 </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="continer">
-                                                    <div class="col-4">
-                                                        <label class="custom-file-upload inputUploadFile">
-                                                            <input type="file" name="Files" id="Files-@solicitude.NumTicket" accept="image/*, video/*" multiple="5" />
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div id="carousel-@solicitude.NumTicket" class="owl-carousel owl-theme">
-                                                            <!-- Carousel items -->
-                                                        </div>
-                                                        <input type="hidden" value="@usuarioModel.Token" id="Tok" name="XT" />
-                                                        <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
-                                                        <input type="hidden" value="@usuarioModel.idsub" id="idsub" name="idsub" />
-                                                           
-                                                            <input type="hidden" value="@Convert.ToDateTime(@TempData["FehInicio"]).ToString("yyyy/MM/dd")" name="FehInicio" />
-                                                            
-                                                            <input type="hidden" value="@Convert.ToDateTime(@TempData["FehFin"]).ToString("yyyy/MM/dd")" name="FehFin" />
-                                                            
-                                                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                                                            {
-                                                                @if (ViewBag.CurrentPage == @i)
-                                                                {
-                                                                <input type="hidden" value="@i" name="pagina" />
-                                                                }
-                                                            }
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <button type="submit" class="btn btn-light btn-sm carga" >
-                                                            <img src="~/imag/sub_imag.png" alt="Agregar" />
+                                                <input type="hidden" value="@usuarioModel.Token" id="Tok" name="XT" />
+                                                <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
+                                                <input type="hidden" value="@usuarioModel.idsub" id="idsub" name="idsub" />
+
+                                                <input type="hidden" value="@Convert.ToDateTime(@TempData["FehInicio"]).ToString("yyyy/MM/dd")" name="FehInicio" />
+
+                                                <input type="hidden" value="@Convert.ToDateTime(@TempData["FehFin"]).ToString("yyyy/MM/dd")" name="FehFin" />
+
+                                                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                                    {
+                                                        @if (ViewBag.CurrentPage == @i)
+                                                        {
+                                                        <input type="hidden" value="@i" name="pagina" />
+                                                        }
+                                                    }
+                                            </div>
+                                            <div class="col-2">
+                                                <button type="submit" class="btn btn-light btn-sm carga">
+                                                    <img src="~/imag/sub_imag.png" alt="Agregar" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    </form>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-link" onclick="mostrarModal('@solicitude.NumTicket')">
+                                            Ver Evidencias
+                                        </button>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="evidenciasModal-@solicitude.NumTicket" tabindex="-1" role="dialog" aria-labelledby="evidenciasModalLabel-@solicitude.NumTicket" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="evidenciasModalLabel-@solicitude.NumTicket">Evidencias del Ticket @solicitude.NumTicket</h5>
+                                                        @* <button id="CloseX" type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button> *@
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="CloseModal('@solicitude.NumTicket')">
+                                                            <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            </form>
-                                            <td class="text-center">
-                                                <button type="button" class="btn btn-link" onclick="mostrarModal('@solicitude.NumTicket')">
-                                                    Ver Evidencias
-                                                </button>
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="evidenciasModal-@solicitude.NumTicket" tabindex="-1" role="dialog" aria-labelledby="evidenciasModalLabel-@solicitude.NumTicket" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="evidenciasModalLabel-@solicitude.NumTicket">Evidencias del Ticket @solicitude.NumTicket</h5>
-                                                                @* <button id="CloseX" type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button> *@
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="CloseModal('@solicitude.NumTicket')">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="owl-carousel owl-theme" id="carousel1">
-                                                                    @foreach (var evidencia in solicitude.PathArchivo)
-                                                                    {
-                                                                        @if (evidencia.exte == ".jpg" || evidencia.exte == ".jpeg" || evidencia.exte == ".png")
-                                                                        {
-                                                                            <div class="item">
-                                                                                <img src="~/GMI/@evidencia.rutFile" alt="Evidencia" class="img-fluid" />
-                                                                            </div>
-                                                                        }
-                                                                        else if (evidencia.exte == ".mp4" || evidencia.exte == ".avi" || evidencia.exte == ".mov")
-                                                                        {
-                                                                            <div class="item-video">
-                                                                                <video autoplay controls style="width: 80%; height: 80%; margin-right: 10px; margin-bottom: 10px;">
-                                                                                    <source src="~/GMI/@evidencia.rutFile" type="video/mp4">
-                                                                                    Tu navegador no soporta el elemento de video.
-                                                                                </video>
-                                                                            </div>
-                                                                        }
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                @* <button type="button" class="btn btn-secondary" id="Close" data-dismiss="modal">Cerrar</button> *@
-                                                            </div>
+                                                    <div class="modal-body">
+                                                        <div class="owl-carousel owl-theme" id="carousel1">
+                                                            @foreach (var evidencia in solicitude.PathArchivo)
+                                                            {
+                                                                @if (evidencia.exte == ".jpg" || evidencia.exte == ".jpeg" || evidencia.exte == ".png")
+                                                                {
+                                                                    <div class="item">
+                                                                        <img src="~/GMI/@evidencia.rutFile" alt="Evidencia" class="img-fluid" />
+                                                                    </div>
+                                                                }
+                                                                else if (evidencia.exte == ".mp4" || evidencia.exte == ".avi" || evidencia.exte == ".mov")
+                                                                {
+                                                                    <div class="item-video">
+                                                                        <video autoplay controls style="width: 80%; height: 80%; margin-right: 10px; margin-bottom: 10px;">
+                                                                            <source src="~/GMI/@evidencia.rutFile" type="video/mp4">
+                                                                            Tu navegador no soporta el elemento de video.
+                                                                        </video>
+                                                                    </div>
+                                                                }
+                                                            }
                                                         </div>
                                                     </div>
+                                                    <div class="modal-footer">
+                                                        @* <button type="button" class="btn btn-secondary" id="Close" data-dismiss="modal">Cerrar</button> *@
+                                                    </div>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="pagination">
-                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                            {
-                                <ul class="pagination pagination-sm">
-                                    @if (ViewBag.CurrentPage == @i)
-                                    {
-                                        <li class="page-item active" aria-current="page">
-                                            <span class="page-link">@i</span>
-                                        </li>
-                                    }
-                                    else
-                                    {
-                                        <li class="page-item">
-                                            <a class="page-link" href="BusConsul?pagina=@i&XT=@usuarioModel.Token&cveEmp=@usuarioModel.Data[0].EmpS[0].cveEmp&FehInicio=@Convert.ToDateTime(@TempData["FehInicio"]).ToString("yyyy/MM/dd")&FehFin=@Convert.ToDateTime(@TempData["FehFin"]).ToString("yyyy/MM/dd")&idsub=@usuarioModel.idsub">
-                                                @i
-                                            </a>
-                                        </li>
-                                    }
-                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
                             }
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
+                <div id="pagination" class="text-center"></div>
             </div>
         </div>
     </div>

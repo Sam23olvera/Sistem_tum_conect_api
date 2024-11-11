@@ -5,8 +5,16 @@ namespace ConectDB.Models
 {
     public class Elements
     {
+        private string? varstrvalue=null;
         public string property { get; set; }
-        public string value { get; set; }
+        public string? value 
+        {
+            get { return varstrvalue; }
+            set 
+            { 
+                varstrvalue = value; 
+            } 
+        }
     }
     public class RootData
     {

@@ -5,7 +5,14 @@
     left: 0;
     padding-top: 20px;
 }
-
+.select {
+    color: white;
+    background-color: #5c8b91;
+}
+    .select : hover {
+        color: white;
+        background-color: #5c8b91;
+    }
 .Lateral {
     margin-left: 250px;
     padding: 20px;

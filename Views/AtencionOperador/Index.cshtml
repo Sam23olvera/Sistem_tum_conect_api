@@ -1,0 +1,201 @@
+﻿@using ConectDB.Models;
+@model AtenOperador;
+@{
+    ViewData["Title"] = "Atencion Operador";
+    Layout = "~/Views/Shared/_Layout_AtencionOpera.cshtml";
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+}
+<div class="container">
+    <div class="row text-center">
+        <h2>@ViewData["Title"]</h2>
+        <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
+        <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+    </div>
+    <br />
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header">
+                <a class="btn" data-bs-toggle="collapse" href="#collapseOne">
+                    Registro
+                </a>
+            </div>
+            <div id="collapseOne" class="collapse show" data-bs-parent="#accordion">
+                <div class="card-body">
+                    <form method="post" class="form" asp-action="RegistrarAtencion" asp-controller="AtencionOperador">
+                        <span asp-validation-summary="ModelOnly" class="text-danger"></span>
+                        <div class="container-fluid">
+                            <div class="row align-content-center text-center">
+                                <div class="col-md-2">
+                                    <label for="ClaveTipoTicket" class="form-label">
+                                        * Tipo de Ticket:
+                                        <select class="form-select form-select-sm" aria-label="Default select example" name="ClaveTipoTicket" id="ClaveTipoTicket" onchange="mostrarselect()" onclick="mostrarselect()" asp-for="ClaveTipoTicket" required>
+                                            <option value="0" selected>[Selecciona]</option>
+                                            @foreach (var ticket in Model.TBCAT_TipoTicket)
+                                            {
+                                                <option value="@ticket.ClaveTipoTicket">@ticket.Descripcion</option>
+                                            }
+                                        </select>
+                                    </label>
+                                    <span asp-validation-for="ClaveTipoTicket" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="ClaveOperador" class="form-label">
+                                        * # Operador:
+                                        <select class="form-select form-select-sm" aria-label="Default select example" id="ClaveOperador" name="ClaveOperador" asp-for="ClaveOperador" required>
+                                            <option value="0" selected>[Selecciona]</option>
+                                            @foreach (var operador in Model.TBCAT_Operador)
+                                            {
+                                                <option value="@operador.ClaveOperador">@operador.NumOP|@operador.Nombre</option>
+                                            }
+                                        </select>
+                                    </label>
+                                    <span asp-validation-for="ClaveTipoTicket" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="FechaReporte" class="form-label">
+                                        * Fecha del Reporte:
+                                        <input type="text" class="form-control form-control-sm" value="@DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")" id="FechaReporte" name="FechaReporte" asp-for="FechaReporte" required />
+                                    </label>
+                                    <span asp-validation-for="FechaReporte" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Comentarios" class="form-label">Observaciones:</label>
+                                    <textarea class="form-control form-control-sm" id="Comentarios" rows="3" name="Comentarios" asp-for="Comentarios"></textarea>
+                                </div>
+                            </div>
+                            <div class="row align-content-center text-center">
+                                <div class="col-md-2 unidad" id="unidad1">
+                                    <label for="ClaveUnidad" class="form-label">
+                                        * Eco TUM:
+                                        <select class="form-select form-select-sm" aria-label="Default select example" id="ClaveUnidad" onchange="filalias()" name="ClaveUnidad" required>
+                                            <option value="0" selected>[Selecciona]</option>
+                                            @foreach (var unidades in Model.TBCAT_Unidades)
+                                            {
+                                                <option value="@unidades.ClaveUnidad_Motora">@unidades.Numero</option>
+                                            }
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="col-md-2 unidad" id="unidad2">
+                                    <label for="selAli" class="form-label">
+                                        Alias:
+                                        <select class="form-select form-select-sm" aria-label="Default select example" id="selAli" name="selAli" required>
+                                            <option value="0" selected>[Selecciona]</option>
+                                            @foreach (var unidades in Model.TBCAT_Unidades)
+                                            {
+                                                <option value="@unidades.ClaveUnidad_Motora">@unidades.Alias</option>
+                                            }
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="col-md-2 dolly" id="dolly">
+                                    <label for="selDolly" class="form-label">
+                                        * Tipo de Dolly:
+                                        <select class="form-select form-select-sm" aria-label="Default select example" id="selDolly" name="selDolly" required>
+                                            <option value="0" selected>[Selecciona]</option>
+                                            @foreach (var carga in Model.TBCAT_Dolly)
+                                            {
+                                                <option value="@carga.ClaveDolly">@carga.Numero</option>
+                                            }
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="col-md-2 remolque" id="remolque">
+                                    <label for="Remolques" class="form-label">
+                                        * Remolque
+                                        <select class="form-select form-select-sm" aria-label="Default select example" id="Remolques" name="Remolques" required>
+                                            <option selected>[Selecciona]</option>
+                                            @foreach (var re in Model.TBCAT_Remolques)
+                                            {
+                                                <option value="@re.ClaveUnidad_Arrastre">@re.Numero</option>
+                                            }
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="hidden" value="@usuarioModel.Token" class="form-control" id="XT" name="XT" />
+                                    <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" class="form-control" id="cveEmp" name="cveEmp" asp-for="cveEmp" />
+                                    <span asp-validation-for="cveEmp" class="text-danger"></span>
+                                    <input type="hidden" value="@usuarioModel.idsub" class="form-control" id="idsub" name="idsub" />
+                                </div>
+                                <div class="col-md-2">
+                                    <br />
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <a class="collapsed btn" data-bs-toggle="collapse" href="#collapseTwo">
+                    Busqueda
+                </a>
+            </div>
+            <div id="collapseTwo" class="collapse show" data-bs-parent="#accordion">
+                <div class="card-body">
+                    <div class="container-fluid">
+                        <form method="post" asp-action="Buscar" asp-controller="AtencionOperador">
+                            <div class="row align-content-center text-center">
+                                <div class="col-md-2">
+                                    <input type="hidden" value="@usuarioModel.Token" class="form-control" id="XT" name="XT" />
+                                    <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" class="form-control" id="cveEmp" name="cveEmp" />
+                                    <input type="hidden" value="@usuarioModel.idsub" class="form-control" id="idsub" name="idsub" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FechaInicio" class="form-label">Fecha Inicio:</label>
+                                    <input type="text" class="form-control input-sm" value="@DateTime.Now.AddDays(-30).ToString("yyyy/MM/dd HH:mm:ss")" id="FechaInicio" name="FechaInicio" required />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FechaFin" class="form-label">Fecha Fin:</label>
+                                    <input type="text" class="form-control input-sm" value="@DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")" id="FechaFin" name="FechaFin" required />
+                                </div>
+                                <div class="col-md-2">
+                                    <br />
+                                    <button type="submit" class="btn btn-primary">Buscar</button>
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                            </div>
+                        </form>
+                        <br />
+                        <div class="row">
+                            <div class="container table-responsive container-fluid">
+                                <table class="table table-bordered tbaleatencion" id="tablaBuscar" >
+                                    <thead>
+                                        <tr>
+                                            <th>TICKET</th>
+                                            <th>Equipo</th>
+                                            <th>NumOperador</th>
+                                            <th>NombreOperador</th>
+                                            <th>TipoTicket</th>
+                                            <th>Observaciones</th>
+                                            <th>FechaReporte</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var op in Model.CSAttOperador)
+                                        {
+                                            <tr>
+                                                <td>@op.TICKET</td>
+                                                <td>@op.Equipo</td>
+                                                <td>@op.NumOperador</td>
+                                                <td>@op.NombreOperador</td>
+                                                <td>@op.TipoTicket</td>
+                                                <td>@op.Observaciones</td>
+                                                <td>@op.FechaReporte.Value.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div id="pagination" class="text-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

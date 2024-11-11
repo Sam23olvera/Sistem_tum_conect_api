@@ -86,3 +86,7 @@ strong {
     justify-content: center;
     text-align: center;
 }
+
+.kill {
+    color: red;
+}

@@ -27,6 +27,16 @@
       "distributionName": ""
     }
   },
+  "Container (.NET SDK)": {
+    "commandName": "SdkContainer",
+    "launchBrowser": true,
+    "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+    "environmentVariables": {
+      "ASPNETCORE_URLS": "https://+:443;http://+:80"
+    },
+    "publishAllPorts": true,
+    "useSSL": true
+  },
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,

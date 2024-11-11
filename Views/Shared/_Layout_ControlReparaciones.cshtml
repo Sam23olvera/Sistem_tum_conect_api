@@ -20,6 +20,10 @@
 
 </head>
 @(await Component.InvokeAsync("Menu", ViewData["UsuarioModel"]))
+@{
+    string? title = ViewData["Title"] as string;
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+}
 <body>
     <div class="container-fluid">
         <main role="main">
@@ -31,7 +35,34 @@
                         </div>
                     </div>
                 </div>
-                @RenderBody()
+                <div class="container-fluid">
+                    <br />
+                    <div class="row">
+                        <div class="col-md-2">
+                            <ul class="nav flex-column border tamancla">
+                                <li class="nav-item">
+                                    <a asp-action="Index" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link carga @(title == "Inicio" ? "select" : "seccion")">Inicio</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-action="PorAsig" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link carga @(title == "Por Asignar" ? "select" : "seccion")">Por Asignar</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-action="Asignacion" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link carga @(title == "Asignados" ? "select" : "seccion")">Asignados</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-action="Repara" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link carga @(title == "Reparacion" ? "select" : "seccion")">En Reparación</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-action="Fin" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link carga @(title == "Finalizado" ? "select" : "seccion")">Finalizado</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-action="Consul" asp-controller="ControlReparaciones" asp-route-XT="@usuarioModel.Token" asp-route-cveEmp="@usuarioModel.Data[0].EmpS[0].cveEmp" asp-route-idsub="@usuarioModel.idsub" class="nav-link carga @(title == "Consulta" ? "select" : "seccion")">Consulta</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @RenderBody()
+                    </div>
+                </div>
             </div>
         </main>
     </div>

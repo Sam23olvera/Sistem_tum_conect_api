@@ -36,7 +36,7 @@ namespace ConectDB.DB
         {
             try
             {
-                jsdat = JObject.Parse("{\"data\":{\"bdCc\":5,\"bdSch\":\"dbo\",\"bdSp\":\"SPINS_ControlReparaciones\"},\"filter\":[{\"property\": \"Json1\",\"value\":\"" + json + "\"}]}");
+                jsdat = JObject.Parse("{\"data\":{\"bdCc\":5,\"bdSch\":\"dbo\",\"bdSp\":\"SPINS_ControlReparacionesTEST\"},\"filter\":[{\"property\": \"Json1\",\"value\":\"" + json + "\"}]}");
                 js = JObject.Parse(hh.HttpWebRequest("POST", url, jsdat));
                 if (js["status"].ToString() == "400")
                 {

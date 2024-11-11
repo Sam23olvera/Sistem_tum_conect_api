@@ -28,7 +28,57 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 5000);
         }
     }
+    
+    const rowsPerPage = 10;
+    const table = document.getElementById("TabDatos");
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    const pagination = document.getElementById("pagination");
 
+    function displayPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        rows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? "" : "none";
+        });
+
+        updatePagination(page);
+    }
+    function updatePagination(currentPage) {
+        pagination.innerHTML = ""; // Limpiar contenido anterior
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "Anterior";
+        prevButton.classList.add("btn", "btn-primary", "me-2");
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => displayPage(currentPage - 1));
+        pagination.appendChild(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement("button");
+            pageButton.textContent = i;
+            pageButton.classList.add("btn", "btn-secondary", "me-2");
+            if (i === currentPage) {
+                pageButton.classList.add("active");
+            }
+            pageButton.addEventListener("click", () => displayPage(i));
+            pagination.appendChild(pageButton);
+        }
+
+        // Botón de "Siguiente"
+        const nextButton = document.createElement("button");
+        nextButton.textContent = "Siguiente";
+        nextButton.classList.add("btn", "btn-primary", "me-2");
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => displayPage(currentPage + 1));
+        pagination.appendChild(nextButton);
+    }
+
+    // Inicializar la primera página
+    displayPage(1);
 
 });
 
@@ -103,7 +153,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#FehTick').datetimepicker({
         //format: 'm/d/Y'
-        format: 'Y/m/d'
+        format: 'Y/m/d H:i'
     });
     $('#TiempAsig').datetimepicker({
         format: 'Y/m/d H:i'
@@ -115,7 +165,7 @@ $(document).ready(function () {
         format: 'm/d/Y H:i'
     });
     $('#FehFin').datetimepicker({
-        format: 'Y/m/d',
+        format: 'Y/m/d H:i',
         timepicker: false,
         maxDate: new Date(),
         onClose: function (selectedDate) {
@@ -340,6 +390,13 @@ function calendario(numTicket) {
     var Tiem = "TiempAsig-" + numTicket;
     var TiempAsig = document.getElementById(Tiem);
     $(TiempAsig).datetimepicker({
+        format: 'Y/m/d H:i'
+    });
+}
+function caleEta(numTicket) {
+    var Etafech = "Eta-" + numTicket;
+    var Etafecha = document.getElementById(Etafech);
+    $(Etafecha).datetimepicker({
         format: 'Y/m/d H:i'
     });
 }

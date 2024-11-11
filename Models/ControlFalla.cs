@@ -15,7 +15,6 @@
         public string? message { get; set; }
         public List<soliGeneral> SolicitudesGenerales { get { return soliGenerals; } set { soliGenerals = value; } }
         public List<Solicitude> Solicitudes { get { return zVarcio; } set { zVarcio = value; } }
-        
         public List<TBCATTipoTicket> TBCAT_TipoTicket { get { return zVaciTBCATTipoTicket; } set { zVaciTBCATTipoTicket = value; } }
         public List<TBCATTipoFalla> TBCAT_TipoFalla { get { return zVaciTBCATFALLAS; } set { zVaciTBCATFALLAS = value; } }
         public List<TBCATTipoApoyo> TBCAT_TipoApoyo { get { return ZVaciTBCATTipApoyo; } set { ZVaciTBCATTipApoyo = value; } }
@@ -26,17 +25,13 @@
     public class Ordenes
     {
         public int OrdenMtto { get; set; }
-
         public DateTime? FechaRegistro { get; set; }
-
     }
-
     public class archivo
     {
         public int carpet { get; set; }
         public string? exte { get; set; }
         public string? rutFile { get; set; }
-
     }
     public class TBCATUserAsignaReparacion
     {
@@ -53,7 +48,7 @@
     public class Solicitude
     {
         private List<archivo> RutArchi = new List<archivo>();
-        
+        private List<Ordenes> Ordenvacio = new List<Ordenes>();        
         public int Cantidad { get; set; }
         public string? Descripcion { get; set; }
         public int ClaveEstatus { get; set; }
@@ -99,7 +94,7 @@
         public bool AtencionParcial { get; set; }
         public int? POSICION { get; set; }
         public int ClaveTipoFalla { get; set; }
-        public List<Ordenes>? OrdenesMtto { get; set; }
+        public List<Ordenes> OrdenesMtto { get { return Ordenvacio; } set { Ordenvacio = value; } }
         public List<archivo> PathArchivo { get { return RutArchi; } set { RutArchi = value; } }
     }
 }

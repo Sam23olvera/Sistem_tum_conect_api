@@ -1,0 +1,18 @@
+﻿@using ConectDB.Models;
+@model Error;
+@{
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_Layout_AtencionOpera.cshtml";
+}
+<div class="container-fluid">
+    <div class="row text-center">
+        <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
+        <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+    </div>
+    <div class="row kill">
+        <h1>ERROR </h1>
+        <h2>@Model.status</h2>
+        <h2 style="color:">@Model.message</h2>
+    </div>
+</div>
+

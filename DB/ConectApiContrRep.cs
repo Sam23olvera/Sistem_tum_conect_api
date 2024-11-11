@@ -140,18 +140,18 @@ namespace ConectDB.DB
                     jsdat = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\": \"SPQRY_ControlReparaciones\"},\"filter\": [{ \"property\": \"cveEmpresa\",\"value\":\"" + empresa + "\"},{\"property\":\"CveEstatus\",\"value\": " + CveEstatus + "},{\"property\":\"Fecha\",\"value\": \"" + FehTick + "\"},{\"property\":\"NumTicket\",\"value\":" + NumTicket + "},{\"property\":\"TipoTicket\",\"value\":" + TipoTicket + "},{\"property\":\"TipoFalla\",\"value\": " + TipoFalla + "},{\"property\":\"CveUser\",\"value\":" + CveUser + "},{\"property\":\"UserFiltro\",\"value\":" + UserFiltro + "},{\"property\":\"IdSubmodulo\",\"value\":" + IdSubmodulo + "}]}");
                     json = JObject.Parse(hh.HttpWebRequest("POST", url, jsdat));
                     data = json["data"] as JArray;
-                    pagina = (pagina - 1) * tamañomuestra;
+                    //pagina = (pagina - 1) * tamañomuestra;
                     if (data != null && data.Count > 0)
                     {
                         controlFalla.Solicitudes = JsonConvert.DeserializeObject<ControlFalla>(data[0].ToString()).Solicitudes;
-                        controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
-                        controlFalla.Solicitudes = controlFalla.Solicitudes.Skip(pagina).Take(tamañomuestra).ToList();
+                        //controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
+                        //controlFalla.Solicitudes = controlFalla.Solicitudes.Skip(pagina).Take(tamañomuestra).ToList();
                         controlFalla.status = Convert.ToInt32(json["status"]);
                     }
                     else
                     {
                         controlFalla.Solicitudes = new List<Solicitude>();
-                        controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
+                        //controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
                         controlFalla.status = Convert.ToInt32(json["status"]);
                         controlFalla.message = json["message"].ToString();
                     }
@@ -159,6 +159,49 @@ namespace ConectDB.DB
                 else
                 {
                     controlFalla.Solicitudes = new List<Solicitude>();
+                }
+                return controlFalla;
+            }
+            catch (Exception e)
+            {
+                controlFalla.status = 400;
+                controlFalla.message = e.Message.ToString();
+                return controlFalla;
+            }
+        }
+        public ControlFalla ModificadorFall2(int CveEstatus, int modCveEstatus, string empresa, string NumTicket, string UseAsigna, int TipoApoyo, int TipoFalla, string FechaHoraEstimadaReparacion, string ComentariosCambioVto, int CveUser, string Fecha, int Tipotikcet, int idsub, int pagina, int tamañomuestra, int Diesel, int Grua, string Dot, string Marca, string Medida, int Posis, bool AttPar,string TiemEta)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(FechaHoraEstimadaReparacion))
+                {
+                    FechaHoraEstimadaReparacion = "null";
+                }
+                else
+                {
+                    FechaHoraEstimadaReparacion = "\"" + FechaHoraEstimadaReparacion + "\"";
+                }
+                if (string.IsNullOrEmpty(TiemEta))
+                {
+                    TiemEta = "null";
+                }
+                else 
+                {
+                    TiemEta = "\"" + TiemEta + "\"";
+                }
+                jsdat = JObject.Parse("{\"data\": {\"bdCc\": 5,\"bdSch\": \"dbo\",\"bdSp\": \"SPMTP_SeguimientoReparaciones_TEST\"},\"filter\": [{\"property\": \"claveControlReparaciones\",\"value\": " + NumTicket + "},{\"property\":\"ClaveEstatusNvo\",\"value\": " + modCveEstatus + "},{\"property\":\"CveUsuarioAsignado \",\"value\": " + UseAsigna + "},{\"property\": \"ClaveTipoApoyo\",\"value\": " + TipoApoyo + "},{\"property\":\"ClaveTipoClasificacion\",\"value\": " + TipoFalla + "},{\"property\":\"FechaHoraEstimadaReparacion\",\"value\": " + FechaHoraEstimadaReparacion + "},{\"property\":\"ComentariosCambioVto\", \"value\": \"" + ComentariosCambioVto + "\"},{\"property\":\"CveUsuarioMod\",\"value\": " + CveUser + "},{\"property\": \"Diesel\",\"value\": " + Diesel + " },{\"property\": \"Grua\",\"value\": " + Grua + "},{\"property\": \"DOT\",\"value\": \"" + Dot + "\"},{\"property\": \"MARCA\",\"value\": \"" + Marca + "\"},{\"property\": \"MEDIDA\",\"value\": \"" + Medida + "\"},{\"property\": \"POSICION\",\"value\": " + Posis + "},{\"property\":\"ATTPARCIAL\",\"value\": " + Convert.ToByte(AttPar) + "},{\"property\":\"EtaProveedor\",\"value\":" + TiemEta + "}]}");
+                json = JObject.Parse(hh.HttpWebRequest("POST", url, jsdat));
+                if (Convert.ToInt32(json["status"]) == 200)
+                {
+                    controlFalla.status = Convert.ToInt32(json["status"]);
+                    controlFalla.message = json["message"].ToString();
+                }
+                else
+                {
+                    //controlFalla = PrimerCarga(CveEstatus, empresa, Fecha, 0, 0, 0, CveUser, 0, idsub, pagina, tamañomuestra);
+                    controlFalla.Solicitudes = new List<Solicitude>();
+                    controlFalla.status = Convert.ToInt32(json["status"]);
+                    controlFalla.message = json["message"].ToString();
                 }
                 return controlFalla;
             }
@@ -219,12 +262,12 @@ namespace ConectDB.DB
                 }
                 json = JObject.Parse(hh.HttpWebRequest("POST", url, jsdat));
                 data = json["data"] as JArray;
-                pagina = (pagina - 1) * tamañomuestra;
+                //pagina = (pagina - 1) * tamañomuestra;
                 if (data != null && data.Count > 0)
                 {
                     controlFalla = JsonConvert.DeserializeObject<ControlFalla>(data[0].ToString());
-                    controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
-                    controlFalla.Solicitudes = controlFalla.Solicitudes.Skip(pagina).Take(tamañomuestra).ToList();
+                    //controlFalla.TotalSolicitudes = controlFalla.Solicitudes.Count;
+                    //controlFalla.Solicitudes = controlFalla.Solicitudes.Skip(pagina).Take(tamañomuestra).ToList();
                     controlFalla.status = Convert.ToInt32(json["status"]);
                     controlFalla.message = json["message"].ToString();
                 }
