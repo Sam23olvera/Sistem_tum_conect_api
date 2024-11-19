@@ -4,6 +4,7 @@ using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using static ConectDB.Models.LogUser;
 
 namespace ConectDB.Controllers
@@ -11,7 +12,7 @@ namespace ConectDB.Controllers
     public class LogingController : Controller
     {
         DataApi data = new DataApi();
-        LogUser jsdatos = new LogUser();
+        LogUser logdata = new LogUser();
         private string url2 = "https://webportal.tum.com.mx/wsstmdv/api/accesyst";
         private string url = "https://webportal.tum.com.mx/wsstmdv/api/logau";
         public IActionResult Privacy()
@@ -31,14 +32,19 @@ namespace ConectDB.Controllers
         {
             string usuarioCifrado = UrlEncryptor.EncryptUrl(log.usr);
             string contraseñaCifrada = UrlEncryptor.EncryptUrl(log.pwd);
-                        
+
             if (log.usr == null || log.pwd == null)
             {
                 return View("Error");
             }
             else
             {
-                JObject jsdatos = JObject.Parse("{\"data\": {\"bdCc\": 1,\"bdSch\": \"dbo\",\"bdSp\": \"SPQRY_User\"},\"filter\": {\"usr\": \"" + log.usr + "\",\"pwd\": \"" + log.pwd + "\" }}");
+                logdata = new LogUser
+                {
+                    data = new Data { bdCc = 1, bdSch = "dbo", bdSp = "SPQRY_User" },
+                    filter = log
+                };
+                JObject jsdatos = JObject.Parse(JsonConvert.SerializeObject(logdata));
                 var datos = JsonConvert.DeserializeObject<UsuarioModel>(data.HttpWebRequest("POST", url, jsdatos));
                 if (datos == null)
                 {
@@ -49,28 +55,45 @@ namespace ConectDB.Controllers
                     HttpContext.Response.Cookies.Append("usuario", usuarioCifrado);
                     HttpContext.Response.Cookies.Append("contra", contraseñaCifrada);
                     HttpContext.Session.SetString("UsuarioModel", JsonConvert.SerializeObject(datos));
-                    return View(datos);
+
+                    // Guardar datos en TempData para usarlos en la redirección
+                    TempData["UsuarioModel"] = JsonConvert.SerializeObject(datos);
+                    // Redirigir a SeleccionEmpresa (GET)
+                    return RedirectToAction("SeleccionEmpresa");
+                    //return View("logeo", datos);
                 }
             }
         }
-        //public IActionResult Acceder(int CVEM, string US, string XT, string Tok)
-        [HttpPost]
+        [HttpGet]
+        public IActionResult SeleccionEmpresa()
+        {
+            // Recuperar datos desde TempData
+            if (TempData["UsuarioModel"] == null)
+            {
+                HttpContext.Session.Clear();
+                HttpContext.Response.Cookies.Delete("usuario", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1), Path = "/" });
+                HttpContext.Response.Cookies.Delete("contra", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1), Path = "/" });
+                TempData["Mensaje"] = "Se Cerro la Sesion";
+                return RedirectToAction("Index");
+            }
+
+            var model = JsonConvert.DeserializeObject<UsuarioModel>(TempData["UsuarioModel"].ToString());
+
+            // Pasar datos a la vista
+            return View("logeo", model);
+        }
+
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Acceder(int CVEM, string Tok)
         {
-            if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]))
-            {
+            if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                 return RedirectToAction("Index", "Loging");
-            }
-            if (string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
-            {
-                return RedirectToAction("Index", "Loging");
-            }
+
             string desusuario = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]);
             string descontraseña = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]);
 
-            jsdatos = new LogUser { data = new Data { bdCc = 1, bdSch = "dbo", bdSp = "SPQRY_EmpUser" }, filter = new Filter { usr = desusuario, pwd = descontraseña, idempresa = CVEM } };
-            var datos = data.HttpWebRequestTokenLog("POST", url2, JsonConvert.SerializeObject(jsdatos), Tok);
+            logdata = new LogUser { data = new Data { bdCc = 1, bdSch = "dbo", bdSp = "SPQRY_EmpUser" }, filter = new Filter { usr = desusuario, pwd = descontraseña, idempresa = CVEM } };
+            var datos = data.HttpWebRequestTokenLog("POST", url2, JsonConvert.SerializeObject(logdata), Tok);
             if (datos == null)
             {
                 return RedirectToAction("Error");
@@ -79,15 +102,33 @@ namespace ConectDB.Controllers
             {
                 var model = JsonConvert.DeserializeObject<UsuarioModel>(datos);
                 model.Token = Tok;
-                ViewData["UsuarioModel"] = model;
-                return View("Acceder", model);
+                //ViewData["UsuarioModel"] = model;
+                TempData["UsuarioModel"] = JsonConvert.SerializeObject(model);
+                //return View("Acceder", model);
+                return RedirectToAction("AccederRedirect", new { CVEM, XT = Tok });
             }
         }
+        public IActionResult AccederRedirect(int CVEM, string XT)
+        {
+            if (TempData["UsuarioModel"] == null)
+            {
+                HttpContext.Session.Clear();
+                HttpContext.Response.Cookies.Delete("usuario", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1), Path = "/" });
+                HttpContext.Response.Cookies.Delete("contra", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1), Path = "/" });
+                TempData["Mensaje"] = "Se Cerro la Sesion";
+                return RedirectToAction("Index", "Loging");
+            }
+            var model = JsonConvert.DeserializeObject<UsuarioModel>(TempData["UsuarioModel"].ToString());
+            ViewData["UsuarioModel"] = model;
+
+            return View("Acceder", model);
+        }
+
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Salir()
         {
             HttpContext.Session.Clear();
-            HttpContext.Response.Cookies.Delete("usuario", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1),Path = "/" });
+            HttpContext.Response.Cookies.Delete("usuario", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1), Path = "/" });
             HttpContext.Response.Cookies.Delete("contra", new CookieOptions { Expires = DateTimeOffset.Now.AddDays(-1), Path = "/" });
             TempData["Mensaje"] = "Se Cerro la Sesion";
             return RedirectToAction("Index");
@@ -95,7 +136,7 @@ namespace ConectDB.Controllers
         public IActionResult Error()
         {
             Error errors = new Error();
-            return View("Error_Pag",errors);
+            return View("Error_Pag", errors);
         }
     }
 }

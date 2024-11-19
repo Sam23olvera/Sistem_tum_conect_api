@@ -5,12 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Views\RegistroFallas\RegistroFallas\**" />
     <Compile Remove="wwwroot\GMI\**" />
     <Compile Remove="wwwroot\NewFolder\**" />
+    <Content Remove="Views\RegistroFallas\RegistroFallas\**" />
     <Content Remove="wwwroot\GMI\**" />
     <Content Remove="wwwroot\NewFolder\**" />
+    <EmbeddedResource Remove="Views\RegistroFallas\RegistroFallas\**" />
     <EmbeddedResource Remove="wwwroot\GMI\**" />
     <EmbeddedResource Remove="wwwroot\NewFolder\**" />
+    <None Remove="Views\RegistroFallas\RegistroFallas\**" />
     <None Remove="wwwroot\GMI\**" />
     <None Remove="wwwroot\NewFolder\**" />
   </ItemGroup>

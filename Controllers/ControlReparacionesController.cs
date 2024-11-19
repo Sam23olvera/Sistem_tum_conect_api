@@ -19,7 +19,7 @@ namespace ConectDB.Controllers
         
         ControlFalla? controlFal = new ControlFalla();
         UsuarioModel? model = new UsuarioModel();
-        Error msj = new Error();
+        private readonly Error msj = new Error();
 
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public ActionResult Index(int cveEmp, string XT, int idsub)

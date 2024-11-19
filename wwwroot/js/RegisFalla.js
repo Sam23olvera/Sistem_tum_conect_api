@@ -51,8 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
     NomOpe.addEventListener('change', function () {
         Numope.value = NomOpe.value;
     });
-    TipTicket.addEventListener('change', function ()
-    {
+    TipTicket.addEventListener('change', function () {
         if (TipTicket.value == 1) {
             ClaOpDol.value = "";
             Tractor.style.display = "block";
@@ -73,8 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
             Dolly.style.display = "block";
             ClaveTipoEquipo.selectedIndex = 0;
         }
-        else
-        {
+        else {
             ClaOpDol.value = "";
             Tractor.style.display = "none";
             Remolque.style.display = "none";
@@ -143,8 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (ChkDisel.checked == true) {
             txtCheckDisel.value = 1;
         }
-        else if (ChkDisel.checked == false)
-        {
+        else if (ChkDisel.checked == false) {
             txtCheckDisel.value = 0;
         }
     });
@@ -171,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Remolque2.value = remo2.options[remo2.selectedIndex].text;
     });
 
-    
+
 });
 
 $(document).ready(function () {
@@ -226,7 +223,7 @@ function EnvioUbica() {
     var Alias = document.getElementById('Alias').value;
     var ClOp = document.getElementById('ClOp').value;
     var cvEmp = document.getElementById('cvEmp').value;
-    var inputLng = document.getElementById('inputLng');  
+    var inputLng = document.getElementById('inputLng');
     var inputLat = document.getElementById('inputLat');
     var DirGPS = document.getElementById('DirGPS');
     var FechGPS = document.getElementById('FechGPS');
@@ -294,7 +291,7 @@ function EnvioUbica() {
                 if (mensaje !== '') {
                     toastr.error(mensaje);
                 }
-            } 
+            }
             else {
                 inputLat.value = obj.data[0].UltimaPosicion[0].Latitud;
                 inputLng.value = obj.data[0].UltimaPosicion[0].Longitud;

@@ -34,7 +34,7 @@ namespace ConectDB.Models
     public class CSAttOperador
     {
         public int ClaveReporteOperador { get; set; }
-        public int TICKET { get; set; }
+        public string TICKET { get; set; }
         public string Equipo { get; set; }
         public int NumOperador { get; set; }
         public string NombreOperador { get; set; }

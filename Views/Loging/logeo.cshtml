@@ -23,28 +23,22 @@
                     {
                         <form id="formAcceder" method="post" asp-action="Acceder" asp-controller="Loging">
                             <div class="card-body">
-                                <br>
                                 <h1 class="card-title text-white">Inicio de Sesión</h1>
-                                <br>
                                 <div class="form-group">
                                     <input type="text" class="form-control custom-input" placeholder="@Sis.nom" disabled>
-                                    <span class="text-danger"></span>
                                 </div>
                                 <br>
                                 <div class="form-group">
                                     <input type="password" class="form-control custom-input" autocomplete="off" placeholder="@Sis.message" disabled>
-                                    <span class="text-danger"></span>
                                 </div>
                                 <br>
                                 <div class="form-group">
-                                    <label class="text-white">Selecciona la empresa:</label>
-                                    <select id="selectEmpresa" name="CVEM" class="form-control CVEM">
-                                        <option selected>Selecione una Empresa</option>
+                                    <label for="selectEmpresa" class="form-label text-white">Selecciona la empresa:</label>
+                                    <select id="selectEmpresa" name="CVEM" class="form-control CVEM" required>
+                                        <option value="" selected>Selecione una Empresa</option>
                                         @foreach (var submod in Sis.EmpS)
                                         {
-                                            <option value="@submod.cveEmp">
-                                                @submod.nomb
-                                            </option>
+                                            <option value="@submod.cveEmp"> @submod.nomb </option>
                                         }
                                     </select>
                                     <input id="cveEmp" type="hidden" name="cveEmp" value="" />

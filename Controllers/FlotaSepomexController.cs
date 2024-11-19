@@ -24,7 +24,10 @@ namespace ConectDB.Controllers
 
             model = menu.RegresMenu(desusuario, descontraseña, cveEmp, url, XT);
             model.Token = XT;
-            ViewData["UsuarioModel"] = model;
+            ViewData["UsuarioModel"] = model;            
+            JObject JHR = JObject.Parse("{local:[{name:\"TUM TRANSPORTISTAS UNIDOS MEXICANOS CUAUTITLAN IZCALLI\", lat: 19.61747213015414, lng: -99.22406370789754 }, { name: \"TUM TRANSPORTISTAS UNIDOS MEXICANOS QUERÉTARO\", lat: 20.570928711236398, lng: -100.30288772919846 }, { name: \"TUM TRANSPORTISTAS UNIDOS MEXICANOS GUADALAJARA\", lat: 20.56577818262262, lng: -103.26878318164584 },{ name: \"TUM TRANSPORTISTAS UNIDOS MEXICANOS AGUASCALIENTES\", lat: 21.76029500758191, lng: -102.27903498636567 }]}");
+            TempData["ffa"] = JHR;
+
             return View("Index");
         }
 

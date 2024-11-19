@@ -1,14 +1,12 @@
 ﻿using static ConectDB.Models.LogUser;
-using System.Xml.Linq;
 
-namespace ConectDB.Models
+namespace ConectDB.Controllers
 {
     public class Elements
     {
-        private string? varstrvalue=null;
+        private string? varstrvalue = null;
         public string property { get; set; }
-        public string? value { get { return varstrvalue; } set { varstrvalue = value; } 
-        }
+        public string? value { get { return varstrvalue; } set { varstrvalue = value; } }
     }
     public class RootData
     {
