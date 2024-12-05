@@ -1,0 +1,150 @@
+@using ConectDB.Models;
+@model CuentaCabezas;
+@{
+    ViewData["Title"] = "HeadCount";
+    Layout = "~/Views/Shared/_Layout_HeadCount.cshtml";
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+}
+<div class="row text-center spiner-center">
+    <div class="row text-center">
+        <h1>HeadCount</h1>
+        <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
+        <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar en la tabla..." onkeyup="filterBusca()">
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row justify-content-start align-items-start">
+        <div class="col-12">
+            <div class="container table-responsive container-fluid">
+                <table class="table table-sm table-bordered tablaHead" id="TabHeadCount">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-content-center text-center">Estatus</th>
+                            <th scope="col" class="align-content-center text-center">Puesto</th>
+                            <th scope="col" class="align-content-center text-center">AgenciaBase</th>
+                            <th scope="col" class="align-content-center text-center">TipoPersona</th>
+                            <th scope="col" class="align-content-center text-center">NumEmpleado</th>
+                            <th scope="col" class="align-content-center text-center">FechaIngreso</th>
+                            <th scope="col" class="align-content-center text-center">Sustituible</th>
+                            <th scope="col" class="align-content-center text-center">TipoOperacion</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cabeza in Model.HeadCount)
+                        {
+                            <tr style="background-color: @(cabeza.Estatus == "Vacante" ? "#E8f6f3" : "inherit");">
+                                <td>
+                                    <button class="btn btn-sm" id="btnEditar" onclick="mostrar('@cabeza.ClaveHeadCount')">
+                                        <img src="~/imag/sort-down.png" />
+                                    </button>
+                                    @cabeza.Estatus
+                                </td>
+                                <td>@cabeza.Puesto</td>
+                                <td>@cabeza.AgenciaBase</td>
+                                <td>@cabeza.TipoPersona</td>
+                                <td>@cabeza.NumEmpleado</td>
+                                <td>@cabeza.FechaIngreso</td>
+                                <td>
+                                    @if (@cabeza.Estatus == "Vacante")
+                                    {
+                                        <input id="checkSustituible-@cabeza.ClaveHeadCount" type="checkbox" name="checkSustituible" checked="@cabeza.Sustituible" onclick="clic('@cabeza.ClaveHeadCount','@usuarioModel.Data[0].idus')" />
+                                    }
+                                    else
+                                    {
+                                        <input id="checkSustituible-@cabeza.ClaveHeadCount" type="checkbox" name="checkSustituible" checked="@cabeza.Sustituible" disabled/>
+                                    }
+
+                                </td>
+                                <td>@cabeza.TipoOperacion</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button>
+                                        <div class="dropdown-menu">
+                                            @if (@cabeza.Estatus == "Vacante")
+                                            {
+                                                <a class="dropdown-item" id="btneditar" disabled >Baja</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="dropdown-item" id="btneditar" onclick="openModalBaja('@cabeza.ClaveHeadCount','@cabeza.ClaveEmpleado')">Baja</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="11">
+                                    <div class="row">
+                                        <div class="container">
+                                            <div id="datos-@cabeza.ClaveHeadCount" class="datos-bak">
+                                                <h6>Empleado: @cabeza.Empleado</h6>
+                                                <h6>Direccion: @cabeza.Direccion</h6>
+                                                <h6>RFC: @cabeza.RFC</h6>
+                                                <h6>CURP: @cabeza.CURP</h6>
+                                                <h6>IMSS: @cabeza.IMSS</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div id="pagination" class="text-center"></div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Modal para editar -->
+            <div class="modal fade" id="editModalBaja" tabindex="-1" aria-labelledby="editModalBajaLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalBajaLabel">Baja de Personal</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editForm" method="post" asp-controller="HeadCount" asp-action="GuardarBaja">
+                                <input type="hidden" id="editClaveHeadCountBaja" name="editClaveHeadCountBaja" />
+                                <input type="hidden" id="editClaveEmpleado" name="editClaveEmpleado" />
+                                <input type="hidden" id="cveEmp" value="@usuarioModel.Data[0].EmpS[0].cveEmp" name="cveEmp" />
+                                <input type="hidden" id="XT" value="@usuarioModel.Token" name="XT" />
+                                <div class="mb-3">
+                                    <label for="idCausa" class="form-label">Motivo de Baja</label>
+                                    <select id="idCausa" class="form-select" name="idCausa" required>
+                                        <!-- Opciones de causa aquí -->
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="FechaBaja" class="form-label">Fecha de Baja</label>
+                                    <input type="text" class="form-control" id="FechaBaja" name="FechaBaja" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="RecContra" class="form-label">Recontratable</label>
+                                    <select id="RecContra" class="form-select form-select-sm" name="RecContra" required>
+                                        <option value="true">Sí</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Puedes escribir algo aqui" id="txtObaserva" name="txtObaserva" maxlength="90"></textarea>
+                                        <label for="txtObaserva">Observaciones:</label>
+                                    </div>
+                                </div>
+                                <!-- Agrega otros campos según sea necesario -->
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>

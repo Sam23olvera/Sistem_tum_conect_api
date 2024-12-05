@@ -1,8 +1,4 @@
 p {
-    color: white;
+    color: blue;
 }
-#map {
-    height: 300px; /* Ajusta el tamaño según sea necesario */
-    margin-top: 50px;
-    width: 100%; /* Asegúrate de que ocupe todo el ancho disponible */
-}
+

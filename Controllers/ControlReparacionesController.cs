@@ -1,11 +1,10 @@
 ﻿using ConectDB.DB;
 using ConectDB.Models;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using System.Drawing.Printing;
-using System.Net.Http;
-using System.Net.Sockets;
+using System.ComponentModel.DataAnnotations;
 
 namespace ConectDB.Controllers
 {
@@ -14,7 +13,6 @@ namespace ConectDB.Controllers
         private readonly string url = "https://webportal.tum.com.mx/wsstmdv/api/accesyst";
         private readonly ConectMenuUser menu = new ConectMenuUser();
         private readonly DataApi data = new DataApi();
-        //private readonly ConectApiContrRep con = new ConectApiContrRep();
         private readonly ConexionApiControlReparaciones cone = new ConexionApiControlReparaciones();
         
         ControlFalla? controlFal = new ControlFalla();
@@ -73,8 +71,8 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        [HttpGet, HttpPost]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)] 
+        [HttpGet, HttpPost ]
         public IActionResult BuscarPorAsig(string XT, string cveEmp, int NumTicket, int ClaveTipoFalla, DateTime? FehTick, int idsub)
         {
             try
@@ -89,12 +87,10 @@ namespace ConectDB.Controllers
                 if (NumTicket == 0)
                 {
                     controlFal = cone.PrimerCarga(1, model.Data[0].EmpS[0].cveEmp.ToString(), FehTick?.ToString("yyyy-MM-dd HH:mm:ss"), NumTicket, 0, ClaveTipoFalla, 0, 0, idsub, false);
-                    //controlFal = cone.PrimerCarga(1, model.Data[0].EmpS[0].cveEmp.ToString(), FehTick?.ToString("yyyy-MM-dd HH:mm:ss"), NumTicket, 0, ClaveTipoFalla, 0, 0, idsub);
                 }
                 else
                 {
                     controlFal = cone.PrimerCarga(1, model.Data[0].EmpS[0].cveEmp.ToString(), null, NumTicket, 0, ClaveTipoFalla, 0, 0, idsub, false);
-                    //controlFal = cone.PrimerCarga(1, model.Data[0].EmpS[0].cveEmp.ToString(), null, NumTicket, 0, ClaveTipoFalla, 0, 0, idsub);
                 }
                 if (controlFal.status == 200)
                 {

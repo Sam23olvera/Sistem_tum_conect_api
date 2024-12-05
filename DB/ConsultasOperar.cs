@@ -21,11 +21,11 @@ namespace ConectDB.DB
             //zTipoOper.CSxTipoOeracion = JsonConvert.DeserializeObject<ConsulTipoOpera>(JA2[0].ToString()).CSxTipoOeracion;
             return zTipoOper;
         }
-        public ConsulTipoOpera SegundaCarga(int empresa, int NumTicket, string? FechaIni, string? FechaFin,int ClaveUnidadNegocio, int CveTipoOperacion,int clvEstatus, int pagina,int tamañomuestra,bool excel)
+        public ConsulTipoOpera SegundaCarga(int empresa, int NumTicket, string? FechaIni, string? FechaFin,int ClaveUnidadNegocio, int CveTipoOperacion,int clvEstatus,bool excel)
         {
             JObject JR1 = JObject.Parse(conapi.HttpWebRequest("POST", url, JObject.Parse("{\"data\":\r{\"bdCc\":5,\"bdSch\":\"dbo\",\"bdSp\":\"SPQRY_CatalogoTipoOperacion\"},\"filter\":[{\"property\":\"ClaveEmpresa\",\"value\":\"" + empresa + "\"}]}")));
             JArray JA1 = JR1["data"] as JArray;
-            pagina = (pagina - 1) * tamañomuestra;
+            //pagina = (pagina - 1) * tamañomuestra;
             zTipoOper = JsonConvert.DeserializeObject<ConsulTipoOpera>(JA1[0].ToString());
             if (FechaIni == null)
             {
@@ -48,8 +48,8 @@ namespace ConectDB.DB
             if (JR2["status"].ToString() != "200")
             {
                 List<CSxTipoOeracion> asgsg = new List<CSxTipoOeracion>();
-                zTipoOper.CSxTipoOeracion = asgsg;
-                zTipoOper.TotalSolicitudes = 0;
+                //zTipoOper.CSxTipoOeracion = asgsg;
+                //zTipoOper.TotalSolicitudes = 0;
             }
             else 
             {
@@ -64,8 +64,8 @@ namespace ConectDB.DB
                     if (JA2.Count != 0)
                     {
                         zTipoOper.CSxTipoOeracion = JsonConvert.DeserializeObject<ConsulTipoOpera>(JA2[0].ToString()).CSxTipoOeracion;
-                        zTipoOper.TotalSolicitudes = zTipoOper.CSxTipoOeracion.Count;
-                        zTipoOper.CSxTipoOeracion = zTipoOper.CSxTipoOeracion.Skip(pagina).Take(tamañomuestra).ToList();
+                        //zTipoOper.TotalSolicitudes = zTipoOper.CSxTipoOeracion.Count;
+                        //zTipoOper.CSxTipoOeracion = zTipoOper.CSxTipoOeracion.Skip(pagina).Take(tamañomuestra).ToList();
                     }
                 }
                 

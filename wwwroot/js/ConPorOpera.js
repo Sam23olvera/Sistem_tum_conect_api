@@ -4,46 +4,99 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     var links = document.querySelectorAll(".carga");
-    var pagin = document.querySelectorAll(".page-link");
+    //var pagin = document.querySelectorAll(".page-link");
     links.forEach(function (link) {
         link.addEventListener("click", function () {
             document.getElementById("spinner-overlay").style.display = "block";
         });
     });
 
-    pagin.forEach(function (link) {
-        link.addEventListener("click", function () {
-            document.getElementById("spinner-overlay").style.display = "block";
+    //pagin.forEach(function (link) {
+    //    link.addEventListener("click", function () {
+    //        document.getElementById("spinner-overlay").style.display = "block";
+    //    });
+    //});
+
+    const rowsPerPage = 10;
+    const table = document.getElementById("myTable");
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    const pagination = document.getElementById("pagination");
+
+    function displayPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        rows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? "" : "none";
         });
-    });
 
-    document.getElementById('btnExcel').addEventListener('click', function (e) {
-        e.preventDefault();
-        var form = this.closest('form');
+        updatePagination(page);
+    }
 
-        document.getElementById("spinner-overlay").style.display = "block";
+    function updatePagination(currentPage) {
+        pagination.innerHTML = ""; // Limpiar contenido anterior
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
 
-        fetch(form.action, {
-            method: form.method,
-            body: new URLSearchParams(new FormData(form))
-        })
-            .then(response => response.blob())
-            .then(blob => {
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                const d = new Date();
-                var day = ("0" + d.getDate()).slice(-2) + '-' + ("0" + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear() + ' ' + ("0" + d.getHours()).slice(-2) + ':' + ("0" + d.getMinutes()).slice(-2);
-                link.download = 'Expo-' + day + '.xlsx';
-                link.click();
-                document.getElementById("spinner-overlay").style.display = "none";
-            })
-            .catch(error => {
-                console.error('Error al descargar el archivo Excel:', error);
-                document.getElementById("spinner-overlay").style.display = "none";
-            });
-    });
+
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "Anterior";
+        prevButton.classList.add("btn", "btn-primary", "me-2");
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => displayPage(currentPage - 1));
+        pagination.appendChild(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement("button");
+            pageButton.textContent = i;
+            pageButton.classList.add("btn", "btn-secondary", "me-2");
+            if (i === currentPage) {
+                pageButton.classList.add("active");
+            }
+            pageButton.addEventListener("click", () => displayPage(i));
+            pagination.appendChild(pageButton);
+        }
+
+        // Botón de "Siguiente"
+        const nextButton = document.createElement("button");
+        nextButton.textContent = "Siguiente";
+        nextButton.classList.add("btn", "btn-primary", "me-2");
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => displayPage(currentPage + 1));
+        pagination.appendChild(nextButton);
+    }
+
+    // Inicializar la primera página
+    displayPage(1);
 
 });
+document.getElementById('btnExcel').addEventListener('click', function (e) {
+    e.preventDefault();
+    var form = this.closest('form');
+
+    document.getElementById("spinner-overlay").style.display = "block";
+
+    fetch(form.action, {
+        method: form.method,
+        body: new URLSearchParams(new FormData(form))
+    })
+        .then(response => response.blob())
+        .then(blob => {
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            const d = new Date();
+            var day = ("0" + d.getDate()).slice(-2) + '-' + ("0" + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear() + ' ' + ("0" + d.getHours()).slice(-2) + ':' + ("0" + d.getMinutes()).slice(-2);
+            link.download = 'Expo-' + day + '.xlsx';
+            link.click();
+            document.getElementById("spinner-overlay").style.display = "none";
+        })
+        .catch(error => {
+            console.error('Error al descargar el archivo Excel:', error);
+            document.getElementById("spinner-overlay").style.display = "none";
+        });
+});
+
+
 
 $(document).ready(function () {
     $('#FehInicio').datetimepicker({
@@ -145,7 +198,7 @@ function filterBusca() {
     var input = document.getElementById("searchInput");
     var filter = input.value.toUpperCase();
     var cards = document.getElementById("cards");
-    
+
     var table = document.getElementById("myTable");
     var tr = table.getElementsByTagName("tr");
 
@@ -189,13 +242,11 @@ function filterTable(columnIndex) {
         }
     }
 }
-function filterEstatusTable(columnIndex)
-{
+function filterEstatusTable(columnIndex) {
     var sele = document.getElementById("filterEstatus");
     var filter = sele.options[sele.selectedIndex].text;
-    if (filter == '[Seleccionar]')
-    {
-        filter = ''; 
+    if (filter == '[Seleccionar]') {
+        filter = '';
     }
     var table = document.getElementById("myTable");
     var tr = table.getElementsByTagName("tr");
@@ -213,7 +264,7 @@ function filterEstatusTable(columnIndex)
     }
 }
 function getColumnName(index) {
-    var columnNames = ["UNE", "TipoOperacion", "NumTicket","Estatus"];
+    var columnNames = ["UNE", "TipoOperacion", "NumTicket", "Estatus"];
     return columnNames[index];
 }
 function llenar(ClaveUNE) {
@@ -269,10 +320,9 @@ function llenar(ClaveUNE) {
                 if (cvtp.value == "") {
                     select.value = "0";
                 }
-                else
-                {
+                else {
                     select.value = cvtp.value;
-                }                
+                }
             }
         })
         .catch(error => console.log("error", error));

@@ -12,11 +12,39 @@
         <br />
         <div class="container-fluid">
             <div class="row">
-                <input type="text" value="@TempData["ffa"]" id="datosload" />
+                <div class="col-md-3">
+                    <input type="text" name="datosload" id="datosload" value="@TempData["ffa"]" />
+                </div>
+                <div class="col-md-3">
+                    <button onclick="PrintMapa()" type="button" class="btn btn-info">Mostrar</button>
+                </div>
+                <div class="col-md-3">
+                    <button onclick="guardarCoordenadas()" type="button" class="btn btn-success">Guardar Coordenadas</button>
+                </div>
+                <div class="col-md-3">
+                    <p id="texto"></p>
+                </div>
             </div>
-            <button onclick="PrintMapa()" type="button" class="btn btn-info">Mostrar</button>
             <div class="row">
-                <div id="map" class="map map-home" style="height: 300px; margin-top: 50px">
+                <div class="col-md-auto">
+                    <div id="map" class="map map-home" style="height: 300px; margin-top: 50px">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button class="form-control" onclick="prueba_notificacion2()" id="prueba">Notificacion</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary position-relative">
+                        Inbox
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            99+
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>

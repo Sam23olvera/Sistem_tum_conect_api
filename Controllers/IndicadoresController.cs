@@ -11,8 +11,7 @@ namespace ConectDB.Controllers
         private readonly string url = "https://webportal.tum.com.mx/wsstmdv/api/accesyst";
         private readonly ConectMenuUser menu = new ConectMenuUser();
         private readonly DataApi data = new DataApi();
-        private readonly ConectApiContrRep con = new ConectApiContrRep();
-        private const int pageSize = 2;
+        private readonly ConexionApiControlReparaciones con = new ConexionApiControlReparaciones();
         ControlFalla? controlFal = new ControlFalla();
         UsuarioModel? model = new UsuarioModel();
         Error msj = new Error();

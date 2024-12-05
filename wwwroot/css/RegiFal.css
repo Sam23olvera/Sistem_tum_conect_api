@@ -1,3 +1,8 @@
 p {
-    color: white;
+    color: black;
+}
+
+#map {
+    height: 300px;
+    width: 100%;
 }

@@ -4,18 +4,18 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     var links = document.querySelectorAll(".carga");
-    var pagin = document.querySelectorAll(".page-link");
+    //var pagin = document.querySelectorAll(".page-link");
     links.forEach(function (link) {
         link.addEventListener("click", function () {
             document.getElementById("spinner-overlay").style.display = "block";
         });
     });
 
-    pagin.forEach(function (link) {
-        link.addEventListener("click", function () {
-            document.getElementById("spinner-overlay").style.display = "block";
-        });
-    });
+    //pagin.forEach(function (link) {
+    //    link.addEventListener("click", function () {
+    //        document.getElementById("spinner-overlay").style.display = "block";
+    //    });
+    //});
 
     var highlightRowId = localStorage.getItem('highlightRowId');
     if (highlightRowId) {

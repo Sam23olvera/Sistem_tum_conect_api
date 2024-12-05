@@ -16,7 +16,7 @@ namespace ConectDB.Controllers
     {
         private readonly string url = "https://webportal.tum.com.mx/wsstmdv/api/accesyst";
         private readonly ConectMenuUser menu = new ConectMenuUser();
-        private const int pageSize = 10;
+        //private const int pageSize = 10;
         UsuarioModel? model = new UsuarioModel();
         Error msj = new Error();
         ConsulTipoOpera catop = new ConsulTipoOpera();
@@ -35,6 +35,12 @@ namespace ConectDB.Controllers
                 model.Token = XT;
                 ViewData["UsuarioModel"] = model;
                 ViewData["Title"] = "Consulta de Operacion";
+
+                if (TempData.ContainsKey("Mensaje"))
+                {
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                }
+
                 catop = Consulta.PrimeraCarga(model.Data[0].EmpS[0].cveEmp);
                 return View("Index", catop);
             }
@@ -47,7 +53,7 @@ namespace ConectDB.Controllers
         }
         [HttpPost,HttpGet]
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        public IActionResult Busca(int NumTicket, DateTime FehInicio, DateTime FehFin,int ClaveUnidadNegocio, int ClaveTipoOperacion,int clvEstatus, bool Excel, int cveEmp, string XT, int pagina) 
+        public IActionResult Busca(int NumTicket, DateTime FehInicio, DateTime FehFin,int ClaveUnidadNegocio, int ClaveTipoOperacion,int clvEstatus, bool Excel, int cveEmp, string XT) 
         {
             try
             {
@@ -68,10 +74,10 @@ namespace ConectDB.Controllers
                 }
                 if (NumTicket != 0) 
                 {
-                    catop = Consulta.SegundaCarga(model.Data[0].EmpS[0].cveEmp, NumTicket, null, null, 0, 0,0, pagina, pageSize, Excel);
+                    catop = Consulta.SegundaCarga(model.Data[0].EmpS[0].cveEmp, NumTicket, null, null, 0, 0,0, Excel);
                 }
                 else {
-                    catop = Consulta.SegundaCarga(model.Data[0].EmpS[0].cveEmp, NumTicket, FehInicio.ToString("yyyy-MM-dd HH:mm:ss"), FehFin.ToString("yyyy-MM-dd HH:mm:ss"), ClaveUnidadNegocio, ClaveTipoOperacion, clvEstatus, pagina, pageSize, Excel);
+                    catop = Consulta.SegundaCarga(model.Data[0].EmpS[0].cveEmp, NumTicket, FehInicio.ToString("yyyy-MM-dd HH:mm:ss"), FehFin.ToString("yyyy-MM-dd HH:mm:ss"), ClaveUnidadNegocio, ClaveTipoOperacion, clvEstatus,Excel);
                 }
                 if (catop.CSxTipoOeracion.Count == 0)
                 {
@@ -86,8 +92,8 @@ namespace ConectDB.Controllers
                     }
                     else 
                     {
-                        ViewBag.TotalPages = (int)Math.Ceiling((double)catop.TotalSolicitudes / pageSize);
-                        ViewBag.CurrentPage = pagina;
+                        //ViewBag.TotalPages = (int)Math.Ceiling((double)catop.TotalSolicitudes / pageSize);
+                        //ViewBag.CurrentPage = pagina;
                     }
                 }
                 TempData["ClaveUniNegocio"] = ClaveUnidadNegocio;

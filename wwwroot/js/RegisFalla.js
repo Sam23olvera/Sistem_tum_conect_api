@@ -1,193 +1,14 @@
 ﻿window.onload = function () {
-    document.getElementById("spinner").style.display = "none";
+    document.getElementById("spinner-overlay").style.display = "none";
 };
 document.addEventListener("DOMContentLoaded", function () {
     var links = document.querySelectorAll(".carga");
     links.forEach(function (link) {
         link.addEventListener("click", function () {
-            document.getElementById("spinner").style.display = "block";
+            document.getElementById("spinner-overlay").style.display = "block";
         });
     });
 });
-document.addEventListener("DOMContentLoaded", function () {
-    var TipoClas = document.getElementById('TipoClas');
-    var forllantas = document.getElementById('forllantas');
-    var TipTicket = document.getElementById('TipTicket');
-    var Remolque = document.getElementById('Remolque');
-    var Tractor = document.getElementById('Tractor');
-    var Numope = document.getElementById('Numope');
-    var NomOpe = document.getElementById('NomOpe');
-    var Eco = document.getElementById('Eco');
-    var selAli = document.getElementById('selAli');
-    var ClTpOp = document.getElementById('ClTpOp');
-    var Ruta = document.getElementById('Ruta');
-    var Alia = document.getElementById('Alias');
-    var Numero = document.getElementById('Numero');
-    var ClOp = document.getElementById('ClOp');
-    var desclTpOp = document.getElementById('desclTpOp');
-    var NomTipOp = document.getElementById('NomTipOp');
-    var ClaveTipoEquipo = document.getElementById('ClaveTipoEquipo');
-    var cvTipoequipo = document.getElementById('cvTipoequipo');
-    var ChkDisel = document.getElementById('ChkDisel');
-    var ChkGrua = document.getElementById('ChkGrua');
-    var txtCheckDisel = document.getElementById('CheckDisel');
-    var txtCheckGrua = document.getElementById('CheckGrua');
-    var Dolly = document.getElementById('Dolly');
-    ///////////////////////////////////////////
-    var selDolly = document.getElementById('selDolly');
-    var SDolOp = document.getElementById('SDolOp');
-    var ClaOpDol = document.getElementById('ClaOpDol');
-    ///////////////////////////////////////////
-    var opcionesRemolque1 = document.getElementById('opcionesRemolque1');
-    var Remp = document.getElementById('Remp');
-    function fillValues(selectedIndex, targetValue, targetText) {
-        targetValue.value = selectedIndex !== -1 ? selectedIndex.options[selectedIndex.selectedIndex].value : '';
-        targetText.value = selectedIndex !== -1 ? selectedIndex.options[selectedIndex.selectedIndex].text : '';
-    }
-    Ruta.disabled = true;
-    Numope.addEventListener('change', function () {
-        NomOpe.value = Numope.value;
-    });
-    NomOpe.addEventListener('change', function () {
-        Numope.value = NomOpe.value;
-    });
-    TipTicket.addEventListener('change', function () {
-        if (TipTicket.value == 1) {
-            ClaOpDol.value = "";
-            Tractor.style.display = "block";
-            Remolque.style.display = "none";
-            Dolly.style.display = "none";
-        }
-        else if (TipTicket.value == 2) {
-            ClaOpDol.value = "";
-            Tractor.style.display = "none";
-            Remolque.style.display = "block";
-            Dolly.style.display = "none";
-            ClaveTipoEquipo.selectedIndex = 0;
-        }
-        else if (TipTicket.value == 3) {
-            ClaOpDol.value = "";
-            Tractor.style.display = "none";
-            Remolque.style.display = "none";
-            Dolly.style.display = "block";
-            ClaveTipoEquipo.selectedIndex = 0;
-        }
-        else {
-            ClaOpDol.value = "";
-            Tractor.style.display = "none";
-            Remolque.style.display = "none";
-            Dolly.style.display = "none";
-        }
-    });
-    opcionesRemolque1.addEventListener('change', function () {
-        Remp.value = opcionesRemolque1.value;
-        ClaOpDol.value = Remp.options[Remp.selectedIndex].text;
-    });
-    selDolly.addEventListener('change', function () {
-        SDolOp.value = selDolly.value;
-        ClaOpDol.value = SDolOp.options[SDolOp.selectedIndex].text;
-    });
-    TipoClas.addEventListener('change', function () {
-        if (TipoClas.value == 2) {
-            forllantas.style.display = "block";
-        }
-        else {
-            forllantas.style.display = "none";
-        }
-    });
-    Eco.addEventListener('change', function () {
-        selAli.value = Eco.value;
-        ClTpOp.value = Eco.value;
-        desclTpOp.value = Eco.value;
-        var valorClTpOp = ClTpOp.value;
-        ClTpEquipo.value = Eco.value;
-
-        fillValues(Eco, ClTpOp, Numero);
-        fillValues(selAli, ClTpOp, Alia);
-        fillValues(ClTpOp, ClTpOp, ClOp);
-
-        Ruta.value = '[Selecciona]';
-        Ruta.disabled = true;
-        NomTipOp.value = desclTpOp.options[desclTpOp.selectedIndex].text;
-        ClaOpDol.value = ClTpOp.options[ClTpOp.selectedIndex].text;
-        ClaveTipoEquipo.value = ClTpEquipo.options[ClTpEquipo.selectedIndex].text;
-        cvTipoequipo.value = ClaveTipoEquipo.value;
-        if (NomTipOp.value == 'SEPOMEX') {
-            Ruta.disabled = false;
-        }
-
-    });
-    selAli.addEventListener('change', function () {
-        Eco.value = selAli.value;
-        ClTpOp.value = selAli.value;
-        desclTpOp.value = selAli.value;
-        var valorClTpOp = ClTpOp.value;
-        ClTpEquipo.value = Eco.value;
-
-        fillValues(Eco, ClTpOp, Numero);
-        fillValues(selAli, ClTpOp, Alia);
-        fillValues(ClTpOp, ClTpOp, ClOp);
-        Ruta.value = '[Selecciona]';
-        Ruta.disabled = true;
-        NomTipOp.value = desclTpOp.options[desclTpOp.selectedIndex].text;
-        ClaOpDol.value = ClTpOp.options[ClTpOp.selectedIndex].text;
-        ClaveTipoEquipo.value = ClTpEquipo.options[ClTpEquipo.selectedIndex].text;
-        cvTipoequipo.value = ClaveTipoEquipo.value;
-        if (NomTipOp.value == 'SEPOMEX') {
-            Ruta.disabled = false;
-        }
-    });
-    ChkDisel.addEventListener('change', function () {
-        if (ChkDisel.checked == true) {
-            txtCheckDisel.value = 1;
-        }
-        else if (ChkDisel.checked == false) {
-            txtCheckDisel.value = 0;
-        }
-    });
-    ChkGrua.addEventListener('change', function () {
-        if (ChkGrua.checked == true) {
-            txtCheckGrua.value = 1;
-        }
-        else if (ChkGrua.checked == false) {
-            txtCheckGrua.value = 0;
-        }
-    });
-
-});
-document.addEventListener("DOMContentLoaded", function () {
-
-    var remo1 = document.getElementById('opcionesRemolque1');
-    var remo2 = document.getElementById('opcionesRemolque2');
-    var Remolque1 = document.getElementById('Remolque1');
-    var Remolque2 = document.getElementById('Remolque2');
-    remo1.addEventListener('change', function () {
-        Remolque1.value = remo1.options[remo1.selectedIndex].text;
-    });
-    remo2.addEventListener('change', function () {
-        Remolque2.value = remo2.options[remo2.selectedIndex].text;
-    });
-
-
-});
-
-$(document).ready(function () {
-    var ChckRemolMostrar = document.getElementById('ChckRemolMostrar');
-    var txtchekRemol = document.getElementById('txtchekRemol');
-    var divremo = document.getElementById('divremo');
-    ChckRemolMostrar.addEventListener('change', function () {
-        if (this.checked) {
-            txtchekRemol.value = true;
-            divremo.style.display = "block";
-        }
-        else {
-            txtchekRemol.value = false;
-            divremo.style.display = "none";
-        }
-    });
-
-});
-
 $(document).ready(function () {
     var mensaje = document.getElementById('mensaje').value;
     var guarda = document.getElementById('guarda').value;
@@ -198,38 +19,232 @@ $(document).ready(function () {
         toastr.success(guarda);
     }
 });
+document.addEventListener("DOMContentLoaded", function () {
+    var TipoClas = document.getElementById('selclasi');
+    var forllantas = document.getElementById('forllantas');
+    TipoClas.addEventListener('change', function () {
+        if (TipoClas.value == 2) {
+            forllantas.style.display = "block";
+        }
+        else {
+            forllantas.style.display = "none";
+        }
+    });
+});
+$(document).ready(function () {
 
-var map = null;
-var marker = null;
-function PintaMapa(inputLngValue, inputLatValue, DirGPS) {
-    if (!map) {
-        map = L.map('map').setView([inputLatValue, inputLngValue], 15);
+    var seleuni = document.getElementById('seleuni');
+    var claveEmp = document.getElementById('cveEmp');
+    seleuni.addEventListener('change', function () {
+        var CheckViaje = document.getElementById('CheckViaje');
+        var numuni = seleuni.options[seleuni.selectedIndex].text;
+        var num = numuni.split("|");
+        if (CheckViaje.checked) {
+            mostrarMapa(claveEmp.value, seleuni.value);
+            muestraViaje(claveEmp.value, num[0]);
+        }
+    });
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+    var CheckViaje = document.getElementById('CheckViaje');
+    var Opera = document.getElementById('Opera');
+    var SelectOperacion = document.getElementById('SelectOperacion');
+    var Ruta = document.getElementById('Ruta');
+    var remolque1 = document.getElementById('remolque1');
+    var remolque2 = document.getElementById('remolque2');
+    var seleuni = document.getElementById('seleuni');
+
+    CheckViaje.addEventListener("change", function () {
+        if (this.checked) {
+            if (seleuni.value != 0) {
+                Opera.disabled = true;
+                SelectOperacion.disabled = true;
+                Ruta.disabled = true;
+                remolque1.disabled = true;
+                remolque2.disabled = true;
+                var numuni = seleuni.options[seleuni.selectedIndex].text;
+                var num = numuni.split("|");
+                if (CheckViaje.checked) {
+                    mostrarMapa(claveEmp.value, seleuni.value);
+                    muestraViaje(claveEmp.value, num[0]);
+                }
+            }
+            else {
+                Opera.disabled = true;
+                Opera.value = 0;
+                SelectOperacion.disabled = true;
+                SelectOperacion.value = 0;
+                Ruta.disabled = true;
+                Ruta.value = "";
+                remolque1.disabled = true;
+                remolque1.value = 0;
+                remolque2.disabled = true;
+                remolque2.value = 0;
+            }
+        }
+        else {
+            Opera.disabled = false;
+            SelectOperacion.disabled = false;
+            Ruta.disabled = false;
+            remolque1.disabled = false;
+            remolque2.disabled = false;
+        }
+    });
+
+
+});
+
+
+document.getElementById('NumDaLla').addEventListener('input', function () {
+    const numLlantas = parseInt(this.value) || 0; // Número de llantas (valor introducido)
+    const container = document.getElementById('llantasContainer');
+    // Limpiar los campos existentes
+    container.innerHTML = '';
+
+    // Generar dinámicamente los campos según el número de llantas
+    for (let i = 1; i <= numLlantas; i++) {
+        const llantaFields = `
+            <div class="row">
+                <div class="col-md-2">
+                    <h6>Llanta ${i}</h6>
+                </div>
+                <div class="col-md-2">
+                    <label for="Dot${i}" class="col-form-label">DOT:</label>
+                    <input type="text" class="form-control form-control-sm" id="Dot${i}" name="Dot${i}" placeholder="#######" value="" />
+                </div>
+                <div class="col-md-2">
+                    <label for="Marca${i}" class="col-form-label">Marca:</label>
+                    <input type="text" class="form-control form-control-sm" id="Marca${i}" name="Marca${i}" placeholder="Marca" value="" />
+                </div>
+                <div class="col-md-2">
+                    <label for="Medida${i}" class="col-form-label">Medida:</label>
+                    <input type="text" class="form-control form-control-sm" id="Medida${i}" name="Medida${i}" placeholder="Medida" value="" />
+                </div>
+                <div class="col-md-2">
+                    <label for="Posis${i}" class="col-form-label">Posición:</label>
+                    <input type="number" class="form-control form-control-sm" id="Posis${i}" name="Posis${i}" placeholder="Posición:" value="" />
+                </div>
+                <div class="col-md-2">
+                    <label for="Ecollant${i}" class="col-form-label">Eco LLantas:</label>
+                    <input type="text" class="form-control form-control-sm" id="Ecollant${i}" name="Ecollant${i}" placeholder="Eco LLantas:" value="" />
+                </div>
+             </div>
+            `;
+        container.innerHTML += llantaFields; // Agregar los campos al contenedor
+    }
+});
+
+function agrgar() {
+    // Obtén los elementos del formulario
+    var fallasmuestra = document.getElementById('fallasmuestra').querySelector('tbody');
+    var comentario = document.getElementById('Comentario').value;
+    var tipoFalla = document.getElementById('seltip').options[document.getElementById('seltip').selectedIndex].text;
+    var clasificacion = document.getElementById('selclasi').options[document.getElementById('selclasi').selectedIndex].text;
+    var fallaEn = document.getElementById('selfalla').options[document.getElementById('selfalla').selectedIndex].text;
+    var clavesFalAndComen = document.getElementById('clavesFalAndComen');
+    var fallallantas = document.getElementById('fallallantas');
+    var clavefal = document.getElementById('selfalla').value;
+    var claveclasi = document.getElementById('selclasi').value;
+    var clavetipo = document.getElementById('seltip').value;
+    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '|';
+
+    // Validar los campos
+    if (!fallaEn || fallaEn === '[seleccionar]' ||
+        !clasificacion || clasificacion === '[Seleccionar]' ||
+        !tipoFalla || tipoFalla === '[Seleccionar]') {
+        toastr.error('Por favor, llena todos los campos antes de agregar.');
+        return;
     }
 
-    if (marker) {
-        map.removeLayer(marker);
+    // Si el tipo de falla es "Llanta", agrega los datos de las llantas
+    let llantasInfo = '';
+    if (clasificacion === 'Llantas') {
+        const numLlantas = parseInt(document.getElementById('NumDaLla').value) || 0;
+        if (numLlantas === 0) {
+            toastr.error('Por favor, especifica el número de llantas dañadas.');
+            return;
+        }
+
+        for (let i = 1; i <= numLlantas; i++) {
+            const dot = document.getElementById(`Dot${i}`).value || 'N/A';
+            const marca = document.getElementById(`Marca${i}`).value || 'N/A';
+            const medida = document.getElementById(`Medida${i}`).value || 'N/A';
+            const posicion = document.getElementById(`Posis${i}`).value || 'N/A';
+            const Ecollant = document.getElementById(`Ecollant${i}`).value || 'N/A';
+
+            llantasInfo += `<p>#Llanta : ${i}, DOT: ${dot}, Marca: ${marca},Medida: ${medida},Posición: ${posicion},Eco LLantas: ${Ecollant} </p>`;
+            fallallantas.value = fallallantas.value + i + '|' + dot + '|' + marca + '|' + medida + '|' + posicion + '|' + Ecollant + '|';
+
+        }
     }
 
-    marker = L.marker([inputLatValue, inputLngValue]).addTo(map);
-    marker.bindPopup("Última ubicación reportada:\n" + DirGPS).openPopup();
-    map.setView([inputLatValue, inputLngValue], 15);
+    // Crea una nueva fila
+    var nuevaFila = document.createElement('tr');
+    nuevaFila.innerHTML = `
+        <td>${fallaEn}</td>
+        <td>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                    ${clasificacion} 
+                    </div>
+                    <div class="col-md-6">
+                    ${llantasInfo || ''}
+                    </div>
+                </div>
+            </div>
+        </td>            
+        <td>${tipoFalla}</td>
+        <td>${comentario}</td>
+        <td>
+            <button type="button" class="btn btn-outline-secondary" onclick="MostraEvid()">
+                <img src="${evidenciasImgPath}" alt="Evidencias" />
+            </button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-danger" onclick="eliminarFila(this)">
+                <img src="${eliminarImgPath}" />
+            </button>
+        </td>
+    `;
+
+    // Agrega la nueva fila al tbody
+    fallasmuestra.appendChild(nuevaFila);
+
+    // Limpia los campos del formulario
+    document.getElementById('Comentario').value = '';
+    document.getElementById('seltip').selectedIndex = 0;
+    document.getElementById('selclasi').selectedIndex = 0;
+    document.getElementById('selfalla').selectedIndex = 0;
+    document.getElementById('NumDaLla').value = '';
+    document.getElementById('llantasContainer').innerHTML = '';
+    document.getElementById('forllantas').style.display = "none";
+
+    toastr.success('Falla agregada correctamente.');
 }
-function EnvioUbica() {
-    var Numero = document.getElementById('Numero').value;
-    var Alias = document.getElementById('Alias').value;
-    var ClOp = document.getElementById('ClOp').value;
-    var cvEmp = document.getElementById('cvEmp').value;
-    var inputLng = document.getElementById('inputLng');
-    var inputLat = document.getElementById('inputLat');
-    var DirGPS = document.getElementById('DirGPS');
-    var FechGPS = document.getElementById('FechGPS');
-    var map = document.getElementById('map');
 
-    var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
+// Función para eliminar una fila específica
+function eliminarFila(boton) {
+    var fila = boton.closest('tr');
+    fila.remove();
+}
+
+function muestraViaje(claveem, numunidad) {
+    var overlay = document.getElementById('loading-overlay');
+    overlay.style.display = 'block'; // Mostrar el spinner
+
+    const inpRuta = document.getElementById('Ruta');
+    const Opera = document.getElementById('Opera');
+    const remolque1 = document.getElementById('remolque1');
+    const remolque2 = document.getElementById('remolque2');
+    const SelectOperacion = document.getElementById('SelectOperacion');
+
+    inpRuta.value = "";
+    remolque1.value = 0;
+    remolque2.value = 0;
+    Opera.value = 0;
+    SelectOperacion.value = 0;
+
+    const url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -237,24 +252,16 @@ function EnvioUbica() {
         "data": {
             "bdCc": 5,
             "bdSch": "dbo",
-            "bdSp": "SPQRY_UltimaPosicion"
+            "bdSp": "SPQRY_DataActualxUnidad"
         },
         "filter": [
             {
+                "property": "NoUnidad",
+                "value": numunidad
+            },
+            {
                 "property": "ClaveEmpresa",
-                "value": cvEmp
-            },
-            {
-                "property": "Unidad",
-                "value": Numero
-            },
-            {
-                "property": "Alias",
-                "value": Alias
-            },
-            {
-                "property": "ClaveOperacion",
-                "value": ClOp
+                "value": claveem
             }
         ]
     });
@@ -265,7 +272,93 @@ function EnvioUbica() {
         body: raw,
         redirect: "follow"
     };
+    fetch(url, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            const obj = JSON.parse(result);
+            if (obj.data == null) {
+                var mensaje = document.getElementById('mensaje').value;
+                mensaje = obj;
+                if (mensaje !== '') {
+                    toastr.error(mensaje);
+                }
+            }
+            else if (obj.data.length == 0) {
+                toastr.error("No se encuentra viaje");
+            }
+            else {
+                if (obj.data[0].DataUnidadActual[0].ClaveOperador == null) {
+                    Opera.value = 0;
+                }
+                else {
+                    Opera.value = obj.data[0].DataUnidadActual[0].ClaveOperador;
+                }
+                if (obj.data[0].DataUnidadActual[0].Ruta == null) {
+                    inpRuta.value = "";
+                }
+                else {
+                    inpRuta.value = obj.data[0].DataUnidadActual[0].Ruta;
+                }
+                if (obj.data[0].DataUnidadActual[0].CveRem1 == null) {
+                    remolque1.value = 0;
+                }
+                else {
+                    remolque1.value = obj.data[0].DataUnidadActual[0].CveRem1;
+                }
+                if (obj.data[0].DataUnidadActual[0].CveRem2 == null) {
+                    remolque2.value = 0;
+                }
+                else {
+                    remolque2.value = obj.data[0].DataUnidadActual[0].CveRem2;
+                }
+                if (obj.data[0].DataUnidadActual[0].ClaveTipoOperacion == null) {
+                    SelectOperacion.value = 0;
+                }
+                else {
+                    SelectOperacion.value = obj.data[0].DataUnidadActual[0].ClaveTipoOperacion;
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            toastr.error("Error al cargar datos del viaje");
+        })
+        .finally(() => {
+            overlay.style.display = 'none'; // Ocultar el spinner
+        });
 
+}
+function mostrarMapa(claveem, unidad) {
+    var overlay = document.getElementById('loading-overlay');
+    overlay.style.display = 'block'; // Mostrar el spinner
+
+    var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+        "data": {
+            "bdCc": 5,
+            "bdSch": "dbo",
+            "bdSp": "SPQRY_UltimaPosicion_Unidad"
+        },
+        "filter": [
+            {
+                "property": "ClaveEmpresa",
+                "value": claveem
+            },
+            {
+                "property": "ClaveUnidad",
+                "value": unidad
+            }
+        ]
+    });
+    var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+    };
     fetch(url, requestOptions)
         .then(response => response.text())
         .then(result => {
@@ -278,45 +371,118 @@ function EnvioUbica() {
                     toastr.error(mensaje);
                 }
             }
-            else if (obj.data.length == 0) {
-                var mensaje = document.getElementById('mensaje').value;
-                var TiGpS = document.getElementById('TiGpS');
-                mensaje = 'No se encuentrar datos GPS';
-                inputLat.value = "";
-                inputLng.value = "";
-                DirGPS.value = "";
-                FechGPS.value = "";
-                map.style.display = "none";
-                TiGpS.style.display = "none";
-                if (mensaje !== '') {
-                    toastr.error(mensaje);
-                }
-            }
             else {
-                inputLat.value = obj.data[0].UltimaPosicion[0].Latitud;
-                inputLng.value = obj.data[0].UltimaPosicion[0].Longitud;
-                DirGPS.value = obj.data[0].UltimaPosicion[0].Position;
-                FechGPS.value = obj.data[0].UltimaPosicion[0].SendTime;
-                document.getElementById('DirGPSHidden').value = DirGPS.value;
-                document.getElementById('FechGPSHidden').value = FechGPS.value;
-                const lat = parseFloat(inputLat.value);
-                const lng = parseFloat(inputLng.value);
-                if (!isNaN(lat) && !isNaN(lng)) {
-                    var TiGpS = document.getElementById('TiGpS');
-                    map.style.display = "block";
-                    TiGpS.style.display = "block";
-                    PintaMapa(lng, lat, DirGPS.value);
-                }
-                else {
-                    var mensaje = document.getElementById('mensaje').value;
-                    mensaje = "Error al obtener coordenadas válidas."
-                    if (mensaje !== '') {
-                        toastr.error(mensaje);
-                    }
-                }
+                var lati = obj.data[0].UltimaPosicion[0].Latitud;
+                var long = obj.data[0].UltimaPosicion[0].Longitud;
+                var LGPS = obj.data[0].UltimaPosicion[0].Position;
+                var fechaGPs = obj.data[0].UltimaPosicion[0].SendTime;
+                PintaMapa(long, lati, LGPS, fechaGPs);
             }
         })
-        .catch(error => console.log("error", error));
+        .catch(error => {
+            var map = document.getElementById('map');
+            map.style.display = "block";
+            console.log("Error:", error);
+            toastr.error("Error al cargar el mapa");
+            PintaMapa(long, lati, "","");
+        })
+        .finally(() => {
+            overlay.style.display = 'none'; // Ocultar el spinner
+        });
+
 }
 
 
+function mostrafalla() {
+    var AltaFalla = document.getElementById('AltaFalla');
+    var Evidencia = document.getElementById('Evidencia');
+    if (AltaFalla.style.display === "none") {
+        AltaFalla.style.display = "block";
+        Evidencia.style.display = "none";
+    } else {
+        AltaFalla.style.display = "none";
+        Evidencia.style.display = "none";
+    }
+}
+function MostraEvid() {
+    var AltaFalla = document.getElementById('AltaFalla');
+    var Evidencia = document.getElementById('Evidencia');
+    if (Evidencia.style.display === "none") {
+        Evidencia.style.display = "block";
+        AltaFalla.style.display = "none";
+    }
+    else {
+        Evidencia.style.display = "none";
+        AltaFalla.style.display = "none";
+    }
+}
+
+var map = null;
+var marker = null;
+function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
+    const latin = document.getElementById('lat');
+    const long = document.getElementById('long');
+    const fecha = document.getElementById('fechaGPs');
+    const DirGps = document.getElementById('DirPosGps');
+    if (!map) {
+        map = L.map('map').setView([inputLatValue, inputLngValue], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+    }
+
+    if (marker) {
+        map.removeLayer(marker);
+    }
+
+    marker = L.marker([inputLatValue, inputLngValue], { draggable: true })
+        .addTo(map)
+        .bindPopup("Última ubicación reportada:<br>\n" + DirGPS + "<br>\nFecha Reportada:<br>\n" + feGPs)
+        .openPopup();
+    latin.value = inputLatValue.toFixed(6);
+    long.value = inputLngValue.toFixed(6);
+    fecha.value = feGPs;
+    DirGps.value = DirGPS;
+    marker.on('dragend', function (e) {
+        var newLatLng = e.target.getLatLng(); // Obtener las nuevas coordenadas
+        inputLatValue = newLatLng.lat;
+        inputLngValue = newLatLng.lng;
+
+        marker.setPopupContent(
+            "Actualización de ubicación reportada:<br>" +
+            "Latitud: " + inputLatValue.toFixed(6) + "<br>" +
+            "Longitud: " + inputLngValue.toFixed(6)
+        ).openPopup();
+        actualizarTexto(inputLatValue, inputLngValue);
+    });
+
+}
+function actualizarTexto(lat, lng) {
+    const cambio = document.getElementById('texto');
+    const latin = document.getElementById('lat');
+    const long = document.getElementById('long');
+    const fecha = document.getElementById('fechaGPs');
+    const DirGps = document.getElementById('DirPosGps');
+    var n = new Date();
+    cambio.innerText = ""; // Limpiar el contenido previo
+    cambio.innerText = "Latitud: " + lat.toFixed(6) + " Longitud: " + lng.toFixed(6);
+    latin.value = "";
+    long.value = "";
+    fecha.value = "";
+    DirGps.value = "";
+    latin.value = lat.toFixed(6);
+    long.value = lng.toFixed(6);
+    fecha.value = n.toISOString("yyyy/MM/dd HH:mm:ss");
+}
+function habilitarCamposDeshabilitados()
+{
+    const campos = ['Opera', 'SelectOperacion', 'Ruta', 'remolque1', 'remolque2'];
+    
+    campos.forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) {
+            campo.disabled = false;
+        }
+    });
+}
