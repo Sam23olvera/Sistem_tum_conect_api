@@ -61,10 +61,10 @@ namespace ConectDB.Controllers
                 if (fallas.selAccion == 0)
                 {
                     TempData["Mensaje"] = "Debes de Selecionar una Accion";
-                    fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                    fallas =  con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
-                if (fallas.selTipCarga == 0) 
+                if (fallas.selTipCarga == 0)
                 {
                     TempData["Mensaje"] = "Debes de Selecionar una Tipo Carga";
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
@@ -76,14 +76,33 @@ namespace ConectDB.Controllers
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
-                if (fallas.Opera == 0) 
+                if (fallas.Opera == 0)
                 {
                     TempData["Mensaje"] = "Debes de Selecionar un operador";
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
-                fallas = con.Guardar(fallas);
-                return View("Index",fallas);
+                if (string.IsNullOrEmpty(fallas.clavesFalAndComen))
+                {
+                    TempData["Mensaje"] = "Debes de agregar una falla por lo menos";
+                    fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                    return View("Index", fallas);
+                }
+                fallas = con.Guardar(fallas, model.Data[0].idus);
+                if (fallas.Eror[0].status == 200)
+                {
+                    TempData["guardado"] = fallas.Eror[0].message;
+                    oLista = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                    fallas = oLista;
+                }
+                else
+                {
+                    TempData["Mensaje"] = fallas.Eror[0].message;
+                    fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                }
+
+
+                return View("Index", fallas);
 
             }
             catch (Exception ex)

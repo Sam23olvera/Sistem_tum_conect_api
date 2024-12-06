@@ -28,7 +28,7 @@
                             <div class="row align-content-center text-center">
                                 <div class="col-md-auto">
                                     <label for="selorigen" class="form-label">Origen:</label>
-                                    <select class="form-select form-select-sm" id="selorigen" name="selorigen" disabled>
+                                    <select class="form-select form-select-sm" id="selorigen" name="selorigen" asp-for="selorigen" disabled>
                                         @foreach (var or in Model.TBCAT_OrigenTicket)
                                         {
                                             <option value="@or.ClaveOrigenTicket">@or.Alias|@or.Descripcion</option>
@@ -40,12 +40,12 @@
                                     <label class="form-check-label" for="chekviaje">
                                         Viaje
                                     </label>
-                                    <input class="form-check-input" type="checkbox" value="" id="CheckViaje" >
-                                    <input type="hidden" value="" class="form-control" id="inCheckViaje" name="inCheckViaje" />
+                                    <input class="form-check-input" type="checkbox" value="" id="CheckViaje">
+                                    <input type="hidden" value="" class="form-control" id="inCheckViaje" name="inCheckViaje" asp-for="inCheckViaje" />
                                 </div>
                                 <div class="col-md-auto">
                                     <label for="selAccion" class="form-label">Accion:</label>
-                                    <select class="form-select form-select-sm" id="selAccion" name="selAccion" asp-for="selAccion" required>
+                                    <select class="form-select form-select-sm" id="selAccion" name="selAccion" asp-for="selAccion">
                                         <option selected value="0">[seleccionar]</option>
                                         @foreach (var tip in Model.TBCAT_TipoMtto)
                                         {
@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="col-md-auto">
                                     <label for="selTipCarga" class="form-label">Tipo Carga:</label>
-                                    <select class="form-select form-select-sm" id="selTipCarga" name="selTipCarga" asp-for="selTipCarga" required>
+                                    <select class="form-select form-select-sm" id="selTipCarga" name="selTipCarga" asp-for="selTipCarga">
                                         <option selected value="0">[seleccionar]</option>
                                         @foreach (var tpc in Model.TBCAT_TipoCarga)
                                         {
@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label for="selDolly" class="col-form-label">Tipo de Dolly:</label>
-                                    <select class="form-select form-select-sm" aria-label="Default select example" id="selDolly" name="selDolly">
+                                    <select class="form-select form-select-sm" aria-label="Default select example" id="selDolly" name="selDolly" asp-for="selDolly">
                                         <option selected value="0">[Seleccionar]</option>
                                         @foreach (var carga in Model.TBCAT_Dolly)
                                         {
@@ -77,13 +77,13 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label for="telopera" class="col-form-label">Tel.Operador:</label>
-                                    <input type="text" class="form-control form-control-sm" id="telopera" name="telopera" />
+                                    <input type="text" class="form-control form-control-sm" id="telopera" name="telopera" asp-for="telopera" />
                                 </div>
                             </div>
                             <div class="row align-content-center text-center">
                                 <div class="col-md-auto">
                                     <label for="seleuni" class="form-label">Unidad</label>
-                                    <select class="form-select form-select-sm" id="seleuni" asp-for="seleuni" name="seleuni">
+                                    <select class="form-select form-select-sm" id="seleuni" name="seleuni" asp-for="seleuni">
                                         <option value="0" selected>[seleccionar]</option>
                                         @foreach (var unidades in Model.TBCAT_Unidades)
                                         {
@@ -94,7 +94,7 @@
                                 </div>
                                 <div class="col-md-auto">
                                     <label for="Opera" class="form-label">Operador</label>
-                                    <select class="form-select form-select-sm" id="Opera" name="Opera">
+                                    <select class="form-select form-select-sm" id="Opera" name="Opera" asp-for="Opera">
                                         <option selected value="0">[seleccionar]</option>
                                         @foreach (var op in Model.TBCAT_Operador)
                                         {
@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="Ruta" class="col-form-label">Ruta</label>
-                                    <input type="text" class="form-control form-control-sm" value="" id="Ruta" name="Ruta" />
+                                    <input type="text" class="form-control form-control-sm" value="" id="Ruta" name="Ruta" asp-for="Ruta" />
                                 </div>
                             </div>
                             <div class="row align-content-center text-center">
@@ -180,6 +180,15 @@
                                 </table>
                             </div>
                             <br />
+                            <div class="align-content-center text-center" id="remolque" style="display:none">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label for="selcveEquipo" class="form-label">Remolque:</label>
+                                        <select class="form-select form-select-sm" id="selcveEquipo" name="selcveEquipo" asp-for="selcveEquipo">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="align-content-center text-center" id="AltaFalla" style="display:none">
                                 <div class="row">
                                     <div class="col-md-2">
@@ -224,6 +233,21 @@
                             </div>
                             <div class="align-content-center text-center" id="Evidencia" style="display:none">
                                 <div class="row">
+                                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner" id="carouselImages">
+                                            <!-- Las imágenes que ya están en el servidor se llenarán aquí -->
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <label for="formFileMultiple" class="form-label">Selecciona Imagenes</label>
                                     <input class="form-control" type="file" id="formFileMultiple" multiple>
                                 </div>
@@ -259,11 +283,18 @@
                             <div class="row">
                                 <p id="texto"></p>
                                 <input type="text" class="form-control form-control-sm" value="" id="lat" name="latitud" />
+                                <input type="text" class="form-control form-control-sm" value="" id="latNew" name="latitudNew" />
                                 <input type="text" class="form-control form-control-sm" value="" id="long" name="longitud" />
+                                <input type="text" class="form-control form-control-sm" value="" id="longNew" name="longitudNew" />
                                 <input type="text" class="form-control form-control-sm" value="" id="fechaGPs" name="fechaGPs" />
+                                <input type="text" class="form-control form-control-sm" value="" id="fechaGPsNew" name="fechaGPsNew" />
                                 <input type="text" class="form-control form-control-sm" value="" id="DirPosGps" name="DirPosGps" />
+                                <input type="text" class="form-control form-control-sm" value="" id="DirPosGpsNew" name="DirPosGpsNew" />
+                                <input type="text" class="form-control form-control-sm" value="" id="ClvViajTum" name="ClvViajTum" />
+
                                 <input type="text" class="form-control form-control-sm" value="" id="clavesFalAndComen" name="clavesFalAndComen" />
                                 <input type="text" class="form-control form-control-sm" value="" id="fallallantas" name="fallallantas" />
+
                             </div>
                         </div>
                     </div>

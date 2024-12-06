@@ -32,6 +32,67 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 $(document).ready(function () {
+    var seleuni = document.getElementById('seleuni');
+    var inCheckViaje = document.getElementById('inCheckViaje');
+    if (inCheckViaje.value == "") {
+        seleuni.checked = false;
+    }
+    else if (inCheckViaje.value == true) {
+        seleuni.checked = true;
+    }
+    else {
+        seleuni.checked = false;
+    }
+});
+$(document).ready(function () {
+    var selfalla = document.getElementById('selfalla');
+    var remolque1 = document.getElementById('remolque1');
+    var remolque2 = document.getElementById('remolque2');
+    var remolque = document.getElementById('remolque');
+    var selcveEquipo = document.getElementById('selcveEquipo');
+    selfalla.addEventListener('change', function () {
+        if (selfalla.value == 2) {
+            if (remolque1.value !== "0" && remolque2.value !== "0") {
+                var textremolque1 = remolque1.options[remolque1.selectedIndex].text;
+                var valueremolque1 = remolque1.value;
+                var textremolque2 = remolque2.options[remolque2.selectedIndex].text;
+                var valueremolque2 = remolque2.value;
+                remolque.style.display = "block";
+                selcveEquipo.innerHTML = "";
+
+
+                // Opción por defecto
+                var defaultOption = document.createElement("option");
+                defaultOption.value = "0";
+                defaultOption.text = "[Seleccionar]";
+                selcveEquipo.appendChild(defaultOption);
+
+                // Opción para remolque1
+                var option1 = document.createElement("option");
+                option1.value = valueremolque1;
+                option1.text = textremolque1;
+                selcveEquipo.appendChild(option1);
+
+                // Opción para remolque2
+                var option2 = document.createElement("option");
+                option2.value = valueremolque2;
+                option2.text = textremolque2;
+                selcveEquipo.appendChild(option2);
+            }
+            else {
+                remolque.style.display = "none";
+                selcveEquipo.innerHTML = "";
+            }
+        }
+        else
+        {
+            remolque.style.display = "none";
+            selcveEquipo.innerHTML = "";
+        }
+    });
+
+});
+$(document).ready(function () {
 
     var seleuni = document.getElementById('seleuni');
     var claveEmp = document.getElementById('cveEmp');
@@ -39,13 +100,17 @@ $(document).ready(function () {
         var CheckViaje = document.getElementById('CheckViaje');
         var numuni = seleuni.options[seleuni.selectedIndex].text;
         var num = numuni.split("|");
+        var inCheckViaje = document.getElementById('inCheckViaje');
         if (CheckViaje.checked) {
+            inCheckViaje.value = true;
             mostrarMapa(claveEmp.value, seleuni.value);
             muestraViaje(claveEmp.value, num[0]);
         }
+        inCheckViaje.value = false;
     });
 
     var CheckViaje = document.getElementById('CheckViaje');
+    var inCheckViaje = document.getElementById('inCheckViaje');
     var Opera = document.getElementById('Opera');
     var SelectOperacion = document.getElementById('SelectOperacion');
     var Ruta = document.getElementById('Ruta');
@@ -55,6 +120,7 @@ $(document).ready(function () {
 
     CheckViaje.addEventListener("change", function () {
         if (this.checked) {
+            inCheckViaje.value = true;
             if (seleuni.value != 0) {
                 Opera.disabled = true;
                 SelectOperacion.disabled = true;
@@ -82,6 +148,7 @@ $(document).ready(function () {
             }
         }
         else {
+            inCheckViaje.value = false;
             Opera.disabled = false;
             SelectOperacion.disabled = false;
             Ruta.disabled = false;
@@ -135,6 +202,7 @@ document.getElementById('NumDaLla').addEventListener('input', function () {
 
 function agrgar() {
     // Obtén los elementos del formulario
+    var AltaFalla = document.getElementById('AltaFalla');
     var fallasmuestra = document.getElementById('fallasmuestra').querySelector('tbody');
     var comentario = document.getElementById('Comentario').value;
     var tipoFalla = document.getElementById('seltip').options[document.getElementById('seltip').selectedIndex].text;
@@ -145,7 +213,9 @@ function agrgar() {
     var clavefal = document.getElementById('selfalla').value;
     var claveclasi = document.getElementById('selclasi').value;
     var clavetipo = document.getElementById('seltip').value;
-    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '|';
+    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '%';
+    //remolque cvleequipo
+    
 
     // Validar los campos
     if (!fallaEn || fallaEn === '[seleccionar]' ||
@@ -172,7 +242,7 @@ function agrgar() {
             const Ecollant = document.getElementById(`Ecollant${i}`).value || 'N/A';
 
             llantasInfo += `<p>#Llanta : ${i}, DOT: ${dot}, Marca: ${marca},Medida: ${medida},Posición: ${posicion},Eco LLantas: ${Ecollant} </p>`;
-            fallallantas.value = fallallantas.value + i + '|' + dot + '|' + marca + '|' + medida + '|' + posicion + '|' + Ecollant + '|';
+            fallallantas.value = fallallantas.value + i + '|' + dot + '|' + marca + '|' + medida + '|' + posicion + '|' + Ecollant + '%';
 
         }
     }
@@ -218,7 +288,7 @@ function agrgar() {
     document.getElementById('NumDaLla').value = '';
     document.getElementById('llantasContainer').innerHTML = '';
     document.getElementById('forllantas').style.display = "none";
-
+    AltaFalla.style.display = "none";
     toastr.success('Falla agregada correctamente.');
 }
 
@@ -237,6 +307,7 @@ function muestraViaje(claveem, numunidad) {
     const remolque1 = document.getElementById('remolque1');
     const remolque2 = document.getElementById('remolque2');
     const SelectOperacion = document.getElementById('SelectOperacion');
+    const claveviajetum = document.getElementById('ClvViajTum');
 
     inpRuta.value = "";
     remolque1.value = 0;
@@ -317,6 +388,12 @@ function muestraViaje(claveem, numunidad) {
                 else {
                     SelectOperacion.value = obj.data[0].DataUnidadActual[0].ClaveTipoOperacion;
                 }
+                if (obj.data[0].DataUnidadActual[0].ClaveViajeTum == null) {
+                    claveviajetum.value = 0;
+                }
+                else {
+                    claveviajetum.value = obj.data[0].DataUnidadActual[0].ClaveViajeTum;
+                }
             }
         })
         .catch(error => {
@@ -384,7 +461,7 @@ function mostrarMapa(claveem, unidad) {
             map.style.display = "block";
             console.log("Error:", error);
             toastr.error("Error al cargar el mapa");
-            PintaMapa(long, lati, "","");
+            PintaMapa(long, lati, "", "");
         })
         .finally(() => {
             overlay.style.display = 'none'; // Ocultar el spinner
@@ -403,6 +480,9 @@ function mostrafalla() {
         AltaFalla.style.display = "none";
         Evidencia.style.display = "none";
     }
+}
+function loadCarouselImages() {
+
 }
 function MostraEvid() {
     var AltaFalla = document.getElementById('AltaFalla');
@@ -460,10 +540,10 @@ function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
 }
 function actualizarTexto(lat, lng) {
     const cambio = document.getElementById('texto');
-    const latin = document.getElementById('lat');
-    const long = document.getElementById('long');
-    const fecha = document.getElementById('fechaGPs');
-    const DirGps = document.getElementById('DirPosGps');
+    const latin = document.getElementById('latNew');
+    const long = document.getElementById('longNew');
+    const fecha = document.getElementById('fechaGPsNew');
+    const DirGps = document.getElementById('DirPosGpsNew');
     var n = new Date();
     cambio.innerText = ""; // Limpiar el contenido previo
     cambio.innerText = "Latitud: " + lat.toFixed(6) + " Longitud: " + lng.toFixed(6);
@@ -475,10 +555,9 @@ function actualizarTexto(lat, lng) {
     long.value = lng.toFixed(6);
     fecha.value = n.toISOString("yyyy/MM/dd HH:mm:ss");
 }
-function habilitarCamposDeshabilitados()
-{
-    const campos = ['Opera', 'SelectOperacion', 'Ruta', 'remolque1', 'remolque2'];
-    
+function habilitarCamposDeshabilitados() {
+    const campos = ['selorigen', 'Opera', 'SelectOperacion', 'Ruta', 'remolque1', 'remolque2'];
+
     campos.forEach(id => {
         const campo = document.getElementById(id);
         if (campo) {

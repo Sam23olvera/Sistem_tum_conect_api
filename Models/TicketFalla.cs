@@ -39,11 +39,11 @@ namespace ConectDB.Models
         public int CveEquipo { get; set; }
         public int CveTipoClasifn { get; set; }
         public int CveTipoFalla { get; set; }
-        public string DescripFalla { get; set; }
-        public string DOT { get; set; }
-        public string Marca { get; set; }
-        public string MEDIDA { get; set; }
+        public string? DescripFalla { get; set; }
+        public string? DOT { get; set; }
+        public string? Marca { get; set; }
+        public string? MEDIDA { get; set; }
         public int POSICION { get; set; }
-        public string ECOLlanta { get; set; }
+        public string? ECOLlanta { get; set; }
     }    
 }

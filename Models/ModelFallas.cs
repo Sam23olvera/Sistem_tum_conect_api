@@ -39,22 +39,22 @@ namespace ConectDB.Models
         public List<TBCATTipoOp> TBCAT_TipoOp { get { return zTBCAT_TipoOp; } set { zTBCAT_TipoOp = value; } }
         public List<UltimaPosicion> UltimaPosicion { get { return zUltimaPosicion; } set { zUltimaPosicion = value; } }
 
+        public int selAccion { get; set; }
         public int selorigen { get; set; }
         public bool inCheckViaje { get; set; }
-        [Required(ErrorMessage = "Selecciona el una Accion")]
-        public int selAccion { get; set; }
-        [Required(ErrorMessage = "Selecciona el un tipo de Carga")]
         public int selTipCarga { get; set; }
         public string fechaGPs { get; set; }
+        public string fechaGPsNew { get; set; }
         public string DirPosGps { get; set; }
+        public string DirPosGpsNew { get; set; }
         public double latitud { get; set; }
+        public double latitudNew { get; set; }
         public double longitud { get; set; }
+        public double longitudNew { get; set; }
         public int selDolly { get; set; }
         public string telopera { get; set; }
-        
-        [Required(ErrorMessage = "Selecciona una Unidad")]
+        public int ClvViajTum { get; set; }
         public int seleuni { get; set; }
-        [Required(ErrorMessage = "Selecciona un operador")]
         public int Opera { get; set; }
         public string Ruta { get; set; }
         public int remolque1 { get; set; }
@@ -63,6 +63,8 @@ namespace ConectDB.Models
         public string clavesFalAndComen { get; set; }
         public string fallallantas { get; set; }
         public int cveEmp { get; set; }
+        public int selcveEquipo { get; set; }
+        public List<Error> Eror { get; set; }
 
     }
     public class TBCATTipoMtto
