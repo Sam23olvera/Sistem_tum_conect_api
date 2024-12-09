@@ -106,7 +106,9 @@ $(document).ready(function () {
             mostrarMapa(claveEmp.value, seleuni.value);
             muestraViaje(claveEmp.value, num[0]);
         }
-        inCheckViaje.value = false;
+        else{
+         inCheckViaje.value = false;   
+        }
     });
 
     var CheckViaje = document.getElementById('CheckViaje');
