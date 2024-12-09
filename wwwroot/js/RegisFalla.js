@@ -213,8 +213,16 @@ function agrgar() {
     var clavefal = document.getElementById('selfalla').value;
     var claveclasi = document.getElementById('selclasi').value;
     var clavetipo = document.getElementById('seltip').value;
-    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '%';
     //remolque cvleequipo
+    var remolque = document.getElementById('remolque');
+    var cveEquipo = document.getElementById('selcveEquipo').value;
+    var selcveEquipo = null;
+    var verselcveEquipo = null;
+    if (cveEquipo === 0)
+    {
+        selcveEquipo = document.getElementById('selcveEquipo').options[document.getElementById('selcveEquipo').selectedIndex].text;
+        verselcveEquipo = "Remolque: " + selcveEquipo;
+    }
     
 
     // Validar los campos
@@ -224,6 +232,10 @@ function agrgar() {
         toastr.error('Por favor, llena todos los campos antes de agregar.');
         return;
     }
+    if (cveEquipo === "") {
+        cveEquipo = 0;
+    }
+    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + cveEquipo + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '%';
 
     // Si el tipo de falla es "Llanta", agrega los datos de las llantas
     let llantasInfo = '';
@@ -258,6 +270,7 @@ function agrgar() {
                     ${clasificacion} 
                     </div>
                     <div class="col-md-6">
+                    ${verselcveEquipo || ''}
                     ${llantasInfo || ''}
                     </div>
                 </div>
@@ -289,13 +302,19 @@ function agrgar() {
     document.getElementById('llantasContainer').innerHTML = '';
     document.getElementById('forllantas').style.display = "none";
     AltaFalla.style.display = "none";
+    remolque.style.display = "none";
     toastr.success('Falla agregada correctamente.');
 }
 
 // Función para eliminar una fila específica
 function eliminarFila(boton) {
+    var fallallantas = document.getElementById('fallallantas').value;
+    var clavesFalAndComen = document.getElementById('clavesFalAndComen').value;
+    fallallantas.value = "";
+    clavesFalAndComen.value = "";
     var fila = boton.closest('tr');
     fila.remove();
+    
 }
 
 function muestraViaje(claveem, numunidad) {
@@ -524,6 +543,7 @@ function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
     long.value = inputLngValue.toFixed(6);
     fecha.value = feGPs;
     DirGps.value = DirGPS;
+    toastr.success("Se creo el Mapa");
     marker.on('dragend', function (e) {
         var newLatLng = e.target.getLatLng(); // Obtener las nuevas coordenadas
         inputLatValue = newLatLng.lat;
@@ -554,6 +574,7 @@ function actualizarTexto(lat, lng) {
     latin.value = lat.toFixed(6);
     long.value = lng.toFixed(6);
     fecha.value = n.toISOString("yyyy/MM/dd HH:mm:ss");
+    toastr.success("Se actualizan las Cordenadas");
 }
 function habilitarCamposDeshabilitados() {
     const campos = ['selorigen', 'Opera', 'SelectOperacion', 'Ruta', 'remolque1', 'remolque2'];

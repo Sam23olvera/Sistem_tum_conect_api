@@ -96,12 +96,12 @@ namespace ConectDB.DB
                             Falla nuevaFalla = new Falla
                             {
                                 CveOrigenFalla = int.TryParse(claveData[0], out int origenFalla) ? origenFalla : 0,
-                                CveEquipo = 0,
-                                CveTipoClasifn = int.TryParse(claveData[1], out int clasificacion) ? clasificacion : 0,
-                                CveTipoFalla = int.TryParse(claveData[2], out int tipoFalla) ? tipoFalla : 0,
-                                DescripFalla = claveData[3]
+                                CveEquipo = int.TryParse(claveData[1], out int CveEquipo) ? CveEquipo : 0,
+                                CveTipoClasifn = int.TryParse(claveData[2], out int clasificacion) ? clasificacion : 0,
+                                CveTipoFalla = int.TryParse(claveData[3], out int tipoFalla) ? tipoFalla : 0,
+                                DescripFalla = claveData[4]
                             };
-                            if (int.Parse(claveData[1]) == 2) 
+                            if (int.Parse(claveData[2]) == 2) 
                             {
                                 if (llantaData != null && llantaData.Length >= 5) // Mínimo para procesar DOT, Marca, MEDIDA, POSICION, ECOLlanta
                                 {

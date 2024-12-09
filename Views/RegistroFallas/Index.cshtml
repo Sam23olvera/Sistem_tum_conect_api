@@ -180,15 +180,6 @@
                                 </table>
                             </div>
                             <br />
-                            <div class="align-content-center text-center" id="remolque" style="display:none">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <label for="selcveEquipo" class="form-label">Remolque:</label>
-                                        <select class="form-select form-select-sm" id="selcveEquipo" name="selcveEquipo" asp-for="selcveEquipo">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="align-content-center text-center" id="AltaFalla" style="display:none">
                                 <div class="row">
                                     <div class="col-md-2">
@@ -228,6 +219,16 @@
                                     </div>
                                     <div class="col-md-2 d-flex align-items-end">
                                         <button class="btn btn-primary w-100" onclick="agrgar()" type="button">Agregar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="align-content-center text-center" id="remolque" style="display:none">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label for="selcveEquipo" class="form-label">Remolque:</label>
+                                        <select class="form-select form-select-sm" id="selcveEquipo" name="selcveEquipo" asp-for="selcveEquipo">
+                                            <option selected value="0">[Seleccionar]</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
