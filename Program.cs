@@ -22,6 +22,13 @@ if (!app.Environment.IsProduction())
     app.UseHsts();
 }
 
+app.Use(async (context, next) => {
+    context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, proxy-revalidate";
+    context.Response.Headers["Pragma"] = "no-cache";
+    context.Response.Headers["Expires"] = "0";
+    await next();
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

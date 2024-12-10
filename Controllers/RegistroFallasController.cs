@@ -3,6 +3,7 @@ using ConectDB.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Crypto;
 using System;
 using static ConectDB.Models.LogUser;
 
@@ -45,6 +46,7 @@ namespace ConectDB.Controllers
         }
 
         [HttpPost, HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public ActionResult Guardar(string XT, ModelFallas fallas)
         {
             try
@@ -61,30 +63,35 @@ namespace ConectDB.Controllers
                 if (fallas.selAccion == 0)
                 {
                     TempData["Mensaje"] = "Debes de Selecionar una Accion";
+                    TempData["check"] = fallas.inCheckViaje;
                     fallas =  con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
                 if (fallas.selTipCarga == 0)
                 {
                     TempData["Mensaje"] = "Debes de Selecionar una Tipo Carga";
+                    TempData["check"] = fallas.inCheckViaje;
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
                 if (fallas.seleuni == 0)
                 {
                     TempData["Mensaje"] = "Debes de Selecionar una Unidad";
+                    TempData["check"] = fallas.inCheckViaje;
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
                 if (fallas.Opera == 0)
                 {
                     TempData["Mensaje"] = "Debes de Selecionar un operador";
+                    TempData["check"] = fallas.inCheckViaje;
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
                 if (string.IsNullOrEmpty(fallas.clavesFalAndComen))
                 {
                     TempData["Mensaje"] = "Debes de agregar una falla por lo menos";
+                    TempData["check"] = fallas.inCheckViaje;
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
@@ -92,16 +99,13 @@ namespace ConectDB.Controllers
                 if (fallas.Eror[0].status == 200)
                 {
                     TempData["guardado"] = fallas.Eror[0].message;
-                    oLista = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
-                    fallas = oLista;
+                    return RedirectToAction("Index", new { model.Data[0].EmpS[0].cveEmp, XT });
                 }
                 else
                 {
                     TempData["Mensaje"] = fallas.Eror[0].message;
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                 }
-
-
                 return View("Index", fallas);
 
             }
@@ -112,5 +116,6 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
+       
     }
 }

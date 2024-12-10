@@ -40,8 +40,8 @@
                                     <label class="form-check-label" for="chekviaje">
                                         Viaje
                                     </label>
-                                    <input class="form-check-input" type="checkbox" value="" id="CheckViaje">
-                                    <input type="hidden" value="" class="form-control" id="inCheckViaje" name="inCheckViaje" asp-for="inCheckViaje" />
+                                    <input class="form-check-input" type="checkbox" value="" id="CheckViaje" checked="@TempData["check"]">
+                                    <input type="hidden" value="@TempData["check"]" class="form-control" id="inCheckViaje" name="inCheckViaje" asp-for="inCheckViaje" />
                                 </div>
                                 <div class="col-md-auto">
                                     <label for="selAccion" class="form-label">Accion:</label>
@@ -283,15 +283,15 @@
                             </div>
                             <div class="row">
                                 <p id="texto"></p>
-                                <input type="text" class="form-control form-control-sm" value="" id="lat" name="latitud" />
-                                <input type="text" class="form-control form-control-sm" value="" id="latNew" name="latitudNew" />
-                                <input type="text" class="form-control form-control-sm" value="" id="long" name="longitud" />
-                                <input type="text" class="form-control form-control-sm" value="" id="longNew" name="longitudNew" />
-                                <input type="text" class="form-control form-control-sm" value="" id="fechaGPs" name="fechaGPs" />
-                                <input type="text" class="form-control form-control-sm" value="" id="fechaGPsNew" name="fechaGPsNew" />
-                                <input type="text" class="form-control form-control-sm" value="" id="DirPosGps" name="DirPosGps" />
-                                <input type="text" class="form-control form-control-sm" value="" id="DirPosGpsNew" name="DirPosGpsNew" />
-                                <input type="text" class="form-control form-control-sm" value="" id="ClvViajTum" name="ClvViajTum" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="lat" name="latitud" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="latNew" name="latitudNew" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="long" name="longitud" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="longNew" name="longitudNew" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="fechaGPs" name="fechaGPs" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="fechaGPsNew" name="fechaGPsNew" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="DirPosGps" name="DirPosGps" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="DirPosGpsNew" name="DirPosGpsNew" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="ClvViajTum" name="ClvViajTum" />
 
                                 <input type="text" class="form-control form-control-sm" value="" id="clavesFalAndComen" name="clavesFalAndComen" />
                                 <input type="text" class="form-control form-control-sm" value="" id="fallallantas" name="fallallantas" />

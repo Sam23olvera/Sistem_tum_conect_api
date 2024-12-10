@@ -19,6 +19,69 @@ $(document).ready(function () {
         toastr.success(guarda);
     }
 });
+$(document).ready(function () {
+
+    var CheckViaje = document.getElementById('CheckViaje');
+    var inCheckViaje = document.getElementById('inCheckViaje').value;
+
+    var Opera = document.getElementById('Opera');
+    var SelectOperacion = document.getElementById('SelectOperacion');
+    var Ruta = document.getElementById('Ruta');
+    var claveEmp = document.getElementById('cveEmp');
+    var remolque1 = document.getElementById('remolque1');
+    var remolque2 = document.getElementById('remolque2');
+    var seleuni = document.getElementById('seleuni');
+    ///extra
+    var clavesFalAndComen = document.getElementById('clavesFalAndComen');
+    var fallallantas = document.getElementById('fallallantas');
+
+
+    if (inCheckViaje === "True") {
+
+        CheckViaje.checked = true;
+
+        inCheckViaje.value = true;
+        if (seleuni.value != 0) {
+            Opera.disabled = true;
+            SelectOperacion.disabled = true;
+            Ruta.disabled = true;
+            remolque1.disabled = true;
+            remolque2.disabled = true;
+            var numuni = seleuni.options[seleuni.selectedIndex].text;
+            var num = numuni.split("|");
+            if (CheckViaje.checked) {
+                mostrarMapa(claveEmp.value, seleuni.value);
+                muestraViaje(claveEmp.value, num[0]);
+                document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
+                clavesFalAndComen.value = "";
+                fallallantas.value = "";
+            }
+        }
+        else {
+            Opera.disabled = true;
+            Opera.value = 0;
+            SelectOperacion.disabled = true;
+            SelectOperacion.value = 0;
+            Ruta.disabled = true;
+            Ruta.value = "";
+            remolque1.disabled = true;
+            remolque1.value = 0;
+            remolque2.disabled = true;
+            remolque2.value = 0;
+        }
+
+    }
+    else if (inCheckViaje == "False") {
+        CheckViaje.checked = false;
+        inCheckViaje.value = false;
+        Opera.disabled = false;
+        SelectOperacion.disabled = false;
+        Ruta.disabled = false;
+        remolque1.disabled = false;
+        remolque2.disabled = false;
+    }
+
+});
 document.addEventListener("DOMContentLoaded", function () {
     var TipoClas = document.getElementById('selclasi');
     var forllantas = document.getElementById('forllantas');
@@ -84,8 +147,7 @@ $(document).ready(function () {
                 selcveEquipo.innerHTML = "";
             }
         }
-        else
-        {
+        else {
             remolque.style.display = "none";
             selcveEquipo.innerHTML = "";
         }
@@ -96,18 +158,9 @@ $(document).ready(function () {
 
     var seleuni = document.getElementById('seleuni');
     var claveEmp = document.getElementById('cveEmp');
-    seleuni.addEventListener('change', function () {
-        var CheckViaje = document.getElementById('CheckViaje');
-        var numuni = seleuni.options[seleuni.selectedIndex].text;
-        var num = numuni.split("|");
-        var inCheckViaje = document.getElementById('inCheckViaje');
-        if (CheckViaje.checked) {
-            inCheckViaje.value = true;
-            mostrarMapa(claveEmp.value, seleuni.value);
-            muestraViaje(claveEmp.value, num[0]);
-        }
-        inCheckViaje.value = false;
-    });
+    ///extra
+    var clavesFalAndComen = document.getElementById('clavesFalAndComen');
+    var fallallantas = document.getElementById('fallallantas');
 
     var CheckViaje = document.getElementById('CheckViaje');
     var inCheckViaje = document.getElementById('inCheckViaje');
@@ -118,6 +171,29 @@ $(document).ready(function () {
     var remolque2 = document.getElementById('remolque2');
     var seleuni = document.getElementById('seleuni');
 
+    seleuni.addEventListener('change', function () {
+        var CheckViaje = document.getElementById('CheckViaje');
+        var numuni = seleuni.options[seleuni.selectedIndex].text;
+        var num = numuni.split("|");
+        var inCheckViaje = document.getElementById('inCheckViaje');
+        if (CheckViaje.checked) {
+            inCheckViaje.value = true;
+            mostrarMapa(claveEmp.value, seleuni.value);
+            muestraViaje(claveEmp.value, num[0]);
+            document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
+            clavesFalAndComen.value = "";
+            fallallantas.value = "";
+        }
+        else {
+            inCheckViaje.value = false;
+            mostrarMapa(claveEmp.value, seleuni.value);
+            document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
+            clavesFalAndComen.value = "";
+            fallallantas.value = "";
+        }
+    });
+
+    
     CheckViaje.addEventListener("change", function () {
         if (this.checked) {
             inCheckViaje.value = true;
@@ -132,6 +208,9 @@ $(document).ready(function () {
                 if (CheckViaje.checked) {
                     mostrarMapa(claveEmp.value, seleuni.value);
                     muestraViaje(claveEmp.value, num[0]);
+                    document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
+                    clavesFalAndComen.value = "";
+                    fallallantas.value = "";
                 }
             }
             else {
@@ -150,10 +229,15 @@ $(document).ready(function () {
         else {
             inCheckViaje.value = false;
             Opera.disabled = false;
+            Opera.value = 0;
             SelectOperacion.disabled = false;
+            SelectOperacion.value = 0;
             Ruta.disabled = false;
+            Ruta.value = 0;
             remolque1.disabled = false;
+            remolque1.value = 0;
             remolque2.disabled = false;
+            remolque2.value = 0;
         }
     });
 
@@ -215,15 +299,9 @@ function agrgar() {
     var clavetipo = document.getElementById('seltip').value;
     //remolque cvleequipo
     var remolque = document.getElementById('remolque');
-    var cveEquipo = document.getElementById('selcveEquipo').value;
-    var selcveEquipo = null;
+    var selcveEquipo = document.getElementById('selcveEquipo').value;
     var verselcveEquipo = null;
-    if (cveEquipo === 0)
-    {
-        selcveEquipo = document.getElementById('selcveEquipo').options[document.getElementById('selcveEquipo').selectedIndex].text;
-        verselcveEquipo = "Remolque: " + selcveEquipo;
-    }
-    
+
 
     // Validar los campos
     if (!fallaEn || fallaEn === '[seleccionar]' ||
@@ -232,10 +310,6 @@ function agrgar() {
         toastr.error('Por favor, llena todos los campos antes de agregar.');
         return;
     }
-    if (cveEquipo === "") {
-        cveEquipo = 0;
-    }
-    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + cveEquipo + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '%';
 
     // Si el tipo de falla es "Llanta", agrega los datos de las llantas
     let llantasInfo = '';
@@ -250,7 +324,7 @@ function agrgar() {
             const dot = document.getElementById(`Dot${i}`).value || 'N/A';
             const marca = document.getElementById(`Marca${i}`).value || 'N/A';
             const medida = document.getElementById(`Medida${i}`).value || 'N/A';
-            const posicion = document.getElementById(`Posis${i}`).value || 'N/A';
+            const posicion = document.getElementById(`Posis${i}`).value || '0';
             const Ecollant = document.getElementById(`Ecollant${i}`).value || 'N/A';
 
             llantasInfo += `<p>#Llanta : ${i}, DOT: ${dot}, Marca: ${marca},Medida: ${medida},Posición: ${posicion},Eco LLantas: ${Ecollant} </p>`;
@@ -258,6 +332,35 @@ function agrgar() {
 
         }
     }
+    if (clavefal == 2) {
+        var inCheckViaje = document.getElementById('inCheckViaje');
+        //var selcveEquipo = document.getElementById('selcveEquipo');
+        if (inCheckViaje.value == "true") {
+            if (remolque1.value !== "0" && remolque2.value !== "0") {
+                if (selcveEquipo == 0) {
+                    toastr.error('Por favor, seleciona el remolque');
+                    return;
+                }
+                else {
+                    var f = document.getElementById('selcveEquipo').options[document.getElementById('selcveEquipo').selectedIndex].text;
+                    verselcveEquipo = "Remolque: " + f;
+
+                }
+            }
+            else if (selcveEquipo == '') {
+                selcveEquipo = 0;
+            }
+        }
+        else {
+            if (selcveEquipo == '') {
+                selcveEquipo = 0;
+            }
+        }
+    }
+    if (selcveEquipo == '') {
+        selcveEquipo = 0;
+    }
+    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + selcveEquipo + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '%';
 
     // Crea una nueva fila
     var nuevaFila = document.createElement('tr');
@@ -308,13 +411,31 @@ function agrgar() {
 
 // Función para eliminar una fila específica
 function eliminarFila(boton) {
-    var fallallantas = document.getElementById('fallallantas').value;
-    var clavesFalAndComen = document.getElementById('clavesFalAndComen').value;
-    fallallantas.value = "";
-    clavesFalAndComen.value = "";
+
     var fila = boton.closest('tr');
+
+    var indexFila = Array.from(fila.parentNode.children).indexOf(fila); // Índice de la fila
+
+    var fallallantas = document.getElementById('fallallantas');
+    var clavesFalAndComen = document.getElementById('clavesFalAndComen');
+
+    var clavesArray = clavesFalAndComen.value.split('%');
+    var llantasArray = fallallantas.value.split('%');
+
+    if (indexFila < clavesArray.length) {
+        clavesArray.splice(indexFila, 1); // Elimina la clave de esta fila
+    }
+
+    if (indexFila < llantasArray.length) {
+        llantasArray.splice(indexFila, 1); // Elimina la info de llantas si aplica
+    }
+    clavesFalAndComen.value = clavesArray.join('%');
+    fallallantas.value = llantasArray.join('%');
+
+    // Eliminar la fila del DOM
     fila.remove();
-    
+    toastr.success('Falla eliminada correctamente.');
+
 }
 
 function muestraViaje(claveem, numunidad) {
@@ -539,6 +660,10 @@ function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
         .addTo(map)
         .bindPopup("Última ubicación reportada:<br>\n" + DirGPS + "<br>\nFecha Reportada:<br>\n" + feGPs)
         .openPopup();
+    latin.value = "";
+    long.value = "";
+    fecha.value = "";
+    DirGps.value = "";
     latin.value = inputLatValue.toFixed(6);
     long.value = inputLngValue.toFixed(6);
     fecha.value = feGPs;
