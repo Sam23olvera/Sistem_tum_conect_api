@@ -1,24 +1,23 @@
-﻿window.onload = function () {
-    document.getElementById("spinner-overlay").style.display = "none";
+﻿
+document.addEventListener("DOMContentLoaded", () => {
+    // Cache de elementos comunes
+    const mensaje = document.getElementById('mensaje');
+    const guarda = document.getElementById('guarda');
+
+    if (mensaje?.value) toastr.error(mensaje.value);
+    if (guarda?.value) toastr.success(guarda.value);
+
+
+});
+
+const clearTable = () => {
+    const clavesFalAndComen = document.getElementById('clavesFalAndComen');
+    const fallallantas = document.getElementById('fallallantas');
+
+    document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
+    clavesFalAndComen.value = "";
+    fallallantas.value = "";
 };
-document.addEventListener("DOMContentLoaded", function () {
-    var links = document.querySelectorAll(".carga");
-    links.forEach(function (link) {
-        link.addEventListener("click", function () {
-            document.getElementById("spinner-overlay").style.display = "block";
-        });
-    });
-});
-$(document).ready(function () {
-    var mensaje = document.getElementById('mensaje').value;
-    var guarda = document.getElementById('guarda').value;
-    if (mensaje !== '') {
-        toastr.error(mensaje);
-    }
-    if (guarda !== '') {
-        toastr.success(guarda);
-    }
-});
 $(document).ready(function () {
 
     var CheckViaje = document.getElementById('CheckViaje');
@@ -31,10 +30,6 @@ $(document).ready(function () {
     var remolque1 = document.getElementById('remolque1');
     var remolque2 = document.getElementById('remolque2');
     var seleuni = document.getElementById('seleuni');
-    ///extra
-    var clavesFalAndComen = document.getElementById('clavesFalAndComen');
-    var fallallantas = document.getElementById('fallallantas');
-
 
     if (inCheckViaje === "True") {
 
@@ -52,9 +47,7 @@ $(document).ready(function () {
             if (CheckViaje.checked) {
                 mostrarMapa(claveEmp.value, seleuni.value);
                 muestraViaje(claveEmp.value, num[0]);
-                document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
-                clavesFalAndComen.value = "";
-                fallallantas.value = "";
+                clearTable();
             }
         }
         else {
@@ -159,8 +152,7 @@ $(document).ready(function () {
     var seleuni = document.getElementById('seleuni');
     var claveEmp = document.getElementById('cveEmp');
     ///extra
-    var clavesFalAndComen = document.getElementById('clavesFalAndComen');
-    var fallallantas = document.getElementById('fallallantas');
+
 
     var CheckViaje = document.getElementById('CheckViaje');
     var inCheckViaje = document.getElementById('inCheckViaje');
@@ -171,6 +163,23 @@ $(document).ready(function () {
     var remolque2 = document.getElementById('remolque2');
     var seleuni = document.getElementById('seleuni');
 
+    if (seleuni.value != 0) {
+        var CheckViaje = document.getElementById('CheckViaje');
+        var numuni = seleuni.options[seleuni.selectedIndex].text;
+        var num = numuni.split("|");
+        var inCheckViaje = document.getElementById('inCheckViaje');
+        if (CheckViaje.checked) {
+            inCheckViaje.value = true;
+            mostrarMapa(claveEmp.value, seleuni.value);
+            muestraViaje(claveEmp.value, num[0]);
+            clearTable();
+        }
+        else {
+            inCheckViaje.value = false;
+            mostrarMapa(claveEmp.value, seleuni.value);
+            clearTable();
+        }
+    }
     seleuni.addEventListener('change', function () {
         var CheckViaje = document.getElementById('CheckViaje');
         var numuni = seleuni.options[seleuni.selectedIndex].text;
@@ -180,20 +189,16 @@ $(document).ready(function () {
             inCheckViaje.value = true;
             mostrarMapa(claveEmp.value, seleuni.value);
             muestraViaje(claveEmp.value, num[0]);
-            document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
-            clavesFalAndComen.value = "";
-            fallallantas.value = "";
+            clearTable();
         }
         else {
             inCheckViaje.value = false;
             mostrarMapa(claveEmp.value, seleuni.value);
-            document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
-            clavesFalAndComen.value = "";
-            fallallantas.value = "";
+            clearTable();
         }
     });
 
-    
+
     CheckViaje.addEventListener("change", function () {
         if (this.checked) {
             inCheckViaje.value = true;
@@ -208,9 +213,7 @@ $(document).ready(function () {
                 if (CheckViaje.checked) {
                     mostrarMapa(claveEmp.value, seleuni.value);
                     muestraViaje(claveEmp.value, num[0]);
-                    document.getElementById('tabmosfal').querySelector("tbody").innerHTML = "";
-                    clavesFalAndComen.value = "";
-                    fallallantas.value = "";
+                    clearTable();
                 }
             }
             else {
@@ -284,7 +287,8 @@ document.getElementById('NumDaLla').addEventListener('input', function () {
     }
 });
 
-function agrgar() {
+
+function agregar() {
     // Obtén los elementos del formulario
     var AltaFalla = document.getElementById('AltaFalla');
     var fallasmuestra = document.getElementById('fallasmuestra').querySelector('tbody');
@@ -302,6 +306,15 @@ function agrgar() {
     var selcveEquipo = document.getElementById('selcveEquipo').value;
     var verselcveEquipo = null;
 
+    var files = document.getElementById('Files').files;
+    var evidencias = [];
+    Array.from(files).forEach((file, index) => {
+        // Generar URL de vista previa para cada archivo
+        var fileUrl = URL.createObjectURL(file);
+        evidencias.push({ name: file.name, url: fileUrl, type: file.type });
+        //RutasArchivos.value = RutasArchivos.value + fileUrl + file.name + '|';
+    });
+    //AgrgarImagenes();
 
     // Validar los campos
     if (!fallaEn || fallaEn === '[seleccionar]' ||
@@ -381,10 +394,15 @@ function agrgar() {
         </td>            
         <td>${tipoFalla}</td>
         <td>${comentario}</td>
-        <td>
-            <button type="button" class="btn btn-outline-secondary" onclick="MostraEvid()">
+        <td colspan="2">
+            <button type="button" class="btn btn-outline-secondary" onclick="MostraEvid(this)">
                 <img src="${evidenciasImgPath}" alt="Evidencias" />
             </button>
+            <div class="evidencias-container" style="display: flex; overflow-x: auto; max-width: 200px;">
+            ${evidencias.map(e => `
+                <img src="${e.url}" class="img-thumbnail" alt="${e.name}" onclick="mostrarModal(this)" style="cursor: pointer; width: 100px; height: auto; margin-right: 5px;">
+                `).join('')}
+            </div>
         </td>
         <td>
             <button type="button" class="btn btn-outline-danger" onclick="eliminarFila(this)">
@@ -403,6 +421,7 @@ function agrgar() {
     document.getElementById('selfalla').selectedIndex = 0;
     document.getElementById('NumDaLla').value = '';
     document.getElementById('llantasContainer').innerHTML = '';
+    document.getElementById('Files').value = '';
     document.getElementById('forllantas').style.display = "none";
     AltaFalla.style.display = "none";
     remolque.style.display = "none";
@@ -411,9 +430,7 @@ function agrgar() {
 
 // Función para eliminar una fila específica
 function eliminarFila(boton) {
-
     var fila = boton.closest('tr');
-
     var indexFila = Array.from(fila.parentNode.children).indexOf(fila); // Índice de la fila
 
     var fallallantas = document.getElementById('fallallantas');
@@ -434,10 +451,79 @@ function eliminarFila(boton) {
 
     // Eliminar la fila del DOM
     fila.remove();
-    toastr.success('Falla eliminada correctamente.');
+    toastr.error('Falla eliminada correctamente.');
+}
+function MostraEvid(boton) {
+    var evidenciasContainer = boton.nextElementSibling;
+    if (evidenciasContainer.style.display === 'none') {
+        evidenciasContainer.style.display = 'block';
+        
+    } else {
+        evidenciasContainer.style.display = 'none';
+    }
+}
+function mostrarModal(img) {
+    const modal = document.getElementById("myModal");
+    const modalImg = document.getElementById("img01");
+    const captionText = document.getElementById("caption");
 
+    modal.style.display = "block";
+    modalImg.src = img.src;
+    captionText.innerHTML = img.alt || "Sin descripción";
 }
 
+function cerrarModal() {
+    const modal = document.getElementById("myModal");
+    modal.style.display = "none";
+}
+
+function AgrgarImagenes() {
+    var files = document.getElementById('Files').files;
+    var formData = new FormData();
+
+    Array.from(files).forEach((file) => {
+        formData.append('files', file); // "files" debe coincidir con el nombre del parámetro en el backend
+    });
+
+    fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+    })
+        .then((response) => {
+            if (response.ok) {
+                toastr.success('Archivos subidos correctamente.');
+            } else {
+                toastr.error('Error al subir los archivos.');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            toastr.error('Ocurrió un error.');
+        });
+}
+function validarArchivos(input) {
+    const archivos = input.files;
+    const maxArchivos = 5;
+    const tiposPermitidos = ['image/png', 'image/jpeg'];
+    const errores = [];
+
+    if (archivos.length > maxArchivos) {
+        errores.push(`Solo puedes subir un máximo de ${maxArchivos} archivos.`);
+    }
+
+    for (let i = 0; i < archivos.length; i++) {
+        if (!tiposPermitidos.includes(archivos[i].type)) {
+            errores.push(`El archivo "${archivos[i].name}" no es un tipo válido. Solo se aceptan imágenes .png y .jpg.`);
+        }
+    }
+
+    if (errores.length > 0) {
+        toastr.error(errores.join('<br>'));
+        input.value = ''; // Limpia los archivos seleccionados
+        return;
+    }
+    toastr.success('Archivos válidos.');
+}
 function muestraViaje(claveem, numunidad) {
     var overlay = document.getElementById('loading-overlay');
     overlay.style.display = 'block'; // Mostrar el spinner
@@ -534,6 +620,7 @@ function muestraViaje(claveem, numunidad) {
                 else {
                     claveviajetum.value = obj.data[0].DataUnidadActual[0].ClaveViajeTum;
                 }
+                toastr.success("Viaje " + obj.data[0].DataUnidadActual[0].Folio);
             }
         })
         .catch(error => {
@@ -612,29 +699,14 @@ function mostrarMapa(claveem, unidad) {
 
 function mostrafalla() {
     var AltaFalla = document.getElementById('AltaFalla');
-    var Evidencia = document.getElementById('Evidencia');
     if (AltaFalla.style.display === "none") {
         AltaFalla.style.display = "block";
-        Evidencia.style.display = "none";
     } else {
         AltaFalla.style.display = "none";
-        Evidencia.style.display = "none";
     }
 }
 function loadCarouselImages() {
 
-}
-function MostraEvid() {
-    var AltaFalla = document.getElementById('AltaFalla');
-    var Evidencia = document.getElementById('Evidencia');
-    if (Evidencia.style.display === "none") {
-        Evidencia.style.display = "block";
-        AltaFalla.style.display = "none";
-    }
-    else {
-        Evidencia.style.display = "none";
-        AltaFalla.style.display = "none";
-    }
 }
 
 var map = null;

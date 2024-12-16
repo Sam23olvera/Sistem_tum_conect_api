@@ -11,14 +11,11 @@ namespace ConectDB.Controllers
 {
     public class RegistroFallasController : Controller
     {
-        private string url = "https://webportal.tum.com.mx/wsstmdv/api/accesyst";
+        private readonly string url = "https://webportal.tum.com.mx/wsstmdv/api/accesyst";
         private readonly Error msj = new Error();
-        ConectRegistraFalla con = new ConectRegistraFalla();
-        ConectMenuUser menu = new ConectMenuUser();
-        UsuarioModel model = new UsuarioModel();
-        ModelFallas oLista = new ModelFallas();
-        Email envio = new Email();
-
+        private readonly ConectRegistraFalla con = new ConectRegistraFalla();
+        private readonly ConectMenuUser menu = new ConectMenuUser();
+            
 
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public ActionResult Index(int cveEmp, string XT)
@@ -27,14 +24,15 @@ namespace ConectDB.Controllers
             {
                 if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
                     return RedirectToAction("Index", "Loging");
-
+                
                 string desusuario = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]);
                 string descontraseña = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]);
 
-                model = menu.RegresMenu(desusuario, descontraseña, cveEmp, url, XT);
-                ViewData["UsuarioModel"] = model;
+                var model = menu.RegresMenu(desusuario, descontraseña, cveEmp, url, XT);
                 model.Token = XT;
-                oLista = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                ViewData["UsuarioModel"] = model;
+
+                var oLista = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                 return View("Index", oLista);
             }
             catch (Exception ex)
@@ -47,7 +45,7 @@ namespace ConectDB.Controllers
 
         [HttpPost, HttpGet]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        public ActionResult Guardar(string XT, ModelFallas fallas)
+        public ActionResult Guardar(string XT, ModelFallas fallas, List<IFormFile> Files)
         {
             try
             {
@@ -57,14 +55,14 @@ namespace ConectDB.Controllers
                 string desusuario = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]);
                 string descontraseña = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]);
 
-                model = menu.RegresMenu(desusuario, descontraseña, fallas.cveEmp, url, XT);
+                var model = menu.RegresMenu(desusuario, descontraseña, fallas.cveEmp, url, XT);
                 ViewData["UsuarioModel"] = model;
                 model.Token = XT;
                 if (fallas.selAccion == 0)
                 {
                     TempData["Mensaje"] = "Debes de Selecionar una Accion";
                     TempData["check"] = fallas.inCheckViaje;
-                    fallas =  con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                    fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
                 if (fallas.selTipCarga == 0)
@@ -81,12 +79,29 @@ namespace ConectDB.Controllers
                     fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
                     return View("Index", fallas);
                 }
-                if (fallas.Opera == 0)
+                if (fallas.inCheckViaje != true)
                 {
-                    TempData["Mensaje"] = "Debes de Selecionar un operador";
-                    TempData["check"] = fallas.inCheckViaje;
-                    fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
-                    return View("Index", fallas);
+                    if (fallas.Opera == 0)
+                    {
+                        TempData["Mensaje"] = "Debes de Selecionar un operador";
+                        TempData["check"] = fallas.inCheckViaje;
+                        fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                        return View("Index", fallas);
+                    }
+                    if (string.IsNullOrEmpty(fallas.Ruta))
+                    {
+                        TempData["Mensaje"] = "Agrega una Ruta";
+                        TempData["check"] = fallas.inCheckViaje;
+                        fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                        return View("Index", fallas);
+                    }
+                    if (fallas.SelectOperacion == 0)
+                    {
+                        TempData["Mensaje"] = "Debes de Selecionar una Operacion";
+                        TempData["check"] = fallas.inCheckViaje;
+                        fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                        return View("Index", fallas);
+                    }
                 }
                 if (string.IsNullOrEmpty(fallas.clavesFalAndComen))
                 {
@@ -104,10 +119,8 @@ namespace ConectDB.Controllers
                 else
                 {
                     TempData["Mensaje"] = fallas.Eror[0].message;
-                    fallas = con.ObjetoModelOperadores_Rem(model.Data[0].EmpS[0].cveEmp.ToString());
+                    return RedirectToAction("Index", new { model.Data[0].EmpS[0].cveEmp, XT });
                 }
-                return View("Index", fallas);
-
             }
             catch (Exception ex)
             {
@@ -116,6 +129,6 @@ namespace ConectDB.Controllers
                 return View("Error", msj);
             }
         }
-       
+
     }
 }

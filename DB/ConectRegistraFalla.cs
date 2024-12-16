@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Security.Policy;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace ConectDB.DB
 {
@@ -81,15 +82,10 @@ namespace ConectDB.DB
                 if (!string.IsNullOrEmpty(fallas.clavesFalAndComen))
                 {
                     var fallasClaves = fallas.clavesFalAndComen.Split('%', StringSplitOptions.RemoveEmptyEntries);
-                    string[] llantas = fallas.fallallantas != null
-                        ? fallas.fallallantas.Split('%', StringSplitOptions.RemoveEmptyEntries)
-                        : Array.Empty<string>();
 
                     for (int i = 0; i < fallasClaves.Length; i++)
                     {
                         var claveData = fallasClaves[i].Split('|', StringSplitOptions.RemoveEmptyEntries);
-                        // LlantaData será nula si no hay datos de llantas
-                        string[] llantaData = i < llantas.Length ? llantas[i].Split('|', StringSplitOptions.RemoveEmptyEntries): null;
 
                         if (claveData.Length >= 4) // Mínimo para procesar CveOrigenFalla, CveEquipo, CveTipoClasifn y CveTipoFalla
                         {
@@ -101,21 +97,40 @@ namespace ConectDB.DB
                                 CveTipoFalla = int.TryParse(claveData[3], out int tipoFalla) ? tipoFalla : 0,
                                 DescripFalla = claveData[4]
                             };
-                            if (int.Parse(claveData[2]) == 2) 
+                            if (int.Parse(claveData[2]) == 2)
                             {
-                                if (llantaData != null && llantaData.Length >= 5) // Mínimo para procesar DOT, Marca, MEDIDA, POSICION, ECOLlanta
+                                string[] llantas = fallas.fallallantas.Split('%', StringSplitOptions.RemoveEmptyEntries);
+                                //string[] llantas = fallas.fallallantas != null ? fallas.fallallantas.Split('%', StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
+                                // LlantaData será nula si no    hay datos de llantas
+                                for (int j = 0; j < llantas.Length; j++)
                                 {
-                                    nuevaFalla.DOT = llantaData[0];
-                                    nuevaFalla.Marca = llantaData[1];
-                                    nuevaFalla.MEDIDA = llantaData[2];
-                                    nuevaFalla.POSICION = int.TryParse(llantaData[3], out int posicion) ? posicion : 0;
-                                    nuevaFalla.ECOLlanta = llantaData[4];
+                                    string[] llantaData = llantas[j].Split('|', StringSplitOptions.RemoveEmptyEntries);
+                                    Falla x1 = new Falla();
+                                    x1.CveOrigenFalla = nuevaFalla.CveOrigenFalla;
+                                    x1.CveEquipo = nuevaFalla.CveEquipo;
+                                    x1.CveTipoClasifn = nuevaFalla.CveTipoClasifn;
+                                    x1.CveTipoFalla = nuevaFalla.CveTipoFalla;
+                                    x1.DescripFalla = nuevaFalla.DescripFalla;
+
+                                    if (llantaData != null && llantaData.Length >= 5) // Mínimo para procesar DOT, Marca, MEDIDA, POSICION, ECOLlanta
+                                    {
+                                        x1.DOT = llantaData[1];
+                                        x1.Marca = llantaData[2];
+                                        x1.MEDIDA = llantaData[3];
+                                        x1.POSICION = int.TryParse(llantaData[4], out int posicion) ? posicion : 0;
+                                        x1.ECOLlanta = llantaData[5];
+                                    }
+                                    ticket.Ticket.Fallas.Add(x1);
                                 }
                             }
-                            ticket.Ticket.Fallas.Add(nuevaFalla);
+                            else 
+                            {
+                                ticket.Ticket.Fallas.Add(nuevaFalla);
+                            }
                         }
                     }
                 }
+
                 string jsonString = JsonConvert.SerializeObject(ticket, Formatting.Indented);
                 JObject JsonTicket = JObject.Parse(jsonString);
 
@@ -125,14 +140,14 @@ namespace ConectDB.DB
                 dataenvio.data.bdSp = "SPINS_ControlTicket";
                 dataenvio.filter.Clear();
                 dataenvio.filter.Add(new Elements { property = "Dat1", value = JsonTicket.ToString() });
-                dataenvio.filter.Add(new Elements { property = "cveUsuario",value= idus.ToString() });
+                dataenvio.filter.Add(new Elements { property = "cveUsuario", value = idus.ToString() });
                 js = JObject.Parse(JsonConvert.SerializeObject(dataenvio));
                 JRespuesta = JObject.Parse(hh.HttpWebRequest("POST", url, js));
                 if (JRespuesta["status"].ToString() == "200")
                 {
                     zcioFallas.Eror = new List<Error> { new Error { status = Convert.ToInt16(JRespuesta["status"].ToString()), message = JRespuesta["message"].ToString() } };
                 }
-                else 
+                else
                 {
                     zcioFallas.Eror = new List<Error> { new Error { status = Convert.ToInt16(JRespuesta["status"].ToString()), message = JRespuesta["message"].ToString() } };
                 }

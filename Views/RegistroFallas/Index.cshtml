@@ -12,7 +12,7 @@
         <input type="hidden" value="@TempData["guardado"]" id="guarda" />
     </div>
     <br />
-    <form method="post" asp-action="Guardar" asp-controller="RegistroFallas" onsubmit="habilitarCamposDeshabilitados()">
+    <form method="post" asp-action="Guardar" asp-controller="RegistroFallas" onsubmit="habilitarCamposDeshabilitados()" enctype="multipart/form-data">
         <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
         <input type="hidden" value="@usuarioModel.Token" id="XT" name="XT" />
         <div id="accordion">
@@ -46,10 +46,17 @@
                                 <div class="col-md-auto">
                                     <label for="selAccion" class="form-label">Accion:</label>
                                     <select class="form-select form-select-sm" id="selAccion" name="selAccion" asp-for="selAccion">
-                                        <option selected value="0">[seleccionar]</option>
+                                        <option value="0">[Seleccionar]</option>
                                         @foreach (var tip in Model.TBCAT_TipoMtto)
                                         {
-                                            <option value="@tip.ClaveTipoMtto">@tip.Descripcion</option>
+                                            if (@tip.ClaveTipoMtto == 2)
+                                            {
+                                                <option selected value="@tip.ClaveTipoMtto">@tip.Descripcion</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@tip.ClaveTipoMtto">@tip.Descripcion</option>
+                                            }
                                         }
                                     </select>
                                     <span asp-validation-for="selAccion" class="text-danger"></span>
@@ -120,7 +127,7 @@
                                 </div>
                                 <div class="col-md-auto">
                                     <label for="remolque2" class="col-form-label">Remolque 2</label>
-                                    <select class="form-select form-select-sm " id="remolque2" name="remolque2">
+                                    <select class="form-select form-select-sm " id="remolque2" name="remolque2" asp-for="remolque2">
                                         <option selected value="0">[seleccionar]</option>
                                         @foreach (var re in Model.TBCAT_Remolques)
                                         {
@@ -130,7 +137,7 @@
                                 </div>
                                 <div class="col-md-auto">
                                     <label for="SelectOperacion" class="form-label">Tipo Operación</label>
-                                    <select class="form-select form-select-sm" id="SelectOperacion" name="SelectOperacion">
+                                    <select class="form-select form-select-sm" id="SelectOperacion" name="SelectOperacion" asp-for="SelectOperacion">
                                         <option selected value="0">[seleccionar]</option>
                                         @foreach (var ope in Model.TBCAT_TipoOp)
                                         {
@@ -171,7 +178,7 @@
                                             <th>Clasificacion:</th>
                                             <th>Tipo Falla:</th>
                                             <th>Comentarios</th>
-                                            <th colspan="2">
+                                            <th colspan="3">
                                             </th>
                                         </tr>
                                     </thead>
@@ -212,14 +219,31 @@
                                             }
                                         </select>
                                     </div>
-                                    <!-- Comentarios alineados en el mismo renglón -->
                                     <div class="col-md-4">
                                         <label for="Comentario" class="col-form-label">Comentarios:</label>
                                         <textarea class="form-control form-control-sm" id="Comentario" placeholder="Comentarios"></textarea>
                                     </div>
                                     <div class="col-md-2 d-flex align-items-end">
-                                        <button class="btn btn-primary w-100" onclick="agrgar()" type="button">Agregar</button>
+                                        <button class="btn btn-primary w-100" onclick="agregar()" type="button">Agregar</button>
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div id="carousel" class="owl-carousel owl-theme">
+                                        </div>
+                                    </div>
+                                    <div class="col-7">
+                                        <label class="custom-file-upload inputUploadFile">
+                                            <input type="file" name="Files" id="Files" accept=".png,.jpg" multiple />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="myModal" class="modal" style="display: none;">
+                                <div class="container-fluid text-center align-content-center justify-content-center">
+                                    <span class="close" onclick="cerrarModal()">&times;</span>
+                                    <img class="modal-content" id="img01" style="width:100%; max-width: 600px;">
+                                    <div id="caption" style="margin-top: 10px; color: #555;"></div>
                                 </div>
                             </div>
                             <div class="align-content-center text-center" id="remolque" style="display:none">
@@ -230,27 +254,6 @@
                                             <option selected value="0">[Seleccionar]</option>
                                         </select>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="align-content-center text-center" id="Evidencia" style="display:none">
-                                <div class="row">
-                                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                                        <div class="carousel-inner" id="carouselImages">
-                                            <!-- Las imágenes que ya están en el servidor se llenarán aquí -->
-                                        </div>
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="formFileMultiple" class="form-label">Selecciona Imagenes</label>
-                                    <input class="form-control" type="file" id="formFileMultiple" multiple>
                                 </div>
                             </div>
                             <div id="forllantas" class="container p-2 my-3 border" style="display:none">
@@ -283,18 +286,18 @@
                             </div>
                             <div class="row">
                                 <p id="texto"></p>
-                                <input type="hidden" class="form-control form-control-sm" value="" id="lat" name="latitud" />
-                                <input type="hidden" class="form-control form-control-sm" value="" id="latNew" name="latitudNew" />
-                                <input type="hidden" class="form-control form-control-sm" value="" id="long" name="longitud" />
-                                <input type="hidden" class="form-control form-control-sm" value="" id="longNew" name="longitudNew" />
-                                <input type="hidden" class="form-control form-control-sm" value="" id="fechaGPs" name="fechaGPs" />
-                                <input type="hidden" class="form-control form-control-sm" value="" id="fechaGPsNew" name="fechaGPsNew" />
-                                <input type="hidden" class="form-control form-control-sm" value="" id="DirPosGps" name="DirPosGps" />
-                                <input type="hidden" class="form-control form-control-sm" value="" id="DirPosGpsNew" name="DirPosGpsNew" />
-                                <input type="hidden" class="form-control form-control-sm" value="" id="ClvViajTum" name="ClvViajTum" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="lat" name="latitud" asp-for="latitud" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="latNew" name="latitudNew" asp-for="latitudNew" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="long" name="longitud" asp-for="longitud" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="longNew" name="longitudNew" asp-for="longitudNew" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="fechaGPs" name="fechaGPs" asp-for="fechaGPs" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="fechaGPsNew" name="fechaGPsNew" asp-for="fechaGPsNew" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="DirPosGps" name="DirPosGps" asp-for="DirPosGps" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="DirPosGpsNew" name="DirPosGpsNew" asp-for="DirPosGpsNew" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="ClvViajTum" name="ClvViajTum" asp-for="ClvViajTum" />
 
-                                <input type="text" class="form-control form-control-sm" value="" id="clavesFalAndComen" name="clavesFalAndComen" />
-                                <input type="text" class="form-control form-control-sm" value="" id="fallallantas" name="fallallantas" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="clavesFalAndComen" name="clavesFalAndComen" />
+                                <input type="hidden" class="form-control form-control-sm" value="" id="fallallantas" name="fallallantas" />
 
                             </div>
                         </div>

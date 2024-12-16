@@ -64,6 +64,7 @@ namespace ConectDB.Models
         public string fallallantas { get; set; }
         public int cveEmp { get; set; }
         public int selcveEquipo { get; set; }
+        //public string RutasArchivos { get; set; }
         public List<Error> Eror { get; set; }
 
     }
