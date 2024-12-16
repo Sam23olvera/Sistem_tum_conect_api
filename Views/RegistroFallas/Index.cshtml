@@ -178,8 +178,7 @@
                                             <th>Clasificacion:</th>
                                             <th>Tipo Falla:</th>
                                             <th>Comentarios</th>
-                                            <th colspan="3">
-                                            </th>
+                                            <th colspan="3">Evidencias</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -229,12 +228,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <div id="carousel" class="owl-carousel owl-theme">
+                                        <div class="alert alert-info d-flex align-items-center justify-content-center" style="gap: 10px;">
+                                            <img src="~/imag/informacion.png" alt="Exclamación" style="width: 30px; height: 30px;" />
+                                            <span>Recuerda solo se aceptan archivos en formato png, jpeg y MP4 </span>
                                         </div>
                                     </div>
                                     <div class="col-7">
                                         <label class="custom-file-upload inputUploadFile">
-                                            <input type="file" name="Files" id="Files" accept=".png,.jpg" multiple />
+                                            <input type="file" name="Files" id="Files" accept=".png,.jpg" multiple onchange="validarArchivos(this)" />
                                         </label>
                                     </div>
                                 </div>
@@ -282,6 +283,10 @@
                     <div class="card-body">
                         <div class="container-fluid">
                             <div class="row align-content-center text-center">
+                                <div class="alert alert-info align-items-center justify-content-center" style="gap: 10px; display:none;" id="ayudamap">
+                                    <img src="~/imag/informacion.png" alt="Exclamación" style="width: 30px; height: 30px;" />
+                                    <span>Arrastra el pin en el mapa para seleccionar una ubicación.</span>
+                                </div>
                                 <div id="map" class="map map-home" style="height: 300px; margin-top: 50px"></div>
                             </div>
                             <div class="row">

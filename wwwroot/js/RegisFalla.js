@@ -152,7 +152,7 @@ $(document).ready(function () {
     var seleuni = document.getElementById('seleuni');
     var claveEmp = document.getElementById('cveEmp');
     ///extra
-
+    
 
     var CheckViaje = document.getElementById('CheckViaje');
     var inCheckViaje = document.getElementById('inCheckViaje');
@@ -168,6 +168,7 @@ $(document).ready(function () {
         var numuni = seleuni.options[seleuni.selectedIndex].text;
         var num = numuni.split("|");
         var inCheckViaje = document.getElementById('inCheckViaje');
+        
         if (CheckViaje.checked) {
             inCheckViaje.value = true;
             mostrarMapa(claveEmp.value, seleuni.value);
@@ -175,6 +176,7 @@ $(document).ready(function () {
             clearTable();
         }
         else {
+            
             inCheckViaje.value = false;
             mostrarMapa(claveEmp.value, seleuni.value);
             clearTable();
@@ -185,6 +187,7 @@ $(document).ready(function () {
         var numuni = seleuni.options[seleuni.selectedIndex].text;
         var num = numuni.split("|");
         var inCheckViaje = document.getElementById('inCheckViaje');
+        
         if (CheckViaje.checked) {
             inCheckViaje.value = true;
             mostrarMapa(claveEmp.value, seleuni.value);
@@ -357,7 +360,6 @@ function agregar() {
                 else {
                     var f = document.getElementById('selcveEquipo').options[document.getElementById('selcveEquipo').selectedIndex].text;
                     verselcveEquipo = "Remolque: " + f;
-
                 }
             }
             else if (selcveEquipo == '') {
@@ -504,7 +506,7 @@ function AgrgarImagenes() {
 function validarArchivos(input) {
     const archivos = input.files;
     const maxArchivos = 5;
-    const tiposPermitidos = ['image/png', 'image/jpeg'];
+    const tiposPermitidos = ['image/png', 'image/jpeg', 'video/'];
     const errores = [];
 
     if (archivos.length > maxArchivos) {
@@ -636,6 +638,7 @@ function mostrarMapa(claveem, unidad) {
     var overlay = document.getElementById('loading-overlay');
     overlay.style.display = 'block'; // Mostrar el spinner
 
+    const ayudamap = document.getElementById('ayudamap');
     var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -680,6 +683,7 @@ function mostrarMapa(claveem, unidad) {
                 var long = obj.data[0].UltimaPosicion[0].Longitud;
                 var LGPS = obj.data[0].UltimaPosicion[0].Position;
                 var fechaGPs = obj.data[0].UltimaPosicion[0].SendTime;
+                ayudamap.style.display = "block";
                 PintaMapa(long, lati, LGPS, fechaGPs);
             }
         })
@@ -687,8 +691,9 @@ function mostrarMapa(claveem, unidad) {
             var map = document.getElementById('map');
             map.style.display = "block";
             console.log("Error:", error);
-            toastr.error("Error al cargar el mapa");
             PintaMapa(long, lati, "", "");
+            ayudamap.style.display = "none";
+            toastr.error("Error al cargar el mapa");
         })
         .finally(() => {
             overlay.style.display = 'none'; // Ocultar el spinner
@@ -732,6 +737,7 @@ function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
         .addTo(map)
         .bindPopup("Última ubicación reportada:<br>\n" + DirGPS + "<br>\nFecha Reportada:<br>\n" + feGPs)
         .openPopup();
+    
     latin.value = "";
     long.value = "";
     fecha.value = "";
@@ -740,28 +746,60 @@ function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
     long.value = inputLngValue.toFixed(6);
     fecha.value = feGPs;
     DirGps.value = DirGPS;
+
     toastr.success("Se creo el Mapa");
     marker.on('dragend', function (e) {
+        var popup = e.target.getPopup();
         var newLatLng = e.target.getLatLng(); // Obtener las nuevas coordenadas
         inputLatValue = newLatLng.lat;
         inputLngValue = newLatLng.lng;
 
-        marker.setPopupContent(
-            "Actualización de ubicación reportada:<br>" +
-            "Latitud: " + inputLatValue.toFixed(6) + "<br>" +
-            "Longitud: " + inputLngValue.toFixed(6)
-        ).openPopup();
-        actualizarTexto(inputLatValue, inputLngValue);
+        // Llamar a Nominatim para obtener la dirección de las nuevas coordenadas
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${inputLatValue}&lon=${inputLngValue}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    // Actualizar el popup con la dirección
+                    var newAddress = data.display_name; // Dirección obtenida de Nominatim
+                    popup.setContent(
+                        "Actualización de ubicación reportada:<br>" +
+                        "Latitud: " + inputLatValue.toFixed(6) + "<br>" +
+                        "Longitud: " + inputLngValue.toFixed(6) + "<br>" +
+                        "Dirección: " + newAddress
+                    ).openOn(map);
+                    // Mostrar en consola para verificar
+                    //console.log("Nueva Dirección:", newAddress);
+                    actualizarTexto(inputLatValue, inputLngValue,newAddress);
+
+                } else {
+                    popup.setContent("No se pudo obtener la dirección.");
+                    actualizarTexto(inputLatValue, inputLngValue, "No se pudo obtener la dirección.");
+                }
+            })
+            .catch(error => {
+                console.error("Error en la geocodificación inversa:", error);
+                popup.setContent("Error al obtener la dirección.");
+            });
+        //marker.setPopupContent(
+        //    "Actualización de ubicación reportada:<br>" +
+        //    "Latitud: " + inputLatValue.toFixed(6) + "<br>" +
+        //    "Longitud: " + inputLngValue.toFixed(6)
+        //).openPopup();
+        //actualizarTexto(inputLatValue, inputLngValue);
     });
 
 }
-function actualizarTexto(lat, lng) {
+function actualizarTexto(lat, lng, newAddress) {
+    
     const cambio = document.getElementById('texto');
     const latin = document.getElementById('latNew');
     const long = document.getElementById('longNew');
     const fecha = document.getElementById('fechaGPsNew');
     const DirGps = document.getElementById('DirPosGpsNew');
     var n = new Date();
+    
     cambio.innerText = ""; // Limpiar el contenido previo
     cambio.innerText = "Latitud: " + lat.toFixed(6) + " Longitud: " + lng.toFixed(6);
     latin.value = "";
@@ -771,6 +809,7 @@ function actualizarTexto(lat, lng) {
     latin.value = lat.toFixed(6);
     long.value = lng.toFixed(6);
     fecha.value = n.toISOString("yyyy/MM/dd HH:mm:ss");
+    DirGps.value = newAddress;
     toastr.success("Se actualizan las Cordenadas");
 }
 function habilitarCamposDeshabilitados() {
