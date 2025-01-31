@@ -94,8 +94,9 @@ namespace ConectDB.DB
                                 CveOrigenFalla = int.TryParse(claveData[0], out int origenFalla) ? origenFalla : 0,
                                 CveEquipo = int.TryParse(claveData[1], out int CveEquipo) ? CveEquipo : 0,
                                 CveTipoClasifn = int.TryParse(claveData[2], out int clasificacion) ? clasificacion : 0,
-                                CveTipoFalla = int.TryParse(claveData[3], out int tipoFalla) ? tipoFalla : 0,
-                                DescripFalla = claveData[4]
+                                CveTipoFalla = 0,
+                                //CveTipoFalla = int.TryParse(claveData[3], out int tipoFalla) ? tipoFalla : 0,
+                                DescripFalla = claveData[3]
                             };
                             if (int.Parse(claveData[2]) == 2)
                             {
@@ -109,7 +110,8 @@ namespace ConectDB.DB
                                     x1.CveOrigenFalla = nuevaFalla.CveOrigenFalla;
                                     x1.CveEquipo = nuevaFalla.CveEquipo;
                                     x1.CveTipoClasifn = nuevaFalla.CveTipoClasifn;
-                                    x1.CveTipoFalla = nuevaFalla.CveTipoFalla;
+                                    //x1.CveTipoFalla = nuevaFalla.CveTipoFalla;
+                                    x1.CveTipoFalla = 0;
                                     x1.DescripFalla = nuevaFalla.DescripFalla;
 
                                     if (llantaData != null && llantaData.Length >= 5) // Mínimo para procesar DOT, Marca, MEDIDA, POSICION, ECOLlanta

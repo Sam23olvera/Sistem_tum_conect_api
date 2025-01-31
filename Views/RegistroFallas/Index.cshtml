@@ -10,10 +10,11 @@
         <h2>@ViewData["Title"]</h2>
         <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
         <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+        <input type="hidden" value="@TempData["status"]" id="status" />
     </div>
     <br />
     <form method="post" asp-action="Guardar" asp-controller="RegistroFallas" onsubmit="habilitarCamposDeshabilitados()" enctype="multipart/form-data">
-        <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
+        <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmpUser" name="cveEmpUser" />
         <input type="hidden" value="@usuarioModel.Token" id="XT" name="XT" />
         <div id="accordion">
             <div class="card">
@@ -27,39 +28,43 @@
                         <div class="container-fluid">
                             <div class="row align-content-center text-center">
                                 <div class="col-md-auto">
-                                    <label for="selorigen" class="form-label">Origen:</label>
-                                    <select class="form-select form-select-sm" id="selorigen" name="selorigen" asp-for="selorigen" disabled>
-                                        @foreach (var or in Model.TBCAT_OrigenTicket)
-                                        {
-                                            <option value="@or.ClaveOrigenTicket">@or.Alias|@or.Descripcion</option>
-                                        }
-                                    </select>
+                                    <label for="selorigen" class="form-label">
+                                        Origen:
+                                        <select class="form-select form-select-sm" id="selorigen" name="selorigen" asp-for="selorigen" disabled>
+                                            @foreach (var or in Model.TBCAT_OrigenTicket)
+                                            {
+                                                <option value="@or.ClaveOrigenTicket">@or.Alias|@or.Descripcion</option>
+                                            }
+                                        </select>
+                                    </label>
                                 </div>
                                 <div class="col-md-auto">
                                     <br />
                                     <label class="form-check-label" for="chekviaje">
                                         Viaje
+                                        <input class="form-check-input" type="checkbox" value="" id="CheckViaje" checked="@TempData["check"]">
+                                        <input type="hidden" value="@TempData["check"]" class="form-control" id="inCheckViaje" name="inCheckViaje" asp-for="inCheckViaje" />
                                     </label>
-                                    <input class="form-check-input" type="checkbox" value="" id="CheckViaje" checked="@TempData["check"]">
-                                    <input type="hidden" value="@TempData["check"]" class="form-control" id="inCheckViaje" name="inCheckViaje" asp-for="inCheckViaje" />
                                 </div>
                                 <div class="col-md-auto">
-                                    <label for="selAccion" class="form-label">Accion:</label>
-                                    <select class="form-select form-select-sm" id="selAccion" name="selAccion" asp-for="selAccion">
-                                        <option value="0">[Seleccionar]</option>
-                                        @foreach (var tip in Model.TBCAT_TipoMtto)
-                                        {
-                                            if (@tip.ClaveTipoMtto == 2)
+                                    <label for="selAccion" class="form-label">
+                                        Accion:
+                                        <select class="form-select form-select-sm" id="selAccion" name="selAccion" asp-for="selAccion">
+                                            <option value="0">[Seleccionar]</option>
+                                            @foreach (var tip in Model.TBCAT_TipoMtto)
                                             {
-                                                <option selected value="@tip.ClaveTipoMtto">@tip.Descripcion</option>
+                                                if (@tip.ClaveTipoMtto == 2)
+                                                {
+                                                    <option selected value="@tip.ClaveTipoMtto">@tip.Descripcion</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@tip.ClaveTipoMtto">@tip.Descripcion</option>
+                                                }
                                             }
-                                            else
-                                            {
-                                                <option value="@tip.ClaveTipoMtto">@tip.Descripcion</option>
-                                            }
-                                        }
-                                    </select>
-                                    <span asp-validation-for="selAccion" class="text-danger"></span>
+                                        </select>
+                                        <span asp-validation-for="selAccion" class="text-danger"></span>
+                                    </label>
                                 </div>
                                 <div class="col-md-auto">
                                     <label for="selTipCarga" class="form-label">Tipo Carga:</label>
@@ -83,40 +88,54 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="telopera" class="col-form-label">Tel.Operador:</label>
-                                    <input type="text" class="form-control form-control-sm" id="telopera" name="telopera" asp-for="telopera" />
+                                    <label for="telopera" class="col-form-label">
+                                        Tel.Operador:
+                                        <input type="text" class="form-control form-control-sm" id="telopera" name="telopera" asp-for="telopera" />
+                                    </label>
                                 </div>
                             </div>
                             <div class="row align-content-center text-center">
                                 <div class="col-md-auto">
-                                    <label for="seleuni" class="form-label">Unidad</label>
-                                    <select class="form-select form-select-sm" id="seleuni" name="seleuni" asp-for="seleuni">
+                                    <label for="seleuni" class="form-label">
+                                        Unidad
+                                        <select class="form-select form-select-sm" id="seleuni" name="seleuni" asp-for="seleuni">
+                                            <option value="0" selected>[seleccionar]</option>
+                                            @foreach (var unidades in Model.TBCAT_Unidades)
+                                            {
+                                                <option value="@unidades.ClaveUnidad_Motora">@unidades.Numero|@unidades.Alias</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="seleuni" class="text-black"></span>
+                                    </label>
+                                    <select class="form-select form-select-sm" id="seleuniempresa" name="seleuniempresa" hidden>
                                         <option value="0" selected>[seleccionar]</option>
                                         @foreach (var unidades in Model.TBCAT_Unidades)
                                         {
-                                            <option value="@unidades.ClaveUnidad_Motora">@unidades.Numero|@unidades.Alias</option>
+                                            <option value="@unidades.ClaveUnidad_Motora">@unidades.ClaveEmpresa</option>
                                         }
                                     </select>
-                                    <span asp-validation-for="seleuni" class="text-black"></span>
                                 </div>
                                 <div class="col-md-auto">
-                                    <label for="Opera" class="form-label">Operador</label>
-                                    <select class="form-select form-select-sm" id="Opera" name="Opera" asp-for="Opera">
-                                        <option selected value="0">[seleccionar]</option>
-                                        @foreach (var op in Model.TBCAT_Operador)
-                                        {
-                                            <option value="@op.ClaveOperador">@op.NumOP |@op.Nombre</option>
-                                        }
-                                    </select>
+                                    <label for="Opera" class="form-label">
+                                        Operador
+                                        <select class="form-select form-select-sm" id="Opera" name="Opera" asp-for="Opera">
+                                            <option selected value="0">[seleccionar]</option>
+                                            @foreach (var op in Model.TBCAT_Operador)
+                                            {
+                                                <option value="@op.ClaveOperador">@op.NumOP |@op.Nombre</option>
+                                            }
+                                        </select>
+                                    </label>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="Ruta" class="col-form-label">Ruta</label>
+                                    <label for="Ruta" class="col-form-label">Ruta
                                     <input type="text" class="form-control form-control-sm" value="" id="Ruta" name="Ruta" asp-for="Ruta" />
+                                    </label>
                                 </div>
                             </div>
                             <div class="row align-content-center text-center">
                                 <div class="col-md-auto">
-                                    <label for="remolque1" class="col-form-label">Remolque 1</label>
+                                    <label for="remolque1" class="col-form-label">Remolque 1
                                     <select class="form-select form-select-sm" id="remolque1" name="remolque1" asp-for="remolque1">
                                         <option selected value="0">[seleccionar]</option>
                                         @foreach (var re in Model.TBCAT_Remolques)
@@ -124,9 +143,10 @@
                                             <option value="@re.ClaveUnidad_Arrastre">@re.Numero</option>
                                         }
                                     </select>
+                                    </label>
                                 </div>
                                 <div class="col-md-auto">
-                                    <label for="remolque2" class="col-form-label">Remolque 2</label>
+                                    <label for="remolque2" class="col-form-label">Remolque 2
                                     <select class="form-select form-select-sm " id="remolque2" name="remolque2" asp-for="remolque2">
                                         <option selected value="0">[seleccionar]</option>
                                         @foreach (var re in Model.TBCAT_Remolques)
@@ -134,9 +154,10 @@
                                             <option value="@re.ClaveUnidad_Arrastre">@re.Numero</option>
                                         }
                                     </select>
+                                    </label>
                                 </div>
                                 <div class="col-md-auto">
-                                    <label for="SelectOperacion" class="form-label">Tipo Operación</label>
+                                    <label for="SelectOperacion" class="form-label">Tipo Operación
                                     <select class="form-select form-select-sm" id="SelectOperacion" name="SelectOperacion" asp-for="SelectOperacion">
                                         <option selected value="0">[seleccionar]</option>
                                         @foreach (var ope in Model.TBCAT_TipoOp)
@@ -144,6 +165,7 @@
                                             <option value="@ope.ClaveTipoOperacion">@ope.Descripcion</option>
                                         }
                                     </select>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -176,9 +198,9 @@
                                         <tr>
                                             <th>Falla:</th>
                                             <th>Clasificacion:</th>
-                                            <th>Tipo Falla:</th>
+                                            @* <th>Tipo Falla:</th> *@
                                             <th>Comentarios</th>
-                                            <th colspan="3">Evidencias</th>
+                                            <th colspan="2">Evidencias</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -189,7 +211,7 @@
                             <div class="align-content-center text-center" id="AltaFalla" style="display:none">
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <label for="selfalla" class="form-label">Falla en:</label>
+                                        <label for="selfalla" class="form-label">Falla en:
                                         <select class="form-select form-select-sm" id="selfalla">
                                             <option selected>[seleccionar]</option>
                                             @foreach (var ticket in Model.TBCAT_TipoTicket)
@@ -197,6 +219,7 @@
                                                 <option value="@ticket.ClaveTipoTicket">@ticket.Descripcion</option>
                                             }
                                         </select>
+                                        </label>
                                     </div>
                                     <div class="col-md-2">
                                         <label for="selclasi" class="col-form-label">Clasificación:</label>
@@ -208,7 +231,7 @@
                                             }
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
+                                    @* <div class="col-md-2">
                                         <label for="seltip" class="form-label">Tipo Falla:</label>
                                         <select class="form-select form-select-sm" id="seltip">
                                             <option selected value="0">[Seleccionar]</option>
@@ -217,7 +240,7 @@
                                                 <option value="@TFAL.ClaveTipoFalla">@TFAL.Descripcion</option>
                                             }
                                         </select>
-                                    </div>
+                                    </div> *@
                                     <div class="col-md-4">
                                         <label for="Comentario" class="col-form-label">Comentarios:</label>
                                         <textarea class="form-control form-control-sm" id="Comentario" placeholder="Comentarios"></textarea>
@@ -317,12 +340,6 @@
             </div>
         </div>
     </form>
-</div>
-<div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; text-align: center; color: white; padding-top: 20%;">
-    <h3>Cargando...</h3>
-    <div class="spinner-border text-light" role="status">
-        <span class="sr-only"></span>
-    </div>
 </div>
 <script>
     const eliminarImgPath = '@Url.Content("~/imag/eliminar.png")';

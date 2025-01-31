@@ -23,10 +23,11 @@
     <div class="container">
         <main role="main">
             <div class="container">
-                <div class="row text-center spiner-center">
-                    <div id="spinner-overlay" class="spinner-overlay">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                <div class="row text-center">
+                    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; text-align: center; color: white; padding-top: 20%;">
+                        <h3>Cargando...</h3>
+                        <div class="spinner-border text-light" role="status">
+                            <span class="sr-only"></span>
                         </div>
                     </div>
                 </div>
@@ -41,9 +42,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.0.5/compressor.min.js"></script>
-    <script src="~/lib/owlcarousel/owl.carousel.js"></script>
-    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
-
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

@@ -29,7 +29,7 @@ namespace ConectDB.Controllers
                 model.idsub = idsub;
                 ViewData["UsuarioModel"] = model;
                 ViewData["Title"] = "Indicadores";
-                controlFal = con.PrimerCarga_sin_catlog(0, model.Data[0]?.EmpS[0].cveEmp.ToString(), model.Data[0].idus.ToString(), DateTime.Now.ToString("yyyy-MM-dd"), 0, idsub);
+                //controlFal = con.PrimerCarga_sin_catlog(0, model.Data[0]?.EmpS[0].cveEmp.ToString(), model.Data[0].idus.ToString(), DateTime.Now.ToString("yyyy-MM-dd"), 0, idsub);
                 return View("Index", controlFal);
             }
             catch (Exception e)

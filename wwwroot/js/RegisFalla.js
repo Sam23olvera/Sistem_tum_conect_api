@@ -3,10 +3,65 @@ document.addEventListener("DOMContentLoaded", () => {
     // Cache de elementos comunes
     const mensaje = document.getElementById('mensaje');
     const guarda = document.getElementById('guarda');
+    const estatus = document.getElementById('status');
 
     if (mensaje?.value) toastr.error(mensaje.value);
     if (guarda?.value) toastr.success(guarda.value);
+    if (estatus.value === '200') {
+        if (Notification) {
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission()
+            }
+            if (mensaje.value !== '')
+            {
+                var title = "Mensaje"
+                var extra = {
+                    icon: "https://webportal.tum.com.mx/wsstest/imag/logo_difuminado.png",
+                    body: mensaje.value
+                }
+                if (typeof noti2 != 'undefined') {
+                    noti2.onclose = null;
+                    noti2.close()
+                }
+                // Generamos la notificación
+                noti2 = new Notification(title, extra);
 
+                noti2.onclick = function () {
+                    noti2.onclose = null;
+                    document.getElementById('XITRUS_act_perm2').value = 'click'
+                    setTimeout(function () { document.getElementById('XITRUS_act_perm2').value = '' }, 2000)
+                }
+                noti2.onclose = function () {
+                    document.getElementById('XITRUS_act_perm2').value = 'close'
+                    setTimeout(function () { document.getElementById('XITRUS_act_perm2').value = '' }, 2000)
+                }
+            }
+            if (guarda.value !== '')
+            {
+                var title = "Mensaje"
+                var extra = {
+                    icon: "https://webportal.tum.com.mx/wsstest/imag/logo_difuminado.png",
+                    body: guarda.value
+                }
+                if (typeof noti2 != 'undefined') {
+                    noti2.onclose = null;
+                    noti2.close()
+                }
+                // Generamos la notificación
+                noti2 = new Notification(title, extra);
+
+                noti2.onclick = function () {
+                    noti2.onclose = null;
+                    document.getElementById('XITRUS_act_perm2').value = 'click'
+                    setTimeout(function () { document.getElementById('XITRUS_act_perm2').value = '' }, 2000)
+                }
+                noti2.onclose = function () {
+                    document.getElementById('XITRUS_act_perm2').value = 'close'
+                    setTimeout(function () { document.getElementById('XITRUS_act_perm2').value = '' }, 2000)
+                }
+            }
+        }
+    }
 
 });
 
@@ -26,10 +81,11 @@ $(document).ready(function () {
     var Opera = document.getElementById('Opera');
     var SelectOperacion = document.getElementById('SelectOperacion');
     var Ruta = document.getElementById('Ruta');
-    var claveEmp = document.getElementById('cveEmp');
+    //var claveEmp = document.getElementById('cveEmp');
     var remolque1 = document.getElementById('remolque1');
     var remolque2 = document.getElementById('remolque2');
     var seleuni = document.getElementById('seleuni');
+    var seleuniempresa = document.getElementById('seleuniempresa');
 
     if (inCheckViaje === "True") {
 
@@ -44,9 +100,11 @@ $(document).ready(function () {
             remolque2.disabled = true;
             var numuni = seleuni.options[seleuni.selectedIndex].text;
             var num = numuni.split("|");
+            seleuniempresa.value = seleuni.value; 
+            
             if (CheckViaje.checked) {
-                mostrarMapa(claveEmp.value, seleuni.value);
-                muestraViaje(claveEmp.value, num[0]);
+                mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
+                muestraViaje(seleuniempresa.options[seleuniempresa.selectedIndex].text, num[0]);
                 clearTable();
             }
         }
@@ -150,9 +208,9 @@ $(document).ready(function () {
 $(document).ready(function () {
 
     var seleuni = document.getElementById('seleuni');
-    var claveEmp = document.getElementById('cveEmp');
+    //var claveEmp = document.getElementById('cveEmp');
     ///extra
-    
+
 
     var CheckViaje = document.getElementById('CheckViaje');
     var inCheckViaje = document.getElementById('inCheckViaje');
@@ -162,23 +220,25 @@ $(document).ready(function () {
     var remolque1 = document.getElementById('remolque1');
     var remolque2 = document.getElementById('remolque2');
     var seleuni = document.getElementById('seleuni');
+    var seleuniempresa = document.getElementById('seleuniempresa');
 
     if (seleuni.value != 0) {
         var CheckViaje = document.getElementById('CheckViaje');
         var numuni = seleuni.options[seleuni.selectedIndex].text;
         var num = numuni.split("|");
+
         var inCheckViaje = document.getElementById('inCheckViaje');
-        
+
         if (CheckViaje.checked) {
             inCheckViaje.value = true;
-            mostrarMapa(claveEmp.value, seleuni.value);
-            muestraViaje(claveEmp.value, num[0]);
+            mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
+            muestraViaje(seleuniempresa.options[seleuniempresa.selectedIndex].text, num[0]);
             clearTable();
         }
         else {
-            
+
             inCheckViaje.value = false;
-            mostrarMapa(claveEmp.value, seleuni.value);
+            mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
             clearTable();
         }
     }
@@ -187,16 +247,17 @@ $(document).ready(function () {
         var numuni = seleuni.options[seleuni.selectedIndex].text;
         var num = numuni.split("|");
         var inCheckViaje = document.getElementById('inCheckViaje');
-        
+        seleuniempresa.value = seleuni.value;
+
         if (CheckViaje.checked) {
             inCheckViaje.value = true;
-            mostrarMapa(claveEmp.value, seleuni.value);
-            muestraViaje(claveEmp.value, num[0]);
+            mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
+            muestraViaje(seleuniempresa.options[seleuniempresa.selectedIndex].text, num[0]);
             clearTable();
         }
         else {
             inCheckViaje.value = false;
-            mostrarMapa(claveEmp.value, seleuni.value);
+            mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
             clearTable();
         }
     });
@@ -214,8 +275,8 @@ $(document).ready(function () {
                 var numuni = seleuni.options[seleuni.selectedIndex].text;
                 var num = numuni.split("|");
                 if (CheckViaje.checked) {
-                    mostrarMapa(claveEmp.value, seleuni.value);
-                    muestraViaje(claveEmp.value, num[0]);
+                    mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
+                    muestraViaje(seleuniempresa.options[seleuniempresa.selectedIndex].text, num[0]);
                     clearTable();
                 }
             }
@@ -296,14 +357,14 @@ function agregar() {
     var AltaFalla = document.getElementById('AltaFalla');
     var fallasmuestra = document.getElementById('fallasmuestra').querySelector('tbody');
     var comentario = document.getElementById('Comentario').value;
-    var tipoFalla = document.getElementById('seltip').options[document.getElementById('seltip').selectedIndex].text;
+    //var tipoFalla = document.getElementById('seltip').options[document.getElementById('seltip').selectedIndex].text;
     var clasificacion = document.getElementById('selclasi').options[document.getElementById('selclasi').selectedIndex].text;
     var fallaEn = document.getElementById('selfalla').options[document.getElementById('selfalla').selectedIndex].text;
     var clavesFalAndComen = document.getElementById('clavesFalAndComen');
     var fallallantas = document.getElementById('fallallantas');
     var clavefal = document.getElementById('selfalla').value;
     var claveclasi = document.getElementById('selclasi').value;
-    var clavetipo = document.getElementById('seltip').value;
+    //var clavetipo = document.getElementById('seltip').value;
     //remolque cvleequipo
     var remolque = document.getElementById('remolque');
     var selcveEquipo = document.getElementById('selcveEquipo').value;
@@ -321,8 +382,8 @@ function agregar() {
 
     // Validar los campos
     if (!fallaEn || fallaEn === '[seleccionar]' ||
-        !clasificacion || clasificacion === '[Seleccionar]' ||
-        !tipoFalla || tipoFalla === '[Seleccionar]') {
+        !clasificacion || clasificacion === '[Seleccionar]') {
+        //|| !tipoFalla || tipoFalla === '[Seleccionar]') {
         toastr.error('Por favor, llena todos los campos antes de agregar.');
         return;
     }
@@ -375,7 +436,8 @@ function agregar() {
     if (selcveEquipo == '') {
         selcveEquipo = 0;
     }
-    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + selcveEquipo + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '%';
+    //clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + selcveEquipo + '|' + claveclasi + '|' + clavetipo + '|' + comentario + '%';
+    clavesFalAndComen.value = clavesFalAndComen.value + clavefal + '|' + selcveEquipo + '|' + claveclasi + '|' + comentario + '%';
 
     // Crea una nueva fila
     var nuevaFila = document.createElement('tr');
@@ -394,7 +456,6 @@ function agregar() {
                 </div>
             </div>
         </td>            
-        <td>${tipoFalla}</td>
         <td>${comentario}</td>
         <td colspan="2">
             <button type="button" class="btn btn-outline-secondary" onclick="MostraEvid(this)">
@@ -418,7 +479,7 @@ function agregar() {
 
     // Limpia los campos del formulario
     document.getElementById('Comentario').value = '';
-    document.getElementById('seltip').selectedIndex = 0;
+    //document.getElementById('seltip').selectedIndex = 0;
     document.getElementById('selclasi').selectedIndex = 0;
     document.getElementById('selfalla').selectedIndex = 0;
     document.getElementById('NumDaLla').value = '';
@@ -459,7 +520,7 @@ function MostraEvid(boton) {
     var evidenciasContainer = boton.nextElementSibling;
     if (evidenciasContainer.style.display === 'none') {
         evidenciasContainer.style.display = 'block';
-        
+
     } else {
         evidenciasContainer.style.display = 'none';
     }
@@ -506,7 +567,7 @@ function AgrgarImagenes() {
 function validarArchivos(input) {
     const archivos = input.files;
     const maxArchivos = 5;
-    const tiposPermitidos = ['image/png', 'image/jpeg', 'video/'];
+    const tiposPermitidos = ['image/png', 'image/jpeg', 'video/mp4'];
     const errores = [];
 
     if (archivos.length > maxArchivos) {
@@ -515,7 +576,7 @@ function validarArchivos(input) {
 
     for (let i = 0; i < archivos.length; i++) {
         if (!tiposPermitidos.includes(archivos[i].type)) {
-            errores.push(`El archivo "${archivos[i].name}" no es un tipo válido. Solo se aceptan imágenes .png y .jpg.`);
+            errores.push(`El archivo "${archivos[i].name}" no es un tipo válido. Solo se aceptan imágenes .png , .jpg. y.mp4`);
         }
     }
 
@@ -737,7 +798,7 @@ function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
         .addTo(map)
         .bindPopup("Última ubicación reportada:<br>\n" + DirGPS + "<br>\nFecha Reportada:<br>\n" + feGPs)
         .openPopup();
-    
+
     latin.value = "";
     long.value = "";
     fecha.value = "";
@@ -771,7 +832,7 @@ function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
                     ).openOn(map);
                     // Mostrar en consola para verificar
                     //console.log("Nueva Dirección:", newAddress);
-                    actualizarTexto(inputLatValue, inputLngValue,newAddress);
+                    actualizarTexto(inputLatValue, inputLngValue, newAddress);
 
                 } else {
                     popup.setContent("No se pudo obtener la dirección.");
@@ -792,14 +853,14 @@ function PintaMapa(inputLngValue, inputLatValue, DirGPS, feGPs) {
 
 }
 function actualizarTexto(lat, lng, newAddress) {
-    
+
     const cambio = document.getElementById('texto');
     const latin = document.getElementById('latNew');
     const long = document.getElementById('longNew');
     const fecha = document.getElementById('fechaGPsNew');
     const DirGps = document.getElementById('DirPosGpsNew');
     var n = new Date();
-    
+
     cambio.innerText = ""; // Limpiar el contenido previo
     cambio.innerText = "Latitud: " + lat.toFixed(6) + " Longitud: " + lng.toFixed(6);
     latin.value = "";
@@ -822,3 +883,4 @@ function habilitarCamposDeshabilitados() {
         }
     });
 }
+

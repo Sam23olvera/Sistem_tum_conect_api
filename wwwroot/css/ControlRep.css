@@ -1,314 +1,494 @@
-.sidebar {
-    height: 80%;
-    width: 250px;
-    top: 0;
-    left: 0;
-    padding-top: 20px;
-}
-.select {
-    color: white;
-    background-color: #5c8b91;
-}
-    .select : hover {
-        color: white;
-        background-color: #5c8b91;
-    }
-.Lateral {
-    margin-left: 250px;
-    padding: 20px;
+.vertical {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
 }
 
-.ticket-reparacion-table {
-    width: 100%;
+.eco-head {
+    width: 40px;
+    height: 160px;
 }
 
-    .ticket-reparacion-table th, .ticket-reparacion-table td {
-        padding: 8px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-    }
-
-    .ticket-reparacion-table th {
-        background-color: #5c8b91;
-        color: #f2f2f2;
-        font-size: small;
-    }
-
-    .ticket-reparacion-table td {
-        min-width: 75pt;
-    }
-
-    .ticket-reparacion-table p {
-        color: black;
-        font-size: small;
-    }
-
-.ticket-final-table {
-    width: 100%;
+.eco {
+    width: 40px;
+    height: 120px;
 }
 
-    .ticket-final-table th, .ticket-final-table td {
-        padding: 8px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-    }
-
-    .ticket-final-table th {
-        background-color: #5c8b91;
-        color: #f2f2f2;
-        font-size: small;
-    }
-
-    .ticket-final-table td {
-        min-width: 75pt;
-    }
-
-    .ticket-final-table p {
-        color: black;
-        font-size: small;
-    }
-
-.ticket-asigna-table {
-    width: 100%;
+.fechalta-head {
+    width: 90px;
+    height: 160px;
 }
 
-    .ticket-asigna-table th, .ticket-asigna-table td {
-        padding: 8px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-    }
-
-    .ticket-asigna-table th {
-        background-color: #5c8b91;
-        color: #f2f2f2;
-        font-size: small;
-    }
-
-    .ticket-asigna-table td {
-        min-width: 75pt;
-    }
-
-    .ticket-asigna-table p {
-        color: black;
-        font-size: small;
-    }
-
-
-.ticket-porasigna-table {
-    width: 100%;
+.fechalta {
+    width: 90px;
+    height: 120px;
 }
 
-    .ticket-porasigna-table th, .ticket-porasigna-table td {
-        padding: 8px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-    }
-
-    .ticket-porasigna-table th {
-        background-color: #5c8b91;
-        color: #f2f2f2;
-        font-size: small;
-    }
-
-    .ticket-porasigna-table td {
-        min-width: 75pt;
-    }
-
-    .ticket-porasigna-table p {
-        color: black;
-        font-size: small;
-    }
-    .ticket-porasigna-table .comment-cell {
-        flex-grow: 2; /* Make the comment cell grow more than others */
-    }
-
-
-.filtros {
-    height: 25pt;
+.crnot-head {
+    width: 40px;
+    height: 160px;
 }
 
-.inputUploadFile {
-    display: block;
-    height: 30pt;
-    width: 200pt;
-    font-size: small;
+.crnot {
+    width: 40px;
+    height: 120px;
 }
 
-.ComeMotvAsig {
-    display: block;
-    font-size: small;
-    height: 45pt;
-    width: 160pt;
-}
-.orderExist {
-    display: block;
-    justify-content: start;
-    font-size: small;
-    width: 160pt;
-    padding: 5px;
-}
-    .orderExist p {
-        margin: 0;
-    }
-.selectTableUser {
-    display: block;
-    width: 230pt;
-    font-size: small;
-}
-.Observaciones {
-    display: block;
-    width: 230pt;
-    font-size: small;
-}
-.fecha_Table {
-    display: block;
-    height: 30pt;
-    width: 110pt;
-    font-size: small;
-}
-
-.FechEstima {
-    display: block;
-    height: 30pt;
-    width: 110pt;
-    font-size: small;
-}
-
-.NumTick_Table {
-    display: block;
-    width: 10pt;
-}
-
-.FechTick_Table {
-    display: block;
-    width: 100pt;
-}
-
-.selectTickTable {
-    display: block;
-    height: 40pt;
-    width: 100pt;
-    font-size: small;
-}
-
-.selectTipFalTable {
-    display: block;
-    height: 40pt;
-    width: 130pt;
-}
-
-.textareaTable {
-    display: block;
-    height: 75pt;
-    width: 180pt;
-}
-
-
-.selectTableClasif {
-    display: block;
-    height: 30pt;
-    width: 110pt;
-    font-size: small;
-}
-
-    .selectTabApoy {
-        display: block;
-        height: 30pt;
-        width: 160pt;
-        font-size: small;
-    }
-
-.llantasTab {
-    display: block;
-    width: 250pt;
-    align-content: center;
+.callop-head {
     text-align: center;
-    font-size: small;
-}
-    .datos-bak {
-        display: none;
-        background-color: #CCD1D1;
-    }
-
-        .datos-bak h6 {
-            font-weight: bold;
-            color: #0d6efd;
-        }
-
-    .letras-index {
-        font-weight: bold;
-        color: #0d6efd;
-    }
-.custom-file-upload {
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
+    width: 40px;
+    height: 160px;
 }
 
-.custom-input {
-    border: none;
-    border-bottom: 1px solid black; /* Color de las líneas abajo (blanco en este caso) */
-    background-color: transparent; /* Fondo transparente */
-    color: black; /* Color del texto (blanco en este caso) */
-    width: 100pt;
-    font-size: small;
+.callop {
+    width: 40px;
+    height: 120px;
 }
 
-.custom-input {
-    
-    border: none;
-    border-bottom: 1px solid black; /* Color de las líneas abajo (negro en este caso) */
-    background-color: transparent; /* Fondo transparente */
-    outline: none; /* Quita el contorno al hacer clic */
-    box-shadow: none; /* Quita la sombra al hacer clic */
-    color: black; /* Color del texto (negro en este caso) */
-    width: 100pt;
-    font-size: small;
+.MecEme-head {
+    text-align: center;
+    width: 40px;
+    height: 160px;
 }
 
-    /* Estilo personalizado para el placeholder */
-    .custom-input::placeholder {
-        color: black; /* Color del placeholder (negro en este caso) */
-    }
-
-.carousel-inner img {
-    justify-content: center;
-    width: 150px; 
-    height: 150px;
+.MecEme {
+    width: 40px;
+    height: 120px;
 }
 
-/*.modal-body .item img {
-    max-width: 50%;
-    height: 50%;
-}*/
-
-/* Estilos para los videos */
-.modal-body .item-video video {
-    max-width: 10dp;
-    height: 10dp;
+.Diag-head {
+    text-align: center;
+    width: 40px;
+    height: 160px;
 }
 
-.ResaltaRenglon {
-    background-color: aliceblue;
+.Diag {
+    width: 40px;
+    height: 120px;
 }
 
-.totalgeneral {
-    background-color: #82E0AA;
-    width: 13rem;
+.rcasig-head {
+    width: 40px;
+    height: 160px;
 }
 
-.totalunidad {
-    background-color: #F0B27A;
-    width: 13rem;
+.rcasig {
+    width: 40px;
+    height: 120px;
 }
 
-.totalremolque {
-    background-color: #2E86C1;
-    width: 13rem;
+.etarc-head {
+    text-align: center;
+    width: 40px;
+    height: 160px;
 }
 
-.totaldolly {
-    background-color: #DAF7A6;
-    width: 13rem;
+.etarc {
+    width: 40px;
+    height: 120px;
+}
+
+.llegadar-head {
+    text-align: center;
+    width: 40px;
+    height: 160px;
+}
+
+.llegadar {
+    width: 40px;
+    height: 120px;
+}
+
+.etarep-head {
+    text-align: center;
+    width: 40px;
+    height: 160px;
+}
+
+.etarep {
+    width: 40px;
+    height: 120px;
+}
+
+.concluido-head {
+    text-align: center;
+    width: 40px;
+    height: 160px;
+}
+
+.concluido {
+    width: 40px;
+    height: 120px;
+}
+
+.usgen-head {
+    width: 100px;
+    height: 160px;
+}
+
+.usgen {
+    width: 100px;
+    height: 120px;
+}
+
+.UNE-head {
+    width: 100px;
+    height: 160px;
+}
+
+.UNE {
+    width: 100px;
+    height: 120px;
+}
+
+.Tiop-head {
+    width: 130px;
+    height: 160px;
+}
+
+.Tiop {
+    width: 130px;
+    height: 120px;
+}
+
+.FALINI-head {
+    width: 160px;
+    height: 160px;
+}
+
+.FALINI {
+    width: 160px;
+    height: 120px;
+}
+
+.FCRC-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FCRC {
+    width: 100px;
+    height: 120px;
+}
+
+.USCRC-head {
+    width: 100px;
+    height: 160px;
+}
+
+.USCRC {
+    width: 100px;
+    height: 120px;
+}
+
+.FLLOP-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FLLOP {
+    width: 100px;
+    height: 120px;
+}
+
+.FMECEME-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FMECEME {
+    width: 100px;
+    height: 120px;
+}
+
+.FDIAG-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FDIAG {
+    width: 100px;
+    height: 120px;
+}
+
+.FRCAS-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FRCAS {
+    width: 100px;
+    height: 120px;
+}
+
+.FETRC-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FETRC {
+    width: 100px;
+    height: 120px;
+}
+
+.FLLRC-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FLLRC {
+    width: 100px;
+    height: 120px;
+}
+
+.FETA-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FETA {
+    width: 100px;
+    height: 120px;
+}
+
+.FC-head {
+    width: 100px;
+    height: 160px;
+}
+
+.FC {
+    width: 100px;
+    height: 120px;
+}
+
+.grid-header-container {
+    display: grid;
+    grid-template-columns: repeat(25, 1fr);
+    gap: 1px;
+    text-align: center;
+    align-content: start;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f0f0f0;
+    /* Asegura un fondo visible */
+}
+
+.grid-cell-container {
+    display: grid;
+    grid-template-columns: repeat(25, 1fr);
+    gap: 1px;
+    text-align: center;
+    align-content: start;
+}
+
+.grid-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    font-weight: bold;
+    background-color: #44acb8;
+    color: white;
+}
+
+.grid-cell {
+    border: 1px solid #ddd;
+}
+
+.grid-cell-container .eco {
+    position: sticky;
+    left: 0;
+    /* Columna fija al hacer scroll horizontal */
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+    /* Línea divisoria para claridad */
+}
+
+.grid-header-container .eco-head {
+    position: sticky;
+    left: 0;
+    /* Columna fija al hacer scroll horizontal */
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+    /* Línea divisoria para claridad */
+}
+
+.grid-header-container .fechalta-head {
+    position: sticky;
+    left: 40px;
+    /* Ajusta este valor al ancho acumulado de columnas anteriores */
+    z-index: 5;
+    /* Más alto para superponer */
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .fechalta {
+    position: sticky;
+    left: 40px;
+    /* Ajusta este valor al ancho acumulado de columnas anteriores */
+    z-index: 5;
+    /* Más alto para superponer */
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* CRC Notificado */
+.grid-header-container .crnot-head {
+    position: sticky;
+    left: 130px;
+    /* Ajusta según el ancho acumulado (40 + 90px de FECHA ALTA TICKET) */
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .crnot {
+    position: sticky;
+    left: 130px;
+    /* Ajusta según el ancho acumulado (40 + 90px de FECHA ALTA TICKET) */
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* Llama Operador */
+.grid-header-container .callop-head {
+    position: sticky;
+    left: 170px;
+    /* Ajusta según el ancho acumulado */
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .callop {
+    position: sticky;
+    left: 170px;
+    /* Ajusta según el ancho acumulado */
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* Mecanica Emergencia */
+.grid-header-container .MecEme-head {
+    position: sticky;
+    left: 210px;
+    /* Ajusta según el ancho acumulado */
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .MecEme {
+    position: sticky;
+    left: 210px;
+    /* Ajusta según el ancho acumulado */
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* Diagnostico */
+.grid-header-container .Diag-head {
+    position: sticky;
+    left: 250px;
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .Diag {
+    position: sticky;
+    left: 250px;
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* RC Asignado */
+.grid-header-container .rcasig-head {
+    position: sticky;
+    left: 290px;
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .rcasig {
+    position: sticky;
+    left: 290px;
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* ETA RC */
+.grid-header-container .etarc-head {
+    position: sticky;
+    left: 330px;
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .etarc {
+    position: sticky;
+    left: 330px;
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* Llegada RC */
+.grid-header-container .llegadar-head {
+    position: sticky;
+    left: 370px;
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .llegadar {
+    position: sticky;
+    left: 370px;
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* ETA Reparacion */
+.grid-header-container .etarep-head {
+    position: sticky;
+    left: 410px;
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .etarep {
+    position: sticky;
+    left: 410px;
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+}
+
+/* Concluido */
+.grid-header-container .concluido-head {
+    position: sticky;
+    left: 450px;
+    z-index: 5;
+    background-color: #44acb8;
+    border-right: 1px solid #ddd;
+}
+
+.grid-cell-container .concluido {
+    position: sticky;
+    left: 450px;
+    z-index: 5;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
 }

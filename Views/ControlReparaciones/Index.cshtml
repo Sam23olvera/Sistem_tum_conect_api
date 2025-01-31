@@ -5,235 +5,204 @@
     Layout = "~/Views/Shared/_Layout_ControlReparaciones.cshtml";
     var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
 }
-<div class="col-md-10">
-    <div class="container">
-        <div class="row justify-content-center">
-            <h2 class="letras-index">Resumen del Mes en Curso</h2>
-        </div>
-        <br />
-        <div class="row justify-content-center">
-            @foreach (var k in Model.SolicitudesGenerales)
-            {
-                @if (k.Descripcion == "Total General")
+<div class="row">
+    <div class="col-lg-5 p-0">
+        <div class="grid-container" id="datageticket">
+            <div class="grid-header-container">
+                <div class="grid-header eco-head align-content-start text-start">ECO</div>
+                <div class="grid-header fechalta-head">FECHA ALTA TICKET</div>
+                <div class="grid-header vertical crnot-head">CRC Notificado</div>
+                <div class="grid-header vertical callop-head">Llama Operador</div>
+                <div class="grid-header vertical MecEme-head">Mecanica Emergencia</div>
+                <div class="grid-header vertical Diag-head">Diagnostico</div>
+                <div class="grid-header vertical rcasig-head">RC Asignado</div>
+                <div class="grid-header vertical etarc-head">ETA RC</div>
+                <div class="grid-header vertical llegadar-head">Llegada RC</div>
+                <div class="grid-header vertical etarep-head">ETA Reparacion</div>
+                <div class="grid-header vertical concluido-head">Concluido</div>
+                <div class="grid-header usgen-head">Usuario Genera Ticket</div>
+                <div class="grid-header UNE-head">UNE</div>
+                <div class="grid-header Tiop-head">Tipo Operacion</div>
+                <div class="grid-header FALINI-head">Falla Inicial</div>
+                <div class="grid-header FCRC-head">Fecha CRC Asignado</div>
+                <div class="grid-header USCRC-head">Usuario CRC Asignado</div>
+                <div class="grid-header FLLOP-head">Fecha Llamada Operador</div>
+                <div class="grid-header FMECEME-head">Fecha Mecanica Emergencia</div>
+                <div class="grid-header FDIAG-head">Fecha Diagnostico</div>
+                <div class="grid-header FRCAS-head">Fecha RC Asignado</div>
+                <div class="grid-header FETRC-head">Fecha ETA RC</div>
+                <div class="grid-header FLLRC-head">Fecha Llegada RC</div>
+                <div class="grid-header FETA-head">Fecha ETA Reparacion</div>
+                <div class="grid-header FC-head">Fecha Concluido</div>
+            </div>
+            <div class="grid-cell-container">
+                @foreach (var c in Model.ListDataPrincipal)
                 {
-                    <div class="col-md-4">
-                        <div class="card" style="background-color: #82E0AA; width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title text-center">@k.Descripcion</h5>
-                                <h4 class="card-text text-center">@k.Cantidad </h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell eco align-content-center text-center">
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalEco-@c.ClaveTicket" data-bs-name="ECO" data-bs-placement="top" title="Mostrar">
+                            <img src="~/imag/unidad.png" />
+                        </button>
+                        <p>@c.ECO</p>
                     </div>
-                }
-                @if (k.Descripcion == "Total_Unidad")
-                {
-                    <div class="col-md-4">
-                        <div class="card" style="background-color: #F0B27A; width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title text-center">@k.Descripcion</h5>
-                                <h4 class="card-text text-center">@k.Cantidad </h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell fechalta align-content-center text-center">
+                        <i class="bi bi-calendar"></i>
+                        <br />
+                        <p>@c.FechaAltaTicket</p>
                     </div>
-                }
-                @if (k.Descripcion == "Total_Remolque")
-                {
-                    <div class="col-md-4">
-                        <div class="card" style="background-color: #2E86C1; width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title text-center">@k.Descripcion</h5>
-                                <h4 class="card-text text-center">@k.Cantidad </h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell crnot align-content-center text-center" style="background-color:@c.CRCNOTIFICADO">
+                        @if (string.IsNullOrEmpty(@c.FechaCRCAsignado.ToString()))
+                        {
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalDetalle-@c.ClaveTicket" data-bs-placement="top" title="Mostrar">
+                                <i class="bi bi-bell"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalDetalle-@c.ClaveTicket" disabled>
+                                <i class="bi bi-bell"></i>
+                            </button>
+                        }
                     </div>
-                }
-            }
-        </div>
-        <br />
-        <div class="row justify-content-between">
-            <h5 class="text-start letras-index">Unidad</h5>
-            @foreach (var s in Model.Solicitudes)
-            {
-                @if (s.ClaveEstatus == 1 && s.ClaveTipoTicket == 1)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #F1948A;width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                                @*<button type="button" class="btn btn-lg btn-block btn-outline-primary">Ir</button>*@
-                            </div>
-                        </div>
+                    <div class="grid-cell callop align-content-center text-center" style="background-color:@c.LLAMADAOPER">
+                        <i class="bi bi-telephone-forward"></i>
                     </div>
-                }
-                @if (s.ClaveEstatus == 2 && s.ClaveTipoTicket == 1)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #85C1E9; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell MecEme align-content-center text-center" style="background-color:@c.MECANICAEMERGENCIA">
+                        <i class="bi bi-wrench"></i>
                     </div>
-                }
-                @if (s.ClaveEstatus == 3 && s.ClaveTipoTicket == 1)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #F8C471; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell Diag align-content-center text-center" style="background-color:@c.DIAGNOSTICO">
+                        <i class="bi bi-clipboard-pulse"></i>
                     </div>
-                }
-                @if (s.ClaveEstatus == 4 && s.ClaveTipoTicket == 1)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #73C6B6; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell rcasig align-content-center text-center" style="background-color:@c.RCASIGNADO">
+                        <i class="bi bi-person-raised-hand"></i>
                     </div>
-                }
-                @if (s.ClaveEstatus == 5 && s.ClaveTipoTicket == 1)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #B2BABB;width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell etarc align-content-center text-center" style="background-color:@c.ETARC">
+                        <i class="bi bi-globe-americas"></i>
                     </div>
-                }
-            }
-        </div>
-        <br />
-        <div class="row justify-content-between">
-            <h5 class="text-start letras-index">Remolque</h5>
-            @foreach (var s in Model.Solicitudes)
-            {
-                @if (s.ClaveEstatus == 1 && s.ClaveTipoTicket == 2)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #F1948A;width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell llegadar align-content-center text-center" style="background-color:@c.LLEGADARC">
+                        <i class="bi bi-geo-alt"></i>
                     </div>
-                }
-                @if (s.ClaveEstatus == 2 && s.ClaveTipoTicket == 2)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #85C1E9; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell etarep align-content-center text-center" style=" background-color:@c.ETAREPARACION">
+                        <i class="bi bi-clock-history"></i>
                     </div>
-                }
-                @if (s.ClaveEstatus == 3 && s.ClaveTipoTicket == 2)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #F8C471; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell concluido align-content-center text-center" style=" background-color:@c.CONCLUIDO">
+                        <i class="bi bi-bookmark-check"></i>
                     </div>
-                }
-                @if (s.ClaveEstatus == 4 && s.ClaveTipoTicket == 2)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #73C6B6; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell usgen align-content-center text-center">
+                        <p>@c.USERGeneraTicket</p>
                     </div>
-                }
-                @if (s.ClaveEstatus == 5 && s.ClaveTipoTicket == 2)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #B2BABB;width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell UNE align-content-center text-center">
+                        <p>@c.UNE</p>
                     </div>
-                }
-            }
-        </div>
-        <div class="row justify-content-between">
-            <h5 class="text-start letras-index">Dolly</h5>
-            @foreach (var s in Model.Solicitudes)
-            {
-                @if (s.ClaveEstatus == 1 && s.ClaveTipoTicket == 3)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #F1948A;width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell Tiop align-content-center text-center">
+                        <p>@c.TipoOperacion</p>
                     </div>
-                }
-                @if (s.ClaveEstatus == 2 && s.ClaveTipoTicket == 3)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #85C1E9; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell FALINI align-content-center text-center overflow-auto">
+                        <p>@c.FallaInicial</p>
                     </div>
-                }
-                @if (s.ClaveEstatus == 3 && s.ClaveTipoTicket == 3)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #F8C471; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell FCRC align-content-center text-center">
+                        <p>@c.FechaCRCAsignado</p>
                     </div>
-                }
-                @if (s.ClaveEstatus == 4 && s.ClaveTipoTicket == 3)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #73C6B6; width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell USCRC align-content-center text-center">
+                        <p>@c.UsrCRCAsignado</p>
                     </div>
-                }
-                @if (s.ClaveEstatus == 5 && s.ClaveTipoTicket == 3)
-                {
-                    <div class="col-md-2">
-                        <div class="card" style="background-color: #B2BABB;width: 12rem;">
-                            <div class="card-body">
-                                <h7 class="card-title text-start">@s.Estatus</h7>
-                                <h4 class="card-text text-start">@s.Cantidad</h4>
-                            </div>
-                        </div>
+                    <div class="grid-cell FLLOP align-content-center text-center">
+                        <p>@c.FechaLlamadaOPE</p>
                     </div>
+                    <div class="grid-cell FMECEME align-content-center text-center">
+                        <p>@c.FechaMECEmergencia</p>
+                    </div>
+                    <div class="grid-cell FDIAG align-content-center text-center">
+                        <p>@c.FechaDiagnostico</p>
+                    </div>
+                    <div class="grid-cell FRCAS align-content-center text-center"></div>
+                    <div class="grid-cell FETRC align-content-center text-center"></div>
+                    <div class="grid-cell FLLRC align-content-center text-center"></div>
+                    <div class="grid-cell FETA align-content-center text-center"></div>
+                    <div class="grid-cell FC align-content-center text-center"></div>
                 }
-            }
+            </div>
         </div>
     </div>
+    @foreach (var c in Model.ListDataPrincipal)
+    {
+        <div class="modal fade" id="modalDetalle-@c.ClaveTicket" tabindex="-1" aria-labelledby="modalDetalle-@c.ClaveTicket-Label"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetalle-@c.ClaveTicket-Label">#Ticket: @c.ClaveTicket ECO: @c.ECO</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>El registro será asignado para su seguimiento inmediato.</h5>
+                        <h5 class="text-end">¿Desea confirmarlo?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="modalDetallebtnsi" onclick="enviarnotificacion('@c.ClaveTicket')">Si</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalEco-@c.ClaveTicket" tabindex="-1" aria-labelledby="modalEco-@c.ClaveTicket-Label"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEco-@c.ClaveTicket-Label">Detalles del Ticket: @c.ClaveTicket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body overflow-auto">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <strong>Operador:</strong>
+                                    <p id="NumOP-@c.ClaveTicket" class="text-capitalize"></p>
+                                    <strong>Remolque(s):</strong>
+                                    <p id="Remolques-@c.ClaveTicket"></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Dolly:</strong>
+                                    <p id="Doly-@c.ClaveTicket"></p>
+                                    <strong>NombreCliente:</strong>
+                                    <p id="NombreCliente-@c.ClaveTicket"></p>
+                                </div>
+                                <div class="col-md-3">                                  
+                                    <div id="MostMap-@c.ClaveTicket"></div>
+                                    <strong>Tipo de Carga:</strong>
+                                    <input class="form-check-input" type="checkbox" value="" id="TipoCarga-@c.ClaveTicket" disabled>
+                                    <label class="form-check-label" for="TipoCarga-@c.ClaveTicket" id="labTipoCarga-@c.ClaveTicket"></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong><i class="bi bi-telephone">Operador:</i></strong>
+                                    <p id="Tel_Operador-@c.ClaveTicket"></p>
+                                    <strong>Viaje:</strong>
+                                    <p id="Folio-@c.ClaveTicket"></p>
+                                </div>
+                            </div>
+                            <div class="row text-center mt-3">
+                                <div class="table-responsive" id="FallasDeta-@c.ClaveTicket">
+                                    <table id="TabFallasDeta-@c.ClaveTicket" class="table table-secondary table-sm table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="align-content-center text-center">Falla en</th>
+                                                <th class="align-content-center text-center">Clasificacion</th>
+                                                <th class="align-content-center text-center">Referencia</th>
+                                                <th class="align-content-center text-center">Proveedores</th>
+                                                <th class="align-content-center text-center">Evidencias</th>
+                                                <th class="align-content-center text-center">Folio de Llantas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>

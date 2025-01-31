@@ -55,7 +55,7 @@ namespace ConectDB.Controllers
                 string desusuario = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]);
                 string descontraseña = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]);
 
-                var model = menu.RegresMenu(desusuario, descontraseña, fallas.cveEmp, url, XT);
+                var model = menu.RegresMenu(desusuario, descontraseña, fallas.cveEmpUser, url, XT);
                 ViewData["UsuarioModel"] = model;
                 model.Token = XT;
                 if (fallas.selAccion == 0)
@@ -114,11 +114,13 @@ namespace ConectDB.Controllers
                 if (fallas.Eror[0].status == 200)
                 {
                     TempData["guardado"] = fallas.Eror[0].message;
+                    TempData["status"] = fallas.Eror[0].status;
                     return RedirectToAction("Index", new { model.Data[0].EmpS[0].cveEmp, XT });
                 }
                 else
                 {
                     TempData["Mensaje"] = fallas.Eror[0].message;
+                    TempData["status"] = fallas.Eror[0].status;
                     return RedirectToAction("Index", new { model.Data[0].EmpS[0].cveEmp, XT });
                 }
             }

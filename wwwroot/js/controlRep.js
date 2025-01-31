@@ -1,712 +1,461 @@
-﻿window.onload = function () {
-    document.getElementById("spinner-overlay").style.display = "none";
+﻿const ventanas = {};
+window.onload = function () {
+    document.getElementById("loading-overlay").style.display = "none";
+    // Iniciar el contador de 10 minutos
+    iniciarContador();
 };
+function ventanaEmergenteAbierta(nombre) {
+    if (!ventanas[nombre] || ventanas[nombre].closed) {
+        aviso(`La ventana "${nombre}" no está abierta.`);
+        return false;
+    }
+    return true;
+}
+function cerrarVentana(nombre) {
+    if (ventanaEmergenteAbierta(nombre)) {
+        ventanas[nombre].close();
+        delete ventanas[nombre]; // Eliminar la referencia de la ventana cerrada
+        aviso(`Se ha cerrado la ventana "${nombre}".`);
+    }
+}
+
+function iniciarContador() {
+    const contadorDisplay = document.createElement("div");
+    contadorDisplay.id = "contador";
+    contadorDisplay.style.position = "fixed";
+    contadorDisplay.style.bottom = "10px";
+    contadorDisplay.style.right = "10px";
+    contadorDisplay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+    contadorDisplay.style.color = "white";
+    contadorDisplay.style.padding = "10px";
+    contadorDisplay.style.borderRadius = "5px";
+    contadorDisplay.style.zIndex = "9999";
+    document.body.appendChild(contadorDisplay);
+
+    let tiempoRestante = 10 * 60; // 10 minutos en segundos
+
+
+    const interval = setInterval(() => {
+        const minutos = Math.floor(tiempoRestante / 60);
+        const segundos = tiempoRestante % 60;
+
+        // Mostrar el contador en formato mm:ss
+        contadorDisplay.textContent = `La página se recargará en ${minutos}:${segundos.toString().padStart(2, "0")}`;
+
+        tiempoRestante--;
+
+        if (tiempoRestante < 0) {
+            clearInterval(interval);
+            location.reload(); // Refrescar la página
+        }
+    }, 1000); // Ejecutar cada segundo
+}
 
 document.addEventListener("DOMContentLoaded", function () {
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission()
+    }
+    const mensaje = document.getElementById('mensaje');
+    const guarda = document.getElementById('guarda');
+
     var links = document.querySelectorAll(".carga");
     //var pagin = document.querySelectorAll(".page-link");
     links.forEach(function (link) {
         link.addEventListener("click", function () {
-            document.getElementById("spinner-overlay").style.display = "block";
+            document.getElementById("loading-overlay").style.display = "block";
         });
     });
 
-    //pagin.forEach(function (link) {
-    //    link.addEventListener("click", function () {
-    //        document.getElementById("spinner-overlay").style.display = "block";
-    //    });
-    //});
-
-    var highlightRowId = localStorage.getItem('highlightRowId');
-    if (highlightRowId) {
-        var renglor = document.getElementById('renglon-'+highlightRowId);
-        if (renglor) {
-            renglor.classList.add('ResaltaRenglon');
-            setTimeout(function () {
-                renglor.classList.remove('ResaltaRenglon');
-                localStorage.removeItem('highlightRowId');
-            }, 5000);
-        }
-    }
-    
-    const rowsPerPage = 10;
-    const table = document.getElementById("TabDatos");
-    const tbody = table.querySelector("tbody");
-    const rows = Array.from(tbody.querySelectorAll("tr"));
-    const pagination = document.getElementById("pagination");
-
-    function displayPage(page) {
-        const start = (page - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-
-        rows.forEach((row, index) => {
-            row.style.display = (index >= start && index < end) ? "" : "none";
-        });
-
-        updatePagination(page);
-    }
-    function updatePagination(currentPage) {
-        pagination.innerHTML = ""; // Limpiar contenido anterior
-        const totalPages = Math.ceil(rows.length / rowsPerPage);
+    if (mensaje?.value) toastr.error(mensaje.value);
+    if (guarda?.value) toastr.success(guarda.value);
 
 
-        const prevButton = document.createElement("button");
-        prevButton.textContent = "Anterior";
-        prevButton.classList.add("btn", "btn-primary", "me-2");
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener("click", () => displayPage(currentPage - 1));
-        pagination.appendChild(prevButton);
+    // Seleccionar todos los botones que tienen el atributo data-bs-target y NO están deshabilitados
+    const botones = document.querySelectorAll('button[data-bs-target]:not([disabled])');
+    botones.forEach(function (boton) {
+        boton.addEventListener('click', async function () {
+            const modalidEco = boton.getAttribute('data-bs-name');
+            const modalId = boton.getAttribute('data-bs-target');
+            const claveTicket = modalId.replace('#modalEco-', '').replace('#modalDetalle-', '');
+            if (modalidEco === 'ECO') {
+                const modalId = boton.getAttribute('data-bs-target');
+                const claveTicket = modalId.replace('#modalEco-', ''); // Por ejemplo: "12345"
+                var json = {
+                    "data": {
+                        "bdCc": 5,
+                        "bdSch": "dbo",
+                        "bdSp": "SPQRY_VerTicket"
+                    },
+                    "filter": [
+                        {
+                            "property": "ClaveTicket",
+                            "value": claveTicket // Usamos la clave obtenida dinámicamente
+                        }
+                    ]
+                };
 
-        for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement("button");
-            pageButton.textContent = i;
-            pageButton.classList.add("btn", "btn-secondary", "me-2");
-            if (i === currentPage) {
-                pageButton.classList.add("active");
-            }
-            pageButton.addEventListener("click", () => displayPage(i));
-            pagination.appendChild(pageButton);
-        }
+                try {
+                    const result = await consumir(json);
+                    if (result.status == 200) {
+                        if (result.data == null || result.data == 0) {
+                            toastr.error(result.status + " No Se Encuentran Datos del Ticket " + claveTicket);
+                            notificacion(result.status + " No Se Encuentran Datos del Ticket " + claveTicket, "TUM NOTIFICA");
+                        }
+                        else {
+                            var inpNumOP = 'NumOP-' + claveTicket;
+                            var inpTipoCarga = 'TipoCarga-' + claveTicket;
+                            var inpTel_Operador = 'Tel_Operador-' + claveTicket;
+                            var inpFolio = 'Folio-' + claveTicket;
+                            var inNombreCliente = 'NombreCliente-' + claveTicket;
+                            var tabFallasDeta = 'FallasDeta-' + claveTicket;
+                            var nametabTabFallasDeta = 'TabFallasDeta-' + claveTicket;
+                            var inpRemolques = 'Remolques-' + claveTicket;
+                            var inpDoly = 'Doly-' + claveTicket;
+                            var inpMostMap = 'MostMap-' + claveTicket;
+                            var labtipoCarga = 'labTipoCarga-' + claveTicket;
 
-        // Botón de "Siguiente"
-        const nextButton = document.createElement("button");
-        nextButton.textContent = "Siguiente";
-        nextButton.classList.add("btn", "btn-primary", "me-2");
-        nextButton.disabled = currentPage === totalPages;
-        nextButton.addEventListener("click", () => displayPage(currentPage + 1));
-        pagination.appendChild(nextButton);
-    }
+                            const numop = document.getElementById(inpNumOP);
+                            const TipoCarga = document.getElementById(inpTipoCarga);
+                            const Tel_Operador = document.getElementById(inpTel_Operador);
+                            const Folio = document.getElementById(inpFolio);
+                            const NombreCliente = document.getElementById(inNombreCliente);
+                            const Remolques = document.getElementById(inpRemolques);
+                            const Doly = document.getElementById(inpDoly);
+                            const labtip = document.getElementById(labtipoCarga);
+                            const fallasdeta = document.getElementById(tabFallasDeta).querySelector('tbody');
 
-    // Inicializar la primera página
-    displayPage(1);
+                            numop.textContent = result.data[0].Ticket[0].NumEmpleado + ' | ' + result.data[0].Ticket[0].NombOperador;
+                            TipoCarga.checked = result.data[0].Ticket[0].TipoCarga;
+                            if (result.data[0].Ticket[0].TipoCarga == true) {
+                                labtip.textContent = 'cargado';
+                            }
+                            else
+                            {
+                                labtip.textContent = 'vacio';
+                            }
+                            Tel_Operador.textContent = result.data[0].Ticket[0].Tel_Operador;
+                            Folio.textContent = result.data[0].Ticket[0].Folio;
+                            Remolques.textContent = result.data[0].Ticket[0].Remolque1 + ' | ' + result.data[0].Ticket[0].Remolque2;
+                            Doly.textContent = result.data[0].Ticket[0].NumDolly;
+                            NombreCliente.textContent = result.data[0].Ticket[0].NombreCliente;
+                            var botonmapa = `<strong> ECO: </strong> <button type="button" class="btn btn-outline-light" onclick="mostrarubicacion(` + claveTicket + `,` + result.data[0].Ticket[0].ECO + `,` + result.data[0].Ticket[0].Latitud + `,` + result.data[0].Ticket[0].Longitud + `)"> <img src="https://webportal.tum.com.mx/wsstest/imag/Unidad.png"/>` + result.data[0].Ticket[0].ECO + `</button>`;
+                            document.getElementById(inpMostMap).innerHTML = botonmapa;
 
-});
+                            document.getElementById(nametabTabFallasDeta).querySelector("tbody").innerHTML = "";
 
+                            const fallas = result.data[0].Ticket[0].Fallas;
+                            for (let i = 0; i <= fallas.length; i++) {
+                                var imag = ``;
+                                if (fallas[i].IdTipoEq == 1) {
+                                    imag = `<img src="https://webportal.tum.com.mx/wsstest/imag/Unidad.png" />`;
+                                }
+                                else if (fallas[i].IdTipoEq == 2) {
+                                    imag = `<img src="https://webportal.tum.com.mx/wsstest/imag/remolque.png" />`;
+                                }
+                                else if (fallas[i].IdTipoEq == 3) {
+                                    imag = `<img src="https://webportal.tum.com.mx/wsstest/imag/Dolly.png" />`;
+                                }
+                                else if (fallas[i].IdTipoEq == 3) {
+                                    imag = `<i class="bi bi-car-front"></i>`;
+                                }
 
-
-//$(document).ready(function () {
-//    var showModal = document.getElementById('showModal').value;
-//    if (showModal === 'True') {
-//        $('#myModal').modal('show'); // Mostrar el modal
-//    }
-//    else if (showModal === 'false') {
-//        $('#myModal').hide();
-//    }
-//});
-
-$(document).ready(function () {
-    var ctx = $('#barChart').get(0).getContext('2d');
-
-    function calculateTotal(estaId, estaUniId, totalId) {
-        var estaValue = parseInt($(estaId).val()) || 0;
-        var estaUniValue = parseInt($(estaUniId).val()) || 0;
-        var totalValue = estaValue + estaUniValue;
-        $(totalId).val(totalValue);
-    }
-
-    calculateTotal('#Esta-1', '#Esta-uni-1', '#Esta-Total-1');
-    calculateTotal('#Esta-2', '#Esta-uni-2', '#Esta-Total-2');
-    calculateTotal('#Esta-3', '#Esta-uni-3', '#Esta-Total-3');
-    calculateTotal('#Esta-4', '#Esta-uni-4', '#Esta-Total-4');
-    calculateTotal('#Esta-5', '#Esta-uni-5', '#Esta-Total-5');
-
-    var barChart = new Chart(ctx, {
-        type: 'polarArea',
-        data: {
-            labels: [
-                $('#Name-Esta-1').val(),
-                $('#Name-Esta-2').val(),
-                $('#Name-Esta-3').val(),
-                $('#Name-Esta-4').val(),
-                $('#Name-Esta-5').val()
-            ],
-            datasets: [{
-                label: 'Reporte Mensual',
-                data: [
-                    parseInt($('#Esta-Total-1').val()),
-                    parseInt($('#Esta-Total-2').val()),
-                    parseInt($('#Esta-Total-3').val()),
-                    parseInt($('#Esta-Total-4').val()),
-                    parseInt($('#Esta-Total-5').val())
-                ],
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(75, 192, 192)',
-                    'rgb(255, 205, 86)',
-                    'rgb(201, 203, 207)',
-                    'rgb(54, 162, 235)'
-                ]
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
+                                var nuevafilas = document.createElement('tr');
+                                nuevafilas.innerHTML = `
+                                <td>
+                                    ${fallas[i].FallaEn} 
+                                    ${fallas[i].Remolque1 || ''}
+                                    ${fallas[i].Remolque2 || ''}
+                                    ${fallas[i].NumDolly || ''}
+                                <br/>
+                                    ${imag}
+                                <br/>
+                                    ${fallas[i].Equipo}
+                                </td>
+                                <td>
+                                    ${fallas[i].Clasificacion}
+                                </td>
+                                <td>
+                                    ${fallas[i].Referencia}
+                                    ${fallas[i].DOT || ''}
+                                    ${fallas[i].Marca || ''}
+                                    ${fallas[i].Medida || ''}
+                                    ${fallas[i].Posicion || ''}
+                                    ${fallas[i].ECOLlanta || ''}
+                                </td>
+                                <td>
+                                    <button class="btn btn-light" onclick="MostrarTabProveedores('${claveTicket}')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-light btn-sm" onclick="subirevidencias(${claveTicket})">
+                                        <i class="bi bi-paperclip"></i>Falla
+                                    </button>
+                                    <br/>
+                                    <button type="button" class="btn btn-light btn-sm" onclick="subirevidencias(${claveTicket})">
+                                       <i class="bi bi-paperclip"></i>Reparacion
+                                    </button>
+                                    <br/>
+                                    <button type="button" class="btn btn-light btn-sm" onclick="subirevidencias(${claveTicket})">
+                                       <i class="bi bi-paperclip"></i>Liberada
+                                    </button>
+                                </td>
+                                <td>
+                                    ${fallas[i].FolLlantas || ''}
+                                </td>`;
+                                fallasdeta.appendChild(nuevafilas);
+                            }
+                        }
                     }
-                }]
+
+                } catch (error) {
+                    console.error("Error de RED:", error);
+                }
+            } else if (modalidEco === 'DETALLE') {
+
             }
-        }
+        });
     });
 });
 
-$(document).ready(function () {
-    $('#FehTick').datetimepicker({
-        //format: 'm/d/Y'
-        format: 'Y/m/d H:i'
-    });
-    $('#TiempAsig').datetimepicker({
-        format: 'Y/m/d H:i'
-    });
-    $('#datetimepicker').datetimepicker({
-        format: 'm/d/Y H:i'
-    });
-    $('#FechEstima').datetimepicker({
-        format: 'm/d/Y H:i'
-    });
-    $('#FehFin').datetimepicker({
-        format: 'Y/m/d H:i',
-        timepicker: false,
-        maxDate: new Date(),
-        onClose: function (selectedDate) {
-            var endDate = new Date(selectedDate);
-            endDate.setDate(endDate.getDate() - 31);
+async function consumir(jsonData) {
+    const overlay = document.getElementById('loading-overlay');
+    overlay.style.display = 'block'; // Mostrar el spinner
 
-            $('#FehInicio').datetimepicker('setOptions', {
-                maxDate: endDate
-            });
-
-            var formattedDate = endDate.getFullYear() + '/' +
-                ('0' + (endDate.getMonth() + 1)).slice(-2) + '/' +
-                ('0' + endDate.getDate()).slice(-2);
-
-            $('#FehInicio').val(formattedDate);
-        }
-    });
-
-    //$('#FehInicio').datetimepicker({
-    //    format: 'Y/m/d',
-    //    timepicker: false,
-    //    onShow: function () {
-    //        $(this).datetimepicker('hide');
-    //    }
-    //});
-});
-
-function mostrarModalOrdenes(cveEmp, NumTicket, TipoEquipo, idus, ClaveTipoTicket, ClaveEquipo) {
-    document.getElementById('modalTitle').innerText = `Relacion de Ordenes con Tikcet - ${NumTicket}`;
-    document.getElementById('TpEqui').innerText = `Tipo de Equipo: ${TipoEquipo}`;
-
-    LLeModOrd(cveEmp, NumTicket, idus, ClaveTipoTicket, ClaveEquipo);
-
-    $('#myModal').modal('show');
-}
-
-function LLeModOrd(cveEmp, NumTicket, idus, ClaveTipoTicket, ClaveEquipo) {
-
-    var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
-    var myHeaders = new Headers();
+    const url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
+    const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-        "data": {
-            "bdCc": 5,
-            "bdSch": "dbo",
-            "bdSp": "SPQRY_OrdenesMtto"
-        },
-        "filter": [
-            {
-                "property": "ClaveEmpresa",
-                "value": cveEmp
-            },
-            {
-                "property": "ClaveTipoTicket",
-                "value": ClaveTipoTicket
-            },
-            {
-                "property": "ClaveTicket",
-                "value": NumTicket
-            },
-            {
-                "property": "ClaveEquipo",
-                "value": ClaveEquipo
-            }
-        ]
-    });
-    
-    var requestOptions = {
+    const requestOptions = {
         method: "POST",
         headers: myHeaders,
-        body: raw,
+        body: JSON.stringify(jsonData), // Convertimos el JSON al formato adecuado
         redirect: "follow"
     };
 
-    fetch(url, requestOptions)
-        .then(response => response.text())
-        .then(result => {
-            const obj = JSON.parse(result);
-            //console.log(obj);
-            if (obj.data == null) {
-                var mensaje = document.getElementById('mensaje').value;
-                mensaje = obj;
-                if (mensaje !== '') {
-                    toastr.error(mensaje);
-                }
-                $("#cuerpo").html("");
-                document.getElementById('btnGuarOrd').disabled = true;
-            }
-            else if (obj.data.length == 0) {
-                $("#cuerpo").html("");
-                var mensaje = document.getElementById('mensaje').value;
-                mensaje = 'No se encuentran Ordenes';
-                if (mensaje !== '') {
-                    toastr.error(mensaje);
-                    document.getElementById('btnGuarOrd').disabled = true;
-                }
-            }
-            else {
-                $("#cuerpo").html("");
-                document.getElementById('btnGuarOrd').disabled = false;
-                for (let i = 0; i < obj.data[0]["OrdenesMtto"].length; i++) {
-                    //console.log(obj.data[0]["OrdenesMtto"][i]["OrdenMtto"]);
-                    const orden = obj.data[0]["OrdenesMtto"][i];
-                    // Establece el estado del checkbox basado en "Seleccionar"
-                    let isChecked = orden["Seleccionar"] ? ' checked' : '';
-                    var tr = '<tr> '
-                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["OrdenMtto"] + '</td>'
-                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["ComentariosOrden"] + '</td>'
-                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Costo"] + '</td>'
-                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Equipo"] + '</td>'
-                        + ' <td>' + obj.data[0]["OrdenesMtto"][i]["Proveedor"] + '</td>'
-                        + ' <td>'
-                        + '<input class=\"form-check-input\" type=\"checkbox\" id="chSelOrder" name="chSelOrder"' + isChecked + ' /> </td>'
-                        + '<input type="hidden" value="' + NumTicket +'" id="NumTicketModOr" name="NumTicketModOr" />'
-                        + '<input type="hidden" value="' + idus +'" id="idusModOr" name="idusModOr" />'
-                        + '</tr>';
-                    $("#cuerpo").append(tr)
-                }
-            }
-        })
-        .catch(error => console.log("error", error));
-}
+    try {
+        // Realizamos el fetch y esperamos la respuesta
+        const response = await fetch(url, requestOptions);
 
-function GuardarOrden(cveEmp)
-{
-    const checkboxes = document.querySelectorAll('#cuerpo .form-check-input');
-    let osTicketArray = [];
-
-    var nutick = document.getElementById('NumTicketModOr').value;
-    var idusModOr = document.getElementById('idusModOr').value;
-
-    checkboxes.forEach((checkbox, index) => {
-        if (checkbox.checked) {
-            let row = checkbox.closest('tr');
-            let orderID = row.querySelector('td:first-child').innerText;
-
-            osTicketArray.push(
-                {
-                    "ClaveTicket": nutick,
-                    "ClaveOrden": orderID,
-                    "ClaveUsuario": idusModOr,
-                    "Vinculado": true,
-                    "CveEmpresa": cveEmp
-                });
-            // Guardar el ID del renglón para resaltarlo después
-            localStorage.setItem('highlightRowId', nutick);
+        // Verificamos si la respuesta es exitosa
+        if (!response.ok) {
+            throw new Error(`Error en la petición: ${response.status} - ${response.statusText} `);
         }
-        else
-        {
-            let row = checkbox.closest('tr');
-            let orderID = row.querySelector('td:first-child').innerText;
 
-            osTicketArray.push(
-                {
-                    "ClaveTicket": nutick,
-                    "ClaveOrden": orderID,
-                    "ClaveUsuario": idusModOr,
-                    "Vinculado": false,
-                    "CveEmpresa": cveEmp
-                });
-            localStorage.setItem('highlightRowId', nutick);
+        // Parseamos la respuesta como JSON
+        const result = await response.json();
+        return result; // Devolvemos el resultado para su manejo posterior
+    } catch (error) {
+        console.error('Error en fetch:', error);
+        throw error; // Propagamos el error para manejarlo fuera de la función
+    } finally {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.display = 'none';
         }
-    });
-    var rawGuardar = JSON.stringify({ "OS_Ticket": osTicketArray });
-    var enviojsonGuarda = JSON.stringify({
-        "data": {
-            "bdCc": 5,
-            "bdSch": "dbo",
-            "bdSp": "SPINS_RelTicketOrdMtto"
-        },
-        "filter": [
-            {
-                "property": "OrdenesRel",
-                "value": rawGuardar.trim()
-            }
-        ]
-    });
-    GuardOrd(enviojsonGuarda);
-    //setTimeout(function () { renglor.classList.remove('ResaltaRenglon'); }, 2000);
-    //location.reload();    
-    //var renglor = document.getElementById('renglon-' + nutick);
-    //renglor.classList.add('ResaltaRenglon');
-}
-function GuardOrd(jsonGuarda) {
-
-    var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: jsonGuarda,
-        redirect: "follow"
-    };
-
-    fetch(url, requestOptions)
-        .then(response => response.text())
-        .then(result => {
-            const obj = JSON.parse(result);
-            //console.log(obj);
-            if (obj.data == null || obj.data == 0) {
-                var guarda = document.getElementById('guarda').value;
-                guarda = obj.message;
-                if (guarda !== '') {
-                    toastr.success(guarda);
-                }
-                location.reload();
-            }
-        })
-        .catch(error => console.log("error", error));
-}
-
-function cal(numTicket) {
-    var Inp = "FechEstima-" + numTicket;
-    var expand = document.getElementById(Inp);
-    $(expand).datetimepicker({
-        format: 'Y/m/d H:i'
-    });
-}
-function calendario(numTicket) {
-    var Tiem = "TiempAsig-" + numTicket;
-    var TiempAsig = document.getElementById(Tiem);
-    $(TiempAsig).datetimepicker({
-        format: 'Y/m/d H:i'
-    });
-}
-function caleEta(numTicket) {
-    var Etafech = "Eta-" + numTicket;
-    var Etafecha = document.getElementById(Etafech);
-    $(Etafecha).datetimepicker({
-        format: 'Y/m/d H:i'
-    });
-}
-
-function llenarDiesel(numTick) {
-    var nameChkDisel = 'ChkDisel-' + numTick;
-    var txtnameCheckDisel = 'CheckDisel-' + numTick;
-    var ChkDisel = document.getElementById(nameChkDisel);
-    var txtCheckDisel = document.getElementById(txtnameCheckDisel);
-    txtCheckDisel.value = ChkDisel.value;
-
-    if (ChkDisel.checked == true) {
-        txtCheckDisel.value = 1;
-    }
-    else if (ChkDisel.checked == false) {
-        txtCheckDisel.value = 0;
     }
 }
 
-function llenarGrua(numTick) {
-    var nameChkGrua = 'ChkGrua-' + numTick;
-    var txtnameCheckGrua = 'CheckGrua-' + numTick;
-    var ChkGrua = document.getElementById(nameChkGrua);
-    var txtCheckGrua = document.getElementById(txtnameCheckGrua);
-    if (ChkGrua.checked == true) {
-        txtCheckGrua.value = 1;
-    }
-    else if (ChkGrua.checked == false) {
-        txtCheckGrua.value = 0;
-    }
-}
+function mostrarubicacion(claveTicket, ECO, Latitud, Longitud) {
+    var ventana = window.open("", "", "menubar=no, scrollbars=no, width=850, height=400");
+    var htmlContent = `
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mapa-Eco-TUM</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            #map { height: 300px; margin-top: 10px; }
+            .info-box { font-size: 18px; margin-bottom: 10px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="info-box">
+                <strong>Numero de Ticket:</strong> ${claveTicket} <br>
+                <strong>ECO:</strong> ${ECO}
+                <input type="hidden" value="${Latitud}" id="Latitud" />
+                <input type="hidden" value="${Longitud}" id="Longitud" />
+            </div>
+            <div id="map"></div>
 
-function mostrarModal(numTicket) {
-    var modal = document.getElementById('evidenciasModal-' + numTicket);
-    $(modal).modal('show');
-}
-function CloseModal(numTicket) {
-    var modal = document.getElementById('evidenciasModal-' + numTicket);
-    $(modal).modal('hide');
-}
-$(document).ready(function () {
-    $(".owl-carousel").owlCarousel({
-        items: 1,
-        merge: true,
-        loop: true,
-        margin: 10,
-        autoplay: true,
-        autoplayTimeout: 5000,
-        autoplayHoverPause: true,
-        center: true,
-        video: true
-    });
-});
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            window.onload = function() {
+                var lat = parseFloat(document.getElementById("Latitud").value);
+                var lon = parseFloat(document.getElementById("Longitud").value);
+                var map = L.map('map').setView([lat, lon], 15);
 
-$(document).ready(function () {
-    $('input[type="file"]').change(function () {
-        const ticket = $(this).attr('id').split('-')[1];
-        const carousel = $('#carousel-' + ticket);
-        carousel.empty(); // Vacía el carousel antes de agregar nuevos elementos
-        const filesArray = Array.from($(this)[0].files);
-        filesArray.forEach((file) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (event) => {
-                const src = event.target.result;
-                // Verifica si es un video o una imagen
-                if (file.type.startsWith('image')) {
-                    carousel.append('<div class="item"><img src="' + src + '" alt="Imagen" style = "width: 40%; height: 80%; margin-right: 10px; margin-bottom: 10px;"></div>');
-                } else if (file.type.startsWith('video')) {
-                    carousel.append('<div class="item-video"><video autoplay controls style = "width: 40%; height: 40%; margin-right: 10px; margin-bottom: 10px;" ><source src="' + src + '" type="' + file.type + '">Tu navegador no soporta el elemento de video.</video></div>');
-                }
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup("<b>Ubicación</b><br>Lat: " + lat + "<br>Lon: " + lon)
+                    .openPopup();
             };
-        });
-        carousel.owlCarousel({
-            items: 1,
-            loop: true,
-            margin: 10,
-            autoplay: true,
-            autoplayTimeout: 5000,
-            autoplayHoverPause: true,
-            center: true,
-            video: true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                1000: {
-                    items: 3
-                }
-            }
-        });
-    });
-});
+        </script>
+    </body>
+    </html>`;
 
-$(document).ready(function () {
-    var checkIni = document.getElementById('checkIni');
-    var checkIniValue = document.getElementById('checkIniValue').value;
-    var checkFin = document.getElementById('checkFin');
-    var checkFinValue = document.getElementById('checkFinValue').value;
-
-    if (checkIniValue === 'true') {
-        checkIni.checked = true;
-    }
-    else {
-        checkIni.checked = false;
-    }
-    if (checkFinValue === 'true') {
-        checkFin.checked = true;
-    }
-    else {
-        checkFin.checked = false;
-    }
-
-});
-function mostrarllantitas(numTicket) {
-    var selectReclas_Asigna = "Reclas_Asigna-" + numTicket
-    var Reclas_Asigna = document.getElementById(selectReclas_Asigna);
-    var mostTab = '.llantitas-' + numTicket;
-
-    if (Reclas_Asigna.value == 2) {
-        $(mostTab).show();
-        $('.headllantitas').show();
-    }
-    else {
-        $(mostTab).hide();
-        $('.headllantitas').hide();
-    }
+    ventana.document.open();
+    ventana.document.write(htmlContent);
+    ventana.document.close();
 }
 
-function asignarTicket(numTicket) {
-    var selectId = "select-" + numTicket;
-    var selectElement = document.getElementById(selectId);
-    var valorSeleccionado = selectElement.value;
-    var botonAsigna = document.getElementById("asigna-" + numTicket);
-    var nuevaURL = botonAsigna.getAttribute("href").replace("asp-route-Asigna=", "asp-route-Asigna=" + valorSeleccionado);
-    // Asignar la nueva URL al enlace del botón
-    botonAsigna.setAttribute("href", nuevaURL);
+
+function MostrarTabProveedores(ClaveTicket) {
+    const nombre = `proveedores-${ClaveTicket}`;
+    ventanas[nombre] = window.open("", "", "menubar=no, width=900, height=250");
+    ventanas[nombre].document.write(`
+           <html>
+           <head>
+               <meta charset="UTF-8">
+               <meta name="viewport" content="width=device-width, initial-scale=1.0">
+               <title>Proveedores-TUM</title>
+               <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+               <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+           </head>
+           <body>
+               <div class="container">
+                   <div class="row align-content-center text-center">
+                       <h1>Proveedores del ticket ${ClaveTicket}</h1>
+                   </div>
+                   <div class="row overflow-scroll">
+                       <table class="table table-secondary table-sm table-bordered align-content-sm-center">
+                           <thead>
+                               <tr>
+                                   <th class="text-center">Proveedor</th>
+                                   <th class="text-center">Eta Proveedor</th>
+                                   <th class="text-center">Costo MXN</th>
+                                   <th class="text-center">Tipo</th>
+                                   <th class="text-center">Fecha Pago</th>
+                                   <th class="text-center">Forma de Pago</th>
+                                   <th class="text-center">Fol Docto</th>
+                                   <th class="text-center">Evidencias</th>
+                               </tr>
+                           </thead>
+                           <tbody>
+                               <tr>
+                                   <td class="text-center">Proveedor</td>
+                                   <td class="text-center">Eta Proveedor</td>
+                                   <td class="text-center">Costo MXN</td>
+                                   <td class="text-center">Tipo</td>
+                                   <td class="text-center">Fecha Pago</td>
+                                   <td class="text-center">Forma de Pago</td>
+                                   <td class="text-center">Fol Docto</td>
+                                   <td class="text-center">
+                                       <button type="button" class="btn btn-light" onclick="subirevidencias(${ClaveTicket})">
+                                       <i class="bi bi-paperclip"></i>
+                                       </button>
+                                   </td>
+                               </tr>
+                           </tbody>
+                       </table>
+                   </div>
+               </div>
+               <script src="js/controlRep.js" asp-append-version="true"></script>
+               <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+           </body>
+           </html>
+       `);
 }
-function pinta() {
+function subirevidencias(ClaveTicket) {
+    const nombre = `evidencias-${ClaveTicket}`;
+    ventanas[nombre] = window.open("", "", "menubar=no, scrollbars=no, width=850, height=300");
+    ventanas[nombre].document.write(`
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Subir Evidencias</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        </head>
+        <body>
+            <div class="container">
+                <div class="row align-content-center text-center">
+                    <h1>Evidencias del Proveedor del Ticket ${ClaveTicket}</h1>
+                </div>
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="inputGroupFile02">
+                        <label class="input-group-text" for="inputGroupFile02">Subir</label>
+                    </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </body>
+        </html>
+    `);
+};
+function enviarnotificacion(ClaveTicket) {
+    const mensaje = document.getElementById('mensaje');
+    const iduser = document.getElementById('IdUSER').value;
 
-    var MenIni = document.getElementById('MenIni');
-    var MenFal = document.getElementById('MenFal');
-    var MenPorAsig = document.getElementById('MenPorAsig');
-    var MenAsig = document.getElementById('MenAsig');
-    var MenTipApoyo = document.getElementById('MenTipApoyo');
-    var MenRep = document.getElementById('MenRep');
-    var MenFin = document.getElementById('MenFin');
-}
-
-function cambio(numTicket) {
-    var ch = "ChekAttPar-" + numTicket;
-    var atp = "AttPar-" + numTicket;
-    var ChekAttPar = document.getElementById(ch);
-    var AttPar = document.getElementById(atp);
-    ChekAttPar.addEventListener('change', function () {
-        if (this.checked) {
-            AttPar.value = ChekAttPar.checked;
-        }
-        else {
-            AttPar.value = ChekAttPar.checked;
-        }
-    });
-}
-$(document).ready(function () {
-    var checkIni = document.getElementById('checkIni');
-    var checkIniValue = document.getElementById('checkIniValue');
-    var checkFin = document.getElementById('checkFin');
-    var checkFinValue = document.getElementById('checkFinValue');
-    checkIni.addEventListener('change', function () {
-        if (this.checked) {
-            checkIniValue.value = true;
-            checkFin.checked = false;
-            checkFinValue.value = false;
-        } else {
-            checkIniValue.value = false;
-            checkFin.checked = true;
-            checkFinValue.value = true;
-        }
-    });
-
-    checkFin.addEventListener('change', function () {
-        if (this.checked) {
-            checkFinValue.value = true;
-            checkIni.checked = false;
-            checkIniValue.value = false;
-        } else {
-            checkFinValue.value = false;
-            checkIni.checked = true;
-            checkIniValue.value = true;
-        }
-    });
-
-});
-
-
-$(document).ready(function () {
-    var mensaje = document.getElementById('mensaje').value;
-    var guarda = document.getElementById('guarda').value;
-    if (mensaje !== '') {
-        toastr.error(mensaje);
-    }
-    if (guarda !== '') {
-        toastr.success(guarda);
-    }
-});
-function mostrar(NumTicket) {
-    var dat = document.getElementById('datos-' + NumTicket);
-    if (dat.style.display === "none") {
-        dat.style.display = "block";
-    } else {
-        dat.style.display = "none";
-    }
-}
-
-function Exporta() {
-    var Export = document.getElementById('ExportExcel');
-    Export.value = "";
-    Export.value = true;
-}
-function Buscar() {
-    var Export = document.getElementById('ExportExcel');
-    Export.value = "";
-    Export.value = false;
-}
-function finalizar(cveEmp, ClavUsu, ClavCtRep) {
-    var selTBCAT_TipoFalla = document.getElementById('selTBCAT_TipoFalla-' + ClavCtRep);
-    var obsMat = document.getElementById('obsMat-' + ClavCtRep);
-    var mensaje = document.getElementById('mensaje').value;
-    var guarda = document.getElementById('guarda').value;
-    var DesFalrel = document.getElementById('DesFalrel-' + ClavCtRep);
-    var btnFinal = document.getElementById('btnFinal-' + ClavCtRep);
-    var FechaFini = document.getElementById('FechaFini-' + ClavCtRep);
-
-    if (selTBCAT_TipoFalla.value == '[Selecciona]') {
-        mensaje = 'No selecciono una Falla';
-        toastr.error(mensaje);
-    }
-    else if (obsMat.value === "") {
-        mensaje = 'Describa la Falla';
-        toastr.error(mensaje);
-    }
-    else {
-        var url = new URL('https://webportal.tum.com.mx/wsstmdv/api/execspxor');
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        var raw = JSON.stringify({
-            "data": {
-                "bdCc": 5,
-                "bdSch": "dbo",
-                "bdSp": "SPUPD_FinRepFalla"
+    var json = {
+        "data": {
+            "bdCc": 5,
+            "bdSch": "dbo",
+            "bdSp": "SPUPD_CRCNotifyFC"
+        },
+        "filter": [
+            {
+                "property": "ClaveTicket ",
+                "value": ClaveTicket
             },
-            "filter": [
-                {
-                    "property": "ClaveEmpresa",
-                    "value": cveEmp
-                },
-                {
-                    "property": "ClaveTipFalla",
-                    "value": selTBCAT_TipoFalla.value
-                },
-                {
-                    "property": "ObsMantenimiento",
-                    "value": obsMat.value
-                },
-                {
-                    "property": "ClaveUser",
-                    "value": ClavUsu
-                },
-                {
-                    "property": "NumeroSolicitud",
-                    "value": ClavCtRep
-                }
-            ]
-        });
-
-        var requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow"
-        };
-
-        fetch(url, requestOptions)
-            .then(response => response.text())
-            .then(result => {
-                const obj = JSON.parse(result);
-                //console.log(obj);
-                if (obj.data == null) {
-                    mensaje = obj.message;
-                    if (mensaje !== '') {
-                        toastr.error(mensaje);
-                    }
-                }
-                else {
-                    FechaFini.value = obj.data[0].Respuesta[0].FechaFinalizacion;
-                    DesFalrel.disabled = true;
-                    selTBCAT_TipoFalla.disabled = true;
-                    btnFinal.disabled = true;
-                    obsMat.disabled = true;
-                    guarda = obj.message;
-                    if (guarda !== '') {
-                        toastr.success(guarda);
-                    }
-                }
-            })
-            .catch(error => console.log("error", error));
+            {
+                "property": "ClaveUser ",
+                "value": iduser
+            }
+        ]
+    };
+    const obj = consumir(json);
+    if (obj.status == 200) {
+        if (obj.message !== '') {
+            notificacion(obj.message, "TUM NOTIFICA");
+            location.reload();
+        }
     }
+    else {
+        mensaje.value = obj.message;
+        if (mensaje.value !== '') {
+            toastr.error(mensaje.value);
+            notificacion(obj.message, "TUM NOTIFICA ERROR");
+        }
+    }
+}
 
+function notificacion(body, title) {
+    if (Notification) {
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission()
+        }
+
+        if (typeof noti2 != 'undefined') {
+            noti2.onclose = null;
+            noti2.close()
+        }
+
+        var extra = {
+            icon: "https://webportal.tum.com.mx/wsstest/imag/logo_difuminado.png",
+            body: body
+        }
+        // Generamos la notificación
+        noti2 = new Notification(title, extra);
+
+        noti2.onclick = function () {
+            noti2.onclose = null;
+            document.getElementById('XITRUS_act_perm2').value = 'click'
+            setTimeout(function () { document.getElementById('XITRUS_act_perm2').value = '' }, 2000)
+        }
+        noti2.onclose = function () {
+            document.getElementById('XITRUS_act_perm2').value = 'close'
+            setTimeout(function () { document.getElementById('XITRUS_act_perm2').value = '' }, 2000)
+        }
+    }
 }

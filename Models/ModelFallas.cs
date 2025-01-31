@@ -63,6 +63,7 @@ namespace ConectDB.Models
         public string clavesFalAndComen { get; set; }
         public string fallallantas { get; set; }
         public int cveEmp { get; set; }
+        public int cveEmpUser { get; set; }        
         public int selcveEquipo { get; set; }
         //public string RutasArchivos { get; set; }
         public List<Error> Eror { get; set; }
@@ -141,6 +142,7 @@ namespace ConectDB.Models
         public int ClaveTipoEquipo { get; set; }
         public string? TipoEquipo { get; set; }
         public string? TipoOperacion { get; set; }
+        public int ClaveEmpresa { get; set; }
     }
     public class UltimaPosicion
     {
