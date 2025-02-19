@@ -5,259 +5,262 @@
 
 .eco-head {
     width: 40px;
-    height: 160px;
+    height: 100px;
 }
 
 .eco {
+    align-content:center;
+    text-align:center;
+    justify-content:center ;
     width: 40px;
-    height: 120px;
+    height: 60px;
 }
 
 .fechalta-head {
     width: 90px;
-    height: 160px;
+    height: 100px;
 }
 
 .fechalta {
     width: 90px;
-    height: 120px;
+    height: 60px;
 }
 
 .crnot-head {
-    width: 40px;
-    height: 160px;
+    width: 50px;
+    height: 100px;
 }
 
 .crnot {
-    width: 40px;
-    height: 120px;
+    width: 50px;
+    height: 60px;
 }
 
 .callop-head {
     text-align: center;
-    width: 40px;
-    height: 160px;
+    width: 50px;
+    height: 100px;
 }
 
 .callop {
-    width: 40px;
-    height: 120px;
+    width: 50px;
+    height: 60px;
 }
 
 .MecEme-head {
     text-align: center;
-    width: 40px;
-    height: 160px;
+    width: 50px;
+    height: 100px;
 }
 
 .MecEme {
-    width: 40px;
-    height: 120px;
+    width: 50px;
+    height: 60px;
 }
 
 .Diag-head {
     text-align: center;
     width: 40px;
-    height: 160px;
+    height: 100px;
 }
 
 .Diag {
     width: 40px;
-    height: 120px;
+    height: 60px;
 }
 
 .rcasig-head {
     width: 40px;
-    height: 160px;
+    height: 100px;
 }
 
 .rcasig {
     width: 40px;
-    height: 120px;
+    height: 60px;
 }
 
 .etarc-head {
     text-align: center;
     width: 40px;
-    height: 160px;
+    height: 100px;
 }
 
 .etarc {
     width: 40px;
-    height: 120px;
+    height: 60px;
 }
 
 .llegadar-head {
     text-align: center;
     width: 40px;
-    height: 160px;
+    height: 100px;
 }
 
 .llegadar {
     width: 40px;
-    height: 120px;
+    height: 60px;
 }
 
 .etarep-head {
     text-align: center;
-    width: 40px;
-    height: 160px;
+    width: 50px;
+    height: 100px;
 }
 
 .etarep {
-    width: 40px;
-    height: 120px;
+    width: 50px;
+    height: 60px;
 }
 
 .concluido-head {
     text-align: center;
     width: 40px;
-    height: 160px;
+    height: 100px;
 }
 
 .concluido {
     width: 40px;
-    height: 120px;
+    height: 60px;
 }
 
 .usgen-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .usgen {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .UNE-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .UNE {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .Tiop-head {
     width: 130px;
-    height: 160px;
+    height: 100px;
 }
 
 .Tiop {
     width: 130px;
-    height: 120px;
+    height: 60px;
 }
 
 .FALINI-head {
-    width: 160px;
-    height: 160px;
+    width: 190px;
+    height: 100px;
 }
 
 .FALINI {
-    width: 160px;
-    height: 120px;
+    width: 190px;
+    height: 60px;
 }
 
 .FCRC-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FCRC {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .USCRC-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .USCRC {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .FLLOP-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FLLOP {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .FMECEME-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FMECEME {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .FDIAG-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FDIAG {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .FRCAS-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FRCAS {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .FETRC-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FETRC {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .FLLRC-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FLLRC {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .FETA-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FETA {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .FC-head {
     width: 100px;
-    height: 160px;
+    height: 100px;
 }
 
 .FC {
     width: 100px;
-    height: 120px;
+    height: 60px;
 }
 
 .grid-header-container {

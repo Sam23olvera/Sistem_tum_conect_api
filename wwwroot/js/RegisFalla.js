@@ -81,7 +81,7 @@ $(document).ready(function () {
     var Opera = document.getElementById('Opera');
     var SelectOperacion = document.getElementById('SelectOperacion');
     var Ruta = document.getElementById('Ruta');
-    //var claveEmp = document.getElementById('cveEmp');
+    var claveEmp = document.getElementById('cveEmp');
     var remolque1 = document.getElementById('remolque1');
     var remolque2 = document.getElementById('remolque2');
     var seleuni = document.getElementById('seleuni');
@@ -100,11 +100,12 @@ $(document).ready(function () {
             remolque2.disabled = true;
             var numuni = seleuni.options[seleuni.selectedIndex].text;
             var num = numuni.split("|");
-            seleuniempresa.value = seleuni.value; 
+            seleuniempresa.value = seleuni.value;
+            claveEmp.value = seleuniempresa.options[seleuniempresa.selectedIndex].text;
             
             if (CheckViaje.checked) {
-                mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
-                muestraViaje(seleuniempresa.options[seleuniempresa.selectedIndex].text, num[0]);
+                mostrarMapa(claveEmp.value, seleuni.value);
+                muestraViaje(claveEmp.value, num[0]);
                 clearTable();
             }
         }
@@ -119,6 +120,8 @@ $(document).ready(function () {
             remolque1.value = 0;
             remolque2.disabled = true;
             remolque2.value = 0;
+            seleuniempresa.value = 0;
+            claveEmp.value = 0;
         }
 
     }
@@ -208,7 +211,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 
     var seleuni = document.getElementById('seleuni');
-    //var claveEmp = document.getElementById('cveEmp');
+    var claveEmp = document.getElementById('cveEmp');
     ///extra
 
 
@@ -222,23 +225,26 @@ $(document).ready(function () {
     var seleuni = document.getElementById('seleuni');
     var seleuniempresa = document.getElementById('seleuniempresa');
 
+
     if (seleuni.value != 0) {
         var CheckViaje = document.getElementById('CheckViaje');
         var numuni = seleuni.options[seleuni.selectedIndex].text;
         var num = numuni.split("|");
 
+        claveEmp.value = seleuniempresa.options[seleuniempresa.selectedIndex].text;
+
         var inCheckViaje = document.getElementById('inCheckViaje');
 
         if (CheckViaje.checked) {
             inCheckViaje.value = true;
-            mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
-            muestraViaje(seleuniempresa.options[seleuniempresa.selectedIndex].text, num[0]);
+            mostrarMapa(claveEmp.value, seleuni.value);
+            muestraViaje(claveEmp.value, num[0]);
             clearTable();
         }
         else {
 
             inCheckViaje.value = false;
-            mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
+            mostrarMapa(claveEmp.value, seleuni.value);
             clearTable();
         }
     }
@@ -248,16 +254,17 @@ $(document).ready(function () {
         var num = numuni.split("|");
         var inCheckViaje = document.getElementById('inCheckViaje');
         seleuniempresa.value = seleuni.value;
+        claveEmp.value = seleuniempresa.options[seleuniempresa.selectedIndex].text;
 
         if (CheckViaje.checked) {
             inCheckViaje.value = true;
-            mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
-            muestraViaje(seleuniempresa.options[seleuniempresa.selectedIndex].text, num[0]);
+            mostrarMapa(claveEmp.value, seleuni.value);
+            muestraViaje(claveEmp.value, num[0]);
             clearTable();
         }
         else {
             inCheckViaje.value = false;
-            mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
+            mostrarMapa(claveEmp.value, seleuni.value);
             clearTable();
         }
     });
@@ -274,9 +281,10 @@ $(document).ready(function () {
                 remolque2.disabled = true;
                 var numuni = seleuni.options[seleuni.selectedIndex].text;
                 var num = numuni.split("|");
+                claveEmp.value = seleuniempresa.options[seleuniempresa.selectedIndex].text;
                 if (CheckViaje.checked) {
-                    mostrarMapa(seleuniempresa.options[seleuniempresa.selectedIndex].text, seleuni.value);
-                    muestraViaje(seleuniempresa.options[seleuniempresa.selectedIndex].text, num[0]);
+                    mostrarMapa(claveEmp.value, seleuni.value);
+                    muestraViaje(claveEmp.value, num[0]);
                     clearTable();
                 }
             }
@@ -291,6 +299,8 @@ $(document).ready(function () {
                 remolque1.value = 0;
                 remolque2.disabled = true;
                 remolque2.value = 0;
+                seleuniempresa.value = 0;
+                claveEmp.value = 0;
             }
         }
         else {
@@ -305,6 +315,8 @@ $(document).ready(function () {
             remolque1.value = 0;
             remolque2.disabled = false;
             remolque2.value = 0;
+            seleuniempresa.value = 0;
+            claveEmp.value = 0;
         }
     });
 

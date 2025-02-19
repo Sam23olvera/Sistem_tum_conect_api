@@ -15,6 +15,7 @@
     <br />
     <form method="post" asp-action="Guardar" asp-controller="RegistroFallas" onsubmit="habilitarCamposDeshabilitados()" enctype="multipart/form-data">
         <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmpUser" name="cveEmpUser" />
+        <input type="hidden" value="" id="cveEmp" name="cveEmp" />
         <input type="hidden" value="@usuarioModel.Token" id="XT" name="XT" />
         <div id="accordion">
             <div class="card">

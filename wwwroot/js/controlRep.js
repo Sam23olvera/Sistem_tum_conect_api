@@ -135,14 +135,22 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                             Tel_Operador.textContent = result.data[0].Ticket[0].Tel_Operador;
                             Folio.textContent = result.data[0].Ticket[0].Folio;
-                            Remolques.textContent = result.data[0].Ticket[0].Remolque1 + ' | ' + result.data[0].Ticket[0].Remolque2;
+                            if (result.data[0].Ticket[0].Remolque1 === null && result.data[0].Ticket[0].Remolque2 === null) {
+                                Remolques.textContent = '' + ' | ' + '';
+                            }
+                            else
+                            {
+                                Remolques.textContent = result.data[0].Ticket[0].Remolque1 + ' | ' + result.data[0].Ticket[0].Remolque2;
+                            }
+                            const prove = result.data[1].Provee; // Lista de proveedores
+                            const proveString = encodeURIComponent(JSON.stringify(prove)); // Convertimos a JSON y codificamos
                             Doly.textContent = result.data[0].Ticket[0].NumDolly;
                             NombreCliente.textContent = result.data[0].Ticket[0].NombreCliente;
-                            var botonmapa = `<strong> ECO: </strong> <button type="button" class="btn btn-outline-light" onclick="mostrarubicacion(` + claveTicket + `,` + result.data[0].Ticket[0].ECO + `,` + result.data[0].Ticket[0].Latitud + `,` + result.data[0].Ticket[0].Longitud + `)"> <img src="https://webportal.tum.com.mx/wsstest/imag/Unidad.png"/>` + result.data[0].Ticket[0].ECO + `</button>`;
+                            var botonmapa = `<strong> ECO: </strong> <br/> <button type="button" class="btn btn-outline-dark" onclick="mostrarubicacion(${claveTicket}, ${result.data[0].Ticket[0].ECO}, ${result.data[0].Ticket[0].Latitud}, ${result.data[0].Ticket[0].Longitud}, '${proveString}')"> <img src="https://webportal.tum.com.mx/wsstest/imag/gpsunidad.png"/> ${result.data[0].Ticket[0].ECO}  </button>`;
                             document.getElementById(inpMostMap).innerHTML = botonmapa;
 
                             document.getElementById(nametabTabFallasDeta).querySelector("tbody").innerHTML = "";
-
+                            
                             const fallas = result.data[0].Ticket[0].Fallas;
                             for (let i = 0; i <= fallas.length; i++) {
                                 var imag = ``;
@@ -158,7 +166,38 @@ document.addEventListener("DOMContentLoaded", function () {
                                 else if (fallas[i].IdTipoEq == 3) {
                                     imag = `<i class="bi bi-car-front"></i>`;
                                 }
-
+                                var Referencia = fallas[i].Referencia;
+                                if (fallas[i].DOT === null) {
+                                    Referencia = Referencia + '' ;
+                                }
+                                else {
+                                    Referencia = Referencia + '<br/>DOT: ' + fallas[i].DOT;
+                                }
+                                if (fallas[i].Marca === null) {
+                                    Referencia = Referencia + '';
+                                }
+                                else {
+                                    Referencia = Referencia + '<br/>Marca: ' + fallas[i].Marca;
+                                }
+                                if (fallas[i].Medida === null) {
+                                    Referencia = Referencia + '';
+                                }
+                                else {
+                                    Referencia = Referencia + '<br/>Medida: ' + fallas[i].Medida;
+                                }
+                                if (fallas[i].Posicion === null) {
+                                    Referencia = Referencia + '';
+                                }
+                                else {
+                                    Referencia = Referencia + '<br/>Posicion: ' + fallas[i].Posicion;
+                                }
+                                if (fallas[i].ECOLlanta === null) {
+                                    Referencia = Referencia + '';
+                                }
+                                else {
+                                    Referencia = Referencia + '<br/>ECO Llanta: ' + fallas[i].ECOLlanta;
+                                }
+                                Referencia = '<td>' + Referencia + '</td>';
                                 var nuevafilas = document.createElement('tr');
                                 nuevafilas.innerHTML = `
                                 <td>
@@ -174,14 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <td>
                                     ${fallas[i].Clasificacion}
                                 </td>
-                                <td>
-                                    ${fallas[i].Referencia}
-                                    ${fallas[i].DOT || ''}
-                                    ${fallas[i].Marca || ''}
-                                    ${fallas[i].Medida || ''}
-                                    ${fallas[i].Posicion || ''}
-                                    ${fallas[i].ECOLlanta || ''}
-                                </td>
+                                ${Referencia}
                                 <td>
                                     <button class="btn btn-light" onclick="MostrarTabProveedores('${claveTicket}')">
                                         <i class="bi bi-eye"></i>
@@ -256,7 +288,9 @@ async function consumir(jsonData) {
     }
 }
 
-function mostrarubicacion(claveTicket, ECO, Latitud, Longitud) {
+function mostrarubicacion(claveTicket, ECO, Latitud, Longitud, proveString) {
+    var proveedores = JSON.parse(decodeURIComponent(proveString)); // Decodificamos el JSON recibido
+
     var ventana = window.open("", "", "menubar=no, scrollbars=no, width=850, height=400");
     var htmlContent = `
     <html>
@@ -268,7 +302,7 @@ function mostrarubicacion(claveTicket, ECO, Latitud, Longitud) {
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <style>
             body { font-family: Arial, sans-serif; padding: 20px; }
-            #map { height: 300px; margin-top: 10px; }
+            #map { height: 400px; margin-top: 10px; }
             .info-box { font-size: 18px; margin-bottom: 10px; }
         </style>
     </head>
@@ -277,27 +311,39 @@ function mostrarubicacion(claveTicket, ECO, Latitud, Longitud) {
             <div class="info-box">
                 <strong>Numero de Ticket:</strong> ${claveTicket} <br>
                 <strong>ECO:</strong> ${ECO}
-                <input type="hidden" value="${Latitud}" id="Latitud" />
-                <input type="hidden" value="${Longitud}" id="Longitud" />
             </div>
             <div id="map"></div>
-
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script>
             window.onload = function() {
-                var lat = parseFloat(document.getElementById("Latitud").value);
-                var lon = parseFloat(document.getElementById("Longitud").value);
-                var map = L.map('map').setView([lat, lon], 15);
+                var map = L.map('map').setView([${Latitud}, ${Longitud}], 10);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
 
-                L.marker([lat, lon]).addTo(map)
-                    .bindPopup("<b>Ubicación</b><br>Lat: " + lat + "<br>Lon: " + lon)
+                var ecoIcon = L.icon({
+                    iconUrl: 'https://webportal.tum.com.mx/wsstest/imag/Unidad.png',
+                    iconSize: [20, 20]
+                });
+
+                L.marker([${Latitud}, ${Longitud}], { icon: ecoIcon }).addTo(map)
+                    .bindPopup("<b>ECO: " + ${ECO} + "</b><br>Lat: " + ${Latitud} + "<br>Lon: " + ${Longitud})
                     .openPopup();
+
+                var provIcon = L.icon({
+                    iconUrl: 'https://webportal.tum.com.mx/wsstest/imag/herramientas.png',
+                    iconSize: [20, 20]
+                });
+
+                var proveedores = ${JSON.stringify(proveedores)};
+
+                proveedores.forEach(prov => {
+                    L.marker([prov.latitud, prov.longitud], { icon: provIcon }).addTo(map)
+                        .bindPopup("<b>Proveedor: " + prov.RazonSocial + "</b><br>Lat: " + prov.latitud + "<br>Lon: " + prov.longitud);
+                });
             };
         </script>
     </body>
@@ -307,8 +353,6 @@ function mostrarubicacion(claveTicket, ECO, Latitud, Longitud) {
     ventana.document.write(htmlContent);
     ventana.document.close();
 }
-
-
 function MostrarTabProveedores(ClaveTicket) {
     const nombre = `proveedores-${ClaveTicket}`;
     ventanas[nombre] = window.open("", "", "menubar=no, width=900, height=250");
@@ -393,7 +437,7 @@ function subirevidencias(ClaveTicket) {
         </html>
     `);
 };
-function enviarnotificacion(ClaveTicket) {
+async function enviarnotificacion(ClaveTicket) {
     const mensaje = document.getElementById('mensaje');
     const iduser = document.getElementById('IdUSER').value;
 
@@ -414,19 +458,24 @@ function enviarnotificacion(ClaveTicket) {
             }
         ]
     };
-    const obj = consumir(json);
-    if (obj.status == 200) {
-        if (obj.message !== '') {
-            notificacion(obj.message, "TUM NOTIFICA");
-            location.reload();
+    try {
+        const obj = await consumir(json);  // Ahora sí se puede usar await
+
+        if (obj.status == 200) {
+            if (obj.message !== '') {
+                notificacion(obj.message, "TUM NOTIFICA");
+                location.reload();
+            }
+        } else {
+            mensaje.value = obj.message;
+            if (mensaje.value !== '') {
+                toastr.error(mensaje.value);
+                notificacion(obj.message, "TUM NOTIFICA ERROR");
+            }
         }
-    }
-    else {
-        mensaje.value = obj.message;
-        if (mensaje.value !== '') {
-            toastr.error(mensaje.value);
-            notificacion(obj.message, "TUM NOTIFICA ERROR");
-        }
+    } catch (error) {
+        console.error("Error al enviar la notificación:", error);
+        toastr.error("Error al enviar la notificación.");
     }
 }
 

@@ -9,16 +9,16 @@
     <div class="col-lg-5 p-0">
         <div class="grid-container" id="datageticket">
             <div class="grid-header-container">
-                <div class="grid-header eco-head align-content-start text-start">ECO</div>
-                <div class="grid-header fechalta-head">FECHA ALTA TICKET</div>
+                <div class="grid-header vertical eco-head align-content-center text-center">ECO</div>
+                <div class="grid-header fechalta-head align-content-center text-center">Alta Ticket</div>
                 <div class="grid-header vertical crnot-head">CRC Notificado</div>
-                <div class="grid-header vertical callop-head">Llama Operador</div>
+                <div class="grid-header vertical callop-head">Operador Llamada a </div>
                 <div class="grid-header vertical MecEme-head">Mecanica Emergencia</div>
                 <div class="grid-header vertical Diag-head">Diagnostico</div>
                 <div class="grid-header vertical rcasig-head">RC Asignado</div>
                 <div class="grid-header vertical etarc-head">ETA RC</div>
                 <div class="grid-header vertical llegadar-head">Llegada RC</div>
-                <div class="grid-header vertical etarep-head">ETA Reparacion</div>
+                <div class="grid-header vertical etarep-head">Reparacion ETA </div>
                 <div class="grid-header vertical concluido-head">Concluido</div>
                 <div class="grid-header usgen-head">Usuario Genera Ticket</div>
                 <div class="grid-header UNE-head">UNE</div>
@@ -38,7 +38,7 @@
             <div class="grid-cell-container">
                 @foreach (var c in Model.ListDataPrincipal)
                 {
-                    <div class="grid-cell eco align-content-center text-center">
+                    <div class="grid-cell eco align-content-center text-center justify-content-center">
                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalEco-@c.ClaveTicket" data-bs-name="ECO" data-bs-placement="top" title="Mostrar">
                             <img src="~/imag/unidad.png" />
                         </button>
@@ -47,45 +47,63 @@
                     <div class="grid-cell fechalta align-content-center text-center">
                         <i class="bi bi-calendar"></i>
                         <br />
-                        <p>@c.FechaAltaTicket</p>
+                        <p>@c.FechaAltaTicket?.ToString("yyyy/MM/dd HH:mm:ss")</p>
                     </div>
                     <div class="grid-cell crnot align-content-center text-center" style="background-color:@c.CRCNOTIFICADO">
                         @if (string.IsNullOrEmpty(@c.FechaCRCAsignado.ToString()))
                         {
                             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalDetalle-@c.ClaveTicket" data-bs-placement="top" title="Mostrar">
-                                <i class="bi bi-bell"></i>
+                                <span class="material-symbols-outlined">
+                                    notifications
+                                </span>
                             </button>
                         }
                         else
                         {
                             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalDetalle-@c.ClaveTicket" disabled>
-                                <i class="bi bi-bell"></i>
+                                <span class="material-symbols-outlined">
+                                    notifications
+                                </span>
                             </button>
                         }
                     </div>
                     <div class="grid-cell callop align-content-center text-center" style="background-color:@c.LLAMADAOPER">
-                        <i class="bi bi-telephone-forward"></i>
+                        <span class="material-symbols-outlined">
+                            phone_forwarded
+                        </span>
                     </div>
                     <div class="grid-cell MecEme align-content-center text-center" style="background-color:@c.MECANICAEMERGENCIA">
-                        <i class="bi bi-wrench"></i>
+                        <span class="material-symbols-outlined">
+                            build
+                        </span>
                     </div>
                     <div class="grid-cell Diag align-content-center text-center" style="background-color:@c.DIAGNOSTICO">
-                        <i class="bi bi-clipboard-pulse"></i>
+                        <span class="material-symbols-outlined">
+                            troubleshoot
+                        </span>
                     </div>
                     <div class="grid-cell rcasig align-content-center text-center" style="background-color:@c.RCASIGNADO">
                         <i class="bi bi-person-raised-hand"></i>
                     </div>
                     <div class="grid-cell etarc align-content-center text-center" style="background-color:@c.ETARC">
-                        <i class="bi bi-globe-americas"></i>
+                        <span class="material-symbols-outlined">
+                            move_location
+                        </span>
                     </div>
                     <div class="grid-cell llegadar align-content-center text-center" style="background-color:@c.LLEGADARC">
-                        <i class="bi bi-geo-alt"></i>
+                        <span class="material-symbols-outlined">
+                            where_to_vote
+                        </span>
                     </div>
                     <div class="grid-cell etarep align-content-center text-center" style=" background-color:@c.ETAREPARACION">
-                        <i class="bi bi-clock-history"></i>
+                        <span class="material-symbols-outlined">
+                            hourglass_bottom
+                        </span>
                     </div>
                     <div class="grid-cell concluido align-content-center text-center" style=" background-color:@c.CONCLUIDO">
-                        <i class="bi bi-bookmark-check"></i>
+                        <span class="material-symbols-outlined">
+                            flag_check
+                        </span>
                     </div>
                     <div class="grid-cell usgen align-content-center text-center">
                         <p>@c.USERGeneraTicket</p>
@@ -100,19 +118,19 @@
                         <p>@c.FallaInicial</p>
                     </div>
                     <div class="grid-cell FCRC align-content-center text-center">
-                        <p>@c.FechaCRCAsignado</p>
+                        <p>@c.FechaCRCAsignado?.ToString("yyyy/MM/dd HH:mm:ss")</p>
                     </div>
                     <div class="grid-cell USCRC align-content-center text-center">
                         <p>@c.UsrCRCAsignado</p>
                     </div>
                     <div class="grid-cell FLLOP align-content-center text-center">
-                        <p>@c.FechaLlamadaOPE</p>
+                        <p>@c.FechaLlamadaOPE?.ToString("yyyy/MM/dd HH:mm:ss")</p>
                     </div>
                     <div class="grid-cell FMECEME align-content-center text-center">
-                        <p>@c.FechaMECEmergencia</p>
+                        <p>@c.FechaMECEmergencia?.ToString("yyyy/MM/dd HH:mm:ss")</p>
                     </div>
                     <div class="grid-cell FDIAG align-content-center text-center">
-                        <p>@c.FechaDiagnostico</p>
+                        <p>@c.FechaDiagnostico?.ToString("yyyy/MM/dd HH:mm:ss")</p>
                     </div>
                     <div class="grid-cell FRCAS align-content-center text-center"></div>
                     <div class="grid-cell FETRC align-content-center text-center"></div>
@@ -139,7 +157,7 @@
                         <h5 class="text-end">¿Desea confirmarlo?</h5>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="modalDetallebtnsi" onclick="enviarnotificacion('@c.ClaveTicket')">Si</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="modalDetallebtnsi" onclick="enviarnotificacion(@c.ClaveTicket)">Si</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
                     </div>
                 </div>
@@ -165,17 +183,18 @@
                                 <div class="col-md-3">
                                     <strong>Dolly:</strong>
                                     <p id="Doly-@c.ClaveTicket"></p>
-                                    <strong>NombreCliente:</strong>
+                                    <strong>Cliente:</strong>
                                     <p id="NombreCliente-@c.ClaveTicket"></p>
                                 </div>
-                                <div class="col-md-3">                                  
+                                <div class="col-md-3">
                                     <div id="MostMap-@c.ClaveTicket"></div>
-                                    <strong>Tipo de Carga:</strong>
                                     <input class="form-check-input" type="checkbox" value="" id="TipoCarga-@c.ClaveTicket" disabled>
                                     <label class="form-check-label" for="TipoCarga-@c.ClaveTicket" id="labTipoCarga-@c.ClaveTicket"></label>
                                 </div>
                                 <div class="col-md-3">
-                                    <strong><i class="bi bi-telephone">Operador:</i></strong>
+                                    <strong>
+                                        <i class="bi bi-whatsapp"></i>
+                                    </strong>
                                     <p id="Tel_Operador-@c.ClaveTicket"></p>
                                     <strong>Viaje:</strong>
                                     <p id="Folio-@c.ClaveTicket"></p>
