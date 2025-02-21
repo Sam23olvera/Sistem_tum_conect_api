@@ -9,7 +9,7 @@
 }
 <div class="container-fluid mt-5">
     <div id="divguard">
-        <form method="post" class="form" id="solicitude" asp-action="Guardar" asp-controller="AltaExpress">
+        <form method="post" class="form" id="solicitude" asp-action="Guardar" asp-controller="AltaExpress" onsubmit="habilitarCamposDeshabilitados()">
             <div class="row">
                 <div class="col-3">
                     <label for="CveTipoEmp" class="form-label">Tipo Trabajador:</label>
@@ -77,13 +77,14 @@
                         </div>
                         <div class="col-2">
                             <label for="originario" class="form-label form-label-sm">Lugar de Nacimiento:</label>
-                            <select class="form-select form-select-sm" id="originario" name="originario">
+                            <select class="form-select form-select-sm" id="originario" name="originario" asp-for="originario">
                                 <option value="0">[SELECIONA]</option>
                                 @foreach (var ori in Model.TBCAT_OriginarioDe)
                                 {
-                                    <option value="@ori.Entidad">@ori.Descripcion</option>
+                                    <option value="@ori.ClaveOriginario">@ori.Descripcion</option>
                                 }
                             </select>
+                            <span asp-validation-for="originario" class="text-danger"></span>
                         </div>
                         <div class="col-2">
                             <label for="FechNac" class="form-label">Fecha Nacimiento:</label>
@@ -105,7 +106,8 @@
                         </div>
                         <div class="col-2">
                             <label for="Edad" class="form-label form-label-sm">Edad:</label>
-                            <input type="text" class="form-control form-control-sm" id="Edad" placeholder="Edad:" disabled />
+                            <input type="number" class="form-control form-control-sm" id="Edad" placeholder="Edad:" name="Edad" asp-for="Edad" disabled />
+                            <span asp-validation-for="Edad" class="text-danger"></span>
                         </div>
                         <div class="col-2">
                             <label for="EdoCivil" class="form-label col-form-label-sm">Estado Civil</label>
@@ -130,7 +132,7 @@
                         </div>
                         <div class="col-2">
                             <label for="CP" class="form-label form-label-sm">CP:</label>
-                            <input type="text" class="form-control form-control-sm" id="CP" placeholder="CP:" name="CP" asp-for="CP" />
+                            <input type="text" class="form-control form-control-sm" id="CP" placeholder="CP:" name="CP" asp-for="CP" onchange="buscarporcp()" />
                             <span asp-validation-for="CP" class="text-danger"></span>
                         </div>
                     </div>
@@ -325,9 +327,10 @@
                         </div>
                         <div class="col-3">
                             <label for="selSal" class="form-label form-label-sm">Salario:</label>
-                            <select class="form-select form-select-sm" id="selSal" name="selSal" asp-for="selSal">
+                            <select class="form-select form-select-sm" id="selSal" name="selSal" asp-for="selSal" data-selected="@Model.selSal">
                                 <option value="0">[SELECIONA]</option>
                             </select>
+                            <span asp-validation-for="selSal" class="text-danger"></span>
                         </div>
                     </div>
                     <br />
@@ -429,11 +432,11 @@
                     </div>
                 }
             </div>
-        </div>
-    </div>
-    <div class="row mt-4 align-content-end text-end">
-        <div class="col-3">
-            <button id="btnguardar" type="button" class="btn btn-info" onclick="imprimirPagina()">Imprimir Contrato</button>
+            <div class="row mt-4 align-content-end text-end">
+                <div class="col-3">
+                    <button id="btnguardar" type="button" class="btn btn-info" onclick="imprimirPagina()">Imprimir Contrato</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -509,40 +512,4 @@
             </div>
         </div>
     </div>
-    @* <div class="modal modal-lg " id="Reigreso" tabindex="-1" aria-labelledby="modalLabelReingre" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-    <div class="modal-header">
-    <h5 class="modal-title" id="modalLabelReingre">Reingreso</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-    <div class="container-fluid">
-    <div class="row align-content-center text-center table-responsive">
-    <table id="TabReingreso" class="table table-sm table-secondary table-bordered">
-    <thead>
-    <tr>
-    <th>Empresa</th>
-    <th>Nombre</th>
-    <th>NumEmpleado</th>
-    <th>Estatus</th>
-    <th>Puesto</th>
-    <th>FechaIngreso</th>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-    </table>
-    </div>
-    </div>
-    </div>
-    <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-    <button type="button" class="btn btn-primary">Mostrar</button>
-    </div>
-    </div>
-    </div>
-    </div> *@
-
-
 </div>

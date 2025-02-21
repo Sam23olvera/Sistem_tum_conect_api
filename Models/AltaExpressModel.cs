@@ -23,6 +23,8 @@ namespace ConectDB.Models
         public string Calle { get; set; }
         [Required(ErrorMessage = "Debes seleccionar una Colonia")]
         public int Colonia { get; set; }
+        [Required(ErrorMessage = "Edad es obligatorio")]
+        public int Edad { get; set; }
 
         [Required(ErrorMessage = "Debes de ingresar el CP")]
         public string CP { get; set; }
@@ -39,6 +41,7 @@ namespace ConectDB.Models
 
         [Required(ErrorMessage = "Debes de Marcar el Genero")]
         public string sexo { get; set; }
+        [Required(ErrorMessage = "Debes de selecionar un Lugar de Nacimiento")]
         public int originario { get; set; }
         [Required(ErrorMessage = "Debes de Agregar un celular")] 
         public string Cel { get; set; }
@@ -84,9 +87,9 @@ namespace ConectDB.Models
         public int selePues { get; set; }
         [Required(ErrorMessage = "Debes de colocar la Fecha de Vigencia Apto Medico")]
         public string AptMedi { get; set; }
-        //[Required(ErrorMessage = "Debes seleccionar un Esquema de Pago")]
-        //public int SelEsquemPago { get; set; }
 
+        //public int SelEsquemPago { get; set; }
+        [Required(ErrorMessage = "Debes seleccionar un Salario")]
         public int selSal { get; set; }
         public bool RangoMedio { get; set; }
         public bool Thorton { get; set; }
@@ -130,6 +133,7 @@ namespace ConectDB.Models
     }
     public class TBCATOriginario
     {
+        public int ClaveOriginario { get; set; }
         public string Entidad { get; set; }
         public string Descripcion { get; set; }
     }

@@ -106,6 +106,12 @@ namespace ConectDB.Controllers
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
+                if (guar.originario == 0)
+                {
+                    ModelState.AddModelError("originario", "Debes de selecionar un Lugar de Nacimiento");
+                    TempData["status"] = 400;
+                    return View("Index", guar);
+                }
                 //if (!guar.Reingreso)
                 //{
                 //    ModelState.AddModelError("Reingreso", "Validar si es un reingreso");
@@ -141,7 +147,7 @@ namespace ConectDB.Controllers
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
-                if(guar.EdoCivil == 0) 
+                if (guar.EdoCivil == 0)
                 {
                     ModelState.AddModelError("EdoCivil", "Debe seleccionar un de los Estado Civil");
                     TempData["status"] = 400;

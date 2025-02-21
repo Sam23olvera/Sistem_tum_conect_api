@@ -88,7 +88,7 @@ namespace ConectDB.DB
                     NoExt = guar.NumExterior,
                     NoInt = guar.NumInterior,
                     CP = guar.CP,
-                    ClaveOrigi = guar.originario,
+                    Entidad = guar.originario,
                     TCel = guar.Cel,
                     TLocal = guar.Tel,
                     FechaNac = guar.FechNac,

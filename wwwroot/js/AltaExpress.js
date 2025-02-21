@@ -408,8 +408,7 @@ async function consumir(jsonData) {
     }
 }
 
-async function Llenasal()
-{
+async function Llenasal() {
     var TipOpera = document.getElementById('TipOpera').value;
     var selSal = document.getElementById('selSal');
     selSal.innerHTML = '';
@@ -428,12 +427,10 @@ async function Llenasal()
     };
 
     try {
-        if (TipOpera == 0)
-        {
+        if (TipOpera == 0) {
             selSal.innerHTML = '<option value="0">[SELECIONA]</option>';
         }
-        else
-        {
+        else {
             const obj = await consumir(JsonSal);  // Ahora sí se puede usar await
             if (obj.status == 200) {
                 if (obj.message !== '') {
@@ -452,8 +449,66 @@ async function Llenasal()
     }
 
 }
-function Agregarcheck() {
 
+async function buscarporcp() {
+    var SeleColonia = document.getElementById("Colonia");
+    var CP = document.getElementById('CP').value;
+    var Muni = document.getElementById('seleMuni');
+    var Esta = document.getElementById('selEstado');
+
+    var JsoCP = {
+        "data": {
+            "bdCc": 2,
+            "bdSch": "dbo",
+            "bdSp": "SPQRY_BuscarporCP"
+        },
+        "filter": [
+            {
+                "property": "CP",
+                "value": CP
+            }
+        ]
+    };
+
+    try {
+        SeleColonia.innerHTML = '<option value="0">[SELECCIONA]</option>';
+        Muni.innerHTML = '<option value="0">[SELECCIONA]</option>';
+
+        const obj = await consumir(JsoCP);
+
+        if (obj.status === 200 && obj.data.length > 0) {
+            const datosCP = obj.data[0];
+            const colonia = datosCP.BuscaCodigoPostal || [];
+            const Municipios = datosCP.TBCAT_Municipio || [];
+
+            if (colonia.length > 0) {
+                Esta.value = colonia[0].ClaveEstado; // Asigna estado
+                Muni.value = colonia[0].ClaveMunicipio; // Asigna municipio
+            }
+            Municipios.forEach(mun => {
+                let option = document.createElement("option");
+                option.value = mun.ClaveMunicipio;
+                option.textContent = mun.Descripcion;
+                Muni.appendChild(option);
+            });
+
+            Muni.value = colonia.length > 0 ? colonia[0].ClaveMunicipio : "0";
+
+            colonia.forEach(col => {
+                let option = document.createElement("option");
+                option.value = col.ClaveColonia;
+                option.textContent = col.Descripcion;
+                option.dataset.cp = col.CodigoPostal; // Guardar CP en atributo personalizado
+                SeleColonia.appendChild(option);
+            });
+
+            if (colonia.length > 0) {
+                SeleColonia.value = colonia[0].ClaveColonia;
+            }
+        }
+    } catch (error) {
+        console.error("Error al procesar la información:", error);
+    }
 }
 
 function imprimirPagina() {
@@ -471,8 +526,8 @@ function imprimirPagina() {
     var fecha_formateada = dia + ' de ' + meses[mes] + ' de ' + yyy;
 
     var Nombreinput = document.getElementById('Nombre').value;
-    var ApMaternoinput = document.getElementById('ApMaterno').value;
-    var ApPaternoinput = document.getElementById('ApPaterno').value;
+    var ApMaternoinput = document.getElementById('ApMaterno').value.toUpperCase();
+    var ApPaternoinput = document.getElementById('ApPaterno').value.toUpperCase();
     var Edadinput = document.getElementById('Edad').value;
     var orisele = document.getElementById('originario');
     var originario = orisele.options[orisele.selectedIndex].text;
@@ -481,6 +536,13 @@ function imprimirPagina() {
     const masculinocheck = document.getElementById("masculino");
     const femeninocheck = document.getElementById("femenino");
     let sex = masculinocheck.checked ? masculinocheck.value : femeninocheck.checked ? femeninocheck.value : "";
+    var letsex = "";
+    if (sex == "H") {
+        letsex = "MASCULINO";
+    }
+    else {
+        letsex = "FEMENINO";
+    }
     var CURPinput = document.getElementById('CURP').value;
     var RFCinput = document.getElementById('RFC').value;
     var NSSinput = document.getElementById('NSS').value;
@@ -494,9 +556,25 @@ function imprimirPagina() {
     var NumExterior = document.getElementById('NumExterior').value;
     var NumInterior = document.getElementById('NumInterior').value;
     var CP = document.getElementById('CP').value;
+    var Civil = document.getElementById('EdoCivil');
+    var EstaCivil = Civil.options[Civil.selectedIndex].text;
+    var selSal = document.getElementById('selSal');
+    var Salario = selSal.options[selSal.selectedIndex].text;
+    var selePues = document.getElementById('selePues');
+    var puesto = selePues.options[selePues.selectedIndex].text;
+    var repre = "C. DELGADO GONZALEZ INDIRA NEREY";
+    var empresa = "";
+    if (document.getElementById('cveEmp').value == 1) {
+        empresa = "TUM TRANSPORTISTAS UNIDOS MEXICANOS DIVISION NORTE S.A. DE C.V ";
+    }
+    else {
+        empresa = "TUM LOGISTICA Y SERVICIOS DEDICADOS, S.A. DE C.V.";
+    }
 
     var mywindow = window.open('', 'PRINT', 'height=600,width=800');
-    
+
+
+
     var htmlContent = `
 <!DOCTYPE html>
 <html lang="es">
@@ -527,6 +605,7 @@ function imprimirPagina() {
                 width: 100%;
                 padding: 0.25cm;
                 box-shadow: none;
+                text-align: justify;
             }
             h2,h5 {
                 text-align: center;
@@ -539,9 +618,9 @@ function imprimirPagina() {
     <div class="container align-content-center my-5">
         <div class="contract p-5">
             <h2>CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO INDETERMINADO</h2>
-            <p>En Cuautitlán Izcalli, Edo. de México, el dia ${fecha_formateada} los que suscriben el presente Contrato, 
-            por una parte como Patrón <strong>TUM TRANSPORTISTAS UNIDOS MEXICANOS DIVISION NORTE S.A. DE C.V </strong>
-            la cual está representada por el C. DELGADO GONZALEZ INDIRA NEREY en su carácter de Representante legal,
+            <p>En CUAUTITLÁN IZCALLI, EDO. DE MÉXICO, el dia ${fecha_formateada.toUpperCase()} los que suscriben el presente Contrato,
+            por una parte como Patrón <strong>${empresa}</strong>
+            la cual está representada por el ${repre} en su carácter de Representante legal,
             y por la otra ${ApPaternoinput} ${ApMaternoinput} ${Nombreinput}
             </p>
             <p><strong>Es intención de las partes facilitar la interpretación de este pacto, por lo que hacen las
@@ -549,29 +628,29 @@ function imprimirPagina() {
 
             <h5 class="text-center">DECLARACIONES</h5>
                 <p>
-                    <strong>I.- Declara el C. DELGADO GONZALEZ INDIRA NEREY</strong> que en lo sucesivo en
+                    <strong>I.- Declara el ${repre}</strong> que en lo sucesivo en
                     el cuerpo de este Contrato se denominará “Trabajador” que:
                 </p>
                 <ul>
                     <li>Es originario de: ${originario}</li>
                     <li>Nacionalidad: ${nacionalidad}</li>
                     <li>Edad: ${Edadinput}</li>
-                    <li>Sexo: ${sex}</li>
-                    <li>Estado Civil: XXXXXXXX</li>
+                    <li>Sexo: ${letsex}</li>
+                    <li>Estado Civil: ${EstaCivil}</li>
                     <li>CURP: ${CURPinput}</li>
                     <li>Registro Federal de Contribuyentes: ${RFCinput}</li>
                     <li>Número de Seguridad Social: ${NSSinput}</li>
-                    <li>Con domicilio en: ${Estado}${Muni}${Colonia}${Calle}${NumExterior}${NumInterior}${CP}</li>
+                    <li>Con domicilio en: ${Calle} ${NumExterior} ${NumInterior} ${CP} ${Colonia} ${Muni} ${Estado} </li>
                 </ul>
                 <p>
-                    <strong>II.- Declara TUM TRANSPORTISTAS UNIDOS MEXICANOS DIVISION NORTE S.A. DE C.V </strong>
+                    <strong>II.- Declara ${empresa}</strong>
                     que en lo sucesivo en el cuerpo de este Contrato se denominará “Patrón” que:
                 </p>
                 <ul>
                     <li><strong>Es una Sociedad mercantil, debidamente constituida de conformidad a las leyes
                             mexicanas.</strong></li>
                     <li><strong>Que tiene su domicilio en:</strong> CALLE Quetzal SN, Col. INDUSTRIAL SAN MARTIN OBISPO,
-                        CUAUTITLAN IZCALLI CP 54769.</li>
+                        CUAUTITLÁN IZCALLI CP 54769.</li>
                     <li><strong>Que entre sus actividades están:</strong> Autotransporte de Carga General.</li>
                 </ul>
                 <h3>FUNCIONES Y OBLIGACIONES</h3>
@@ -585,6 +664,8 @@ function imprimirPagina() {
                         objetivos para los cuales fue contratado.</li>
                     <li>Tendrá la obligación de aceptar los programas de Capacitación y medición en los que lo incluya
                         la empresa, dentro y fuera de las instalaciones.</li>
+            </div>
+            <div class="contract p-5">
                     <li>Tener bajo su responsabilidad el resguardo de los medios y herramientas de trabajo, por lo tanto
                         se le considerará como depositario de la misma. </li>
                     <li>Efectuar todas las actividades del área relacionadas con su puesto, indicadas por su superior o
@@ -609,8 +690,6 @@ function imprimirPagina() {
                 fundamento en lo establecido por el artículo 39-A, 47 y 53 de la Ley Federal del Trabajo.</p>
             <p>CUARTA.- El Trabajador se obliga a prestar bajo la dirección, dependencia y subordinación del
                 patrón, sus servicios personales consistentes en <strong>CONDUCTOR DOBLE OPERADOR.</strong></p>
-        </div>
-        <div class="contract p-5">
             <p>QUINTA.- El Trabajador y el Patrón convienen en que a juicio de éste se podrá cambiar al
                 trabajador de unidad asignada, siempre y cuando se le garanticen su categoría y salario.</p>
             <p>SEXTA.- El Trabajador se obliga a desempeñar sus funciones en el área Metropolitana de la Ciudad
@@ -622,7 +701,7 @@ function imprimirPagina() {
                 tiempo extra, salvo por causas ajenas al trabajador que prolongue o retarde el viaje, con
                 fundamento en los artículos 5° fracción III, 60 y 62 de la Ley Federal del Trabajo.</p>
             <p>OCTAVA.- El salario o sueldo convenido, como retribución por los servicios a que en este contrato
-                se refiere es el siguiente: XXXXXXXX mensuales, lo anterior con fundamento en los artículos 257
+                se refiere es el siguiente: ${Salario} mensuales, lo anterior con fundamento en los artículos 257
                 y 258 de la Ley Federal del Trabajo.</p>
             <p>NOVENA- El día de descanso semanal o séptimos días, días festivos y descansos obligatorios, se
                 encuentran cubiertos con el salario pactado en la cláusula anterior, en términos de lo dispuesto
@@ -635,7 +714,7 @@ function imprimirPagina() {
                 prima vacacional que deberá disfrutar el trabajador, de acuerdo con las necesidades de la
                 empresa, lo anterior con fundamento en los artículos 76 y 80 de la Ley Federal del Trabajo.</p>
             <p>DECIMA SEGUNDA.- Se reconoce expresamente al trabajador una antigüedad de servicio en la Empresa
-                a partir del día XXXXXXX</p>
+                a partir del día ${fecha_formateada}</p>
             <p>DECIMA TERCERA.- El Patrón cumpliendo con lo establecido en el artículo 25 fracción VIII de la
                 Ley Federal del Trabajo, proporcionará al Trabajador los medios suficientes para Capacitarlo en
                 su trabajo, si así lo requiere a efecto del mejor desempeño de sus labores.</p>
@@ -661,6 +740,11 @@ function imprimirPagina() {
                 de La Ley Federal del Trabajo, en el entendido de que la falta injustificada en cualquiera de
                 estos días será considerado como falta de probidad, debido a las necesidades operativas,
                 administrativas o comerciales de “LA EMPRESA”.</p>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <div class="contract p-5">
             <p>DECIMA NOVENA: En caso de fallecimiento o desaparición derivada de un acto delincuencial el
                 trabajador haciendo uso del derecho que le concede la fracción X del artículo 25 de la Ley
                 Federal del Trabajo en relación con el artículo 501 de la misma Ley, designa como beneficiarios
@@ -669,27 +753,18 @@ function imprimirPagina() {
                 <li class="BodyText" style="margin-left:31.34pt; padding-left:4.66pt; font-family:Arial">
                     &#xad;<span style="background-color:#c0c0c0">___________________________________________con
                         parentesco, ________________</span>
-                </li>
-            </ol>
-            <p class="BodyText" style="margin-left:18pt">
-                <span style="font-family:Arial; background-color:#c0c0c0">del empleado, a quien en su caso se le
+                        <span style="font-family:Arial; background-color:#c0c0c0">del empleado, a quien en su caso se le
                     localizará en el teléfono móvil: ___________________</span>
-            </p>
-            <p class="BodyText" style="text-indent:18pt">
-                <span
-                    style="font-family:Arial; background-color:#c0c0c0">2.____________________________________________,
+                    <span style="font-family:Arial; background-color:#c0c0c0">2.____________________________________________,
                     con parentesco _______________</span>
-            </p>
-            <p class="BodyText" style="text-indent:18pt">
                 <span style="font-family:Arial; background-color:#c0c0c0">del empleado a quien en su caso se le
                     localizará en el teléfono móvil:___________________</span>
-            </p>
+                    </li>
+            </ol>
+           
             <p>Personas a quienes autoriza expresamente para poder recibir el finiquito y prestaciones a las que haya
                 tenido derecho.</p>
-        </div>
-        <br/>
-        <br/>
-        <div class="contract p-5">
+        
             <p>VIGESIMA: El Trabajador se obliga a dar por escrito cualquier cambio de domicilio en la inteligencia de
                 que
                 sí no lo hace se tendrá como tal el que se señala en este Contrato para todos los efectos legales.</p>
@@ -706,19 +781,32 @@ function imprimirPagina() {
             <p>Así mismo y como se estipula en el artículo 24 de la Ley Federal del Trabajo, se entrega un ejemplar del
                 mismo y se acusa de recibido dicho contrato.</p>
             <p>Leído que fue por ambas partes este contrato ante los testigos que también lo firman e impuestos todos de
-                su
-                contenido y sabedores de los efectos legales; se firma de común acuerdo el día XX del mes de XXXX DE
-                XXXX.
+                su contenido y sabedores de los efectos legales; se firma de común acuerdo el día ${fecha_formateada}
             </p>
-            <p class="mt-5 text-center">__________________________________</p>
-            <p class="text-center">Firma del Patrón</p>
-
-            <p class="mt-5 text-center">__________________________________</p>
-            <p class="text-center">Firma del Trabajador</p>
+            <div class="row">
+                <div class="col-6">
+                    <p class="mt-5 text-center">__________________________________</p>
+                    <p class="text-center">Firma del Patrón</p>  
+                </div>
+                <div class="col-6">
+                    <p class="mt-5 text-center">__________________________________</p>
+                    <p class="text-center">Firma del Trabajador</p>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="contract p-5">
             <h2 class="text-center">ACUSE DE RECIBIDO</h2>
-            <p>USTED PARTICIPARA COMO UN COLABORADOR DE LA COMPAÑÍA <strong>TUM TRANSPORTISTAS UNIDOS MEXICANOS DIVISION
-                    NORTE S.A. DE C.V.</strong>
-                EN LO SUCESIVO DENOMINADA EMPRESA, EN EL PUESTO XXXX A TRAVÉS DEL CUAL DESARROLLARÁ SUS ACTIVIDADES
+            <p>USTED PARTICIPARA COMO UN COLABORADOR DE LA COMPAÑÍA <strong>${empresa}</strong>
+                EN LO SUCESIVO DENOMINADA EMPRESA, EN EL PUESTO ${puesto} A TRAVÉS DEL CUAL DESARROLLARÁ SUS ACTIVIDADES
                 ASIGNADAS.</p>
             <p>USTED RECONOCE QUE PODRÁ TENER ACCESO A CONOCIMIENTOS, FORMULACIONES, PROCEDIMIENTOS, SECRETOS, PATENTES,
                 ESTRATEGIAS, PROGRAMAS, PRODUCTOS Y OTRAS INFORMACIONES DE CARÁCTER CONFIDENCIAL ( EN LOS SUCESIVO
@@ -734,34 +822,38 @@ function imprimirPagina() {
                 PERSONAL NI PARA EL BENEFICIO DE SU SUPERIORES, SOCIOS, EMPLEADOS REPRESENTANTE O CLIENTES Y NO DIVULGAR
                 LA INFORMACIÓN CONFIDENCIAL POR NINGÚN MEDIO SIN LA AUTORIZACIÓN EXPRESA DE LA EMPRESA, Y HA NO HACERLA
                 DEL CONOCIMIENTO DE PERSONA AJENAS A LA MISMA, ASÍ COMO EVITAR SU REPRODUCCIÓN O DIVULGACIÓN POR PARTE
-                DE CUALQUIER DE TERCERA PERSONA. </p>
-            <p>FUNDAMENTANDO LO ANTERIOR MANIFESTADO, AL ARTICULO 211 DEL CÓDIGO PENAL PARA EL DISTRITO FEDERAL Y PARA
+                DE CUALQUIER DE TERCERA PERSONA. FUNDAMENTANDO LO ANTERIOR MANIFESTADO, AL ARTICULO 211 DEL CÓDIGO PENAL PARA EL DISTRITO FEDERAL Y PARA
                 TODA LA REPÚBLICA EN MATERIA DE FUERO FEDERAL, SANCIÓN DE PENA PRIVATIVA Y HASTA LA SUSPENSIÓN DE SU
-                PROFESIÓN EN SU CASO, CUANDO SE ESTE EN LOS SUPUESTO EN LOS PÁRRAFOS SEÑALADOS CON ANTELACIÓN.</p>
-            <p>ASÍ MISMO Y COMO SE ESTIPULA EN EL ARTÍCULO 24 DE LA LEY FEDERAL DEL TRABAJO, SE ENTREGA UN EJEMPLAR DEL
+                PROFESIÓN EN SU CASO, CUANDO SE ESTE EN LOS SUPUESTO EN LOS PÁRRAFOS SEÑALADOS CON ANTELACIÓN.
+                ASÍ MISMO Y COMO SE ESTIPULA EN EL ARTÍCULO 24 DE LA LEY FEDERAL DEL TRABAJO, SE ENTREGA UN EJEMPLAR DEL
                 MISMO Y SE ACUSA DE RECIBIDO DICHO CONTRATO.</p>
             <p>LEÍDO QUE FUE POR AMBAS PARTES ESTE CONTRATO ANTE LOS TESTIGOS QUE TAMBIÉN LO FIRMAN E IMPUESTOS TODOS DE
-                SU CONTENIDO Y SABEDORES DE LOS EFECTOS LEGALES; SE FIRMA DE COMÚN ACUERDO EL DÍA XX DEL MES DE XXXX DE
-                XXXX.</p>
-            <p class="mt-5 text-center">__________________________________</p>
-            <p class="text-center">Firma del Patrón</p>
-
-            <p class="mt-5 text-center">__________________________________</p>
-            <p class="text-center">Firma del Trabajador</p>
+                SU CONTENIDO Y SABEDORES DE LOS EFECTOS LEGALES; SE FIRMA DE COMÚN ACUERDO EL DÍA ${fecha_formateada}.</p>
+             <div class="row">
+                <div class="col-6">
+                    <p class="mt-5 text-center">__________________________________</p>
+                    <p class="text-center">Firma del Patrón</p>  
+                </div>
+                <div class="col-6">
+                    <p class="mt-5 text-center">__________________________________</p>
+                    <p class="text-center">Firma del Trabajador</p>
+                </div>
+            </div>
         </div>
         <div class="contract p-5">
-            <h2>TUM TRANSPORTISTAS UNIDOS MEXICANOS DIVISION NORTE, S.A. DE C.V.</h2>
+            <h2>${empresa}</h2>
+            <br/>
             <h2>P R E S E N T E</h2>
+            <br/>
             <p>Por medio de la presente, hago de su conocimiento que con esta fecha y por así convenir a mis intereses,
                 en uso de la fracción I del Artículo 53 de la Ley Federal del Trabajo, renuncio libre y voluntariamente
-                a la relación de trabajo que con el puesto de XXXXXX XXXXXXX que venía desempeñando en esta empresa, en
+                a la relación de trabajo que con el puesto de ${puesto} que venía desempeñando en esta empresa, en
                 la inteligencia de que así conviene a mis intereses.</p>
-            <p>Quiero hacer constar que a la fecha he recibido todos y cada uno de los pagos <strong>TUM TRANSPORTISTAS
-                    UNIDOS MEXICANOS DIVISION NORTE, S.A. DE C.V.</strong> por concepto de salarios ordinarios, salarios
-                relativos a vacaciones, pago de prima vacacional, pago de prima de antigüedad, séptimos días, descansos
-                obligatorios, aguinaldo, horas extras reconociendo expresamente no haberlas laborado, reparto de
-                utilidades, previsión social que me correspondían, así como todo a lo que tuve derecho conforme a la Ley
-                de la materia.</p>
+            <p>Quiero hacer constar que a la fecha he recibido todos y cada uno de los pagos <strong>${empresa}</strong> 
+                por concepto de salarios ordinarios, salarios relativos a vacaciones, pago de prima vacacional, pago de 
+                prima de antigüedad, séptimos días, descansos obligatorios, aguinaldo, horas extras reconociendo expresamente 
+                no haberlas laborado, reparto de utilidades, previsión social que me correspondían, así como todo a 
+                lo que tuve derecho conforme a la Ley de la materia.</p>
             <p>Asimismo, reconozco libremente que durante el tiempo que preste mis servicios en la empresa jamás sufrí
                 riesgo de trabajo o enfermedad profesional alguna por lo que no me reservo acción o derecho alguno que
                 intentar por cualquiera de los conceptos mencionados, ni por ningún otro, liberando a la empresa, a la
@@ -771,6 +863,8 @@ function imprimirPagina() {
             <p>Por último manifiesto libremente que de estimarlo necesario la compañía, me obligo a RATIFICAR, ante las
                 autoridades del Trabajo lo manifestado libre y voluntariamente, toda vez que me han sido cubierto
                 oportunamente todas y cada una de las prestaciones a las que se refiere la Ley.</p>
+                <br/>
+                <br/>
             <p class="text-center">ATENTAMENTE</p>
             <p class="mt-5 text-center">__________________________________</p>
         </div>
@@ -786,6 +880,17 @@ function imprimirPagina() {
 
 
     mywindow.document.write(htmlContent);
-    mywindow.window.print();
+    mywindow.document.window.print();
     mywindow.document.close(); // Importante para evitar problemas de carga
+}
+
+function habilitarCamposDeshabilitados() {
+    const campos = ['Edad'];
+
+    campos.forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) {
+            campo.disabled = false;
+        }
+    });
 }

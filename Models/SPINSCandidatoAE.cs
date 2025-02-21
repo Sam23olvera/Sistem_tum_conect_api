@@ -14,7 +14,7 @@
         public string NoExt { get; set; }
         public string NoInt { get; set; }
         public string CP { get; set; }
-        public int ClaveOrigi { get; set; }
+        public int Entidad { get; set; }
         public string TCel { get; set; }
         public string TLocal { get; set; }
         public string FechaNac { get; set; }
