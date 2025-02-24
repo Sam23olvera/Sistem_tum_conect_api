@@ -5,11 +5,14 @@ namespace ConectDB.Models
 {
     public class AltaExpressModel: IValidatableObject
     {
+        public int ClaveCantidato { get; set; }
 
         [Required(ErrorMessage = "Debes seleccionar un Tipo de Trabajador")]
         public int CveTipoEmp { get; set; }
+        public string Descripcion_Emp { get; set; }
         [Required(ErrorMessage = "Debes seleccionar una Escolaridad")]
         public int Escol { get; set; }
+        public string EscolDescripcion { get; set; }
         [Required(ErrorMessage = "Apellido Paterno es obligatorio")]
         public string ApPaterno { get; set; }
 
@@ -23,6 +26,7 @@ namespace ConectDB.Models
         public string Calle { get; set; }
         [Required(ErrorMessage = "Debes seleccionar una Colonia")]
         public int Colonia { get; set; }
+        public string Descripcion_col {  get; set; }
         [Required(ErrorMessage = "Edad es obligatorio")]
         public int Edad { get; set; }
 
@@ -30,10 +34,14 @@ namespace ConectDB.Models
         public string CP { get; set; }
         [Required(ErrorMessage = "Debes seleccionar un País")]
         public int SelPais { get; set; }
+        public string DescripNacionalidad { get; set; }
         [Required(ErrorMessage = "Debes seleccionar un Estado")]
         public int selEstado { get; set; }
+        public string Descripcion_Esta { get; set; }
         [Required(ErrorMessage = "Debes seleccionar un Municipio")]
         public int seleMuni { get; set; }
+
+        public string Descripcion_muni { get; set; }
 
         [Required(ErrorMessage = "Ingresa el numero exterior")]
         public string NumExterior { get; set; }
@@ -43,6 +51,7 @@ namespace ConectDB.Models
         public string sexo { get; set; }
         [Required(ErrorMessage = "Debes de selecionar un Lugar de Nacimiento")]
         public int originario { get; set; }
+        public string Desorigen { get; set; }
         [Required(ErrorMessage = "Debes de Agregar un celular")] 
         public string Cel { get; set; }
         [Required(ErrorMessage = "Debes de Agregar un telefono")]
@@ -58,9 +67,11 @@ namespace ConectDB.Models
         public bool EscoConcluida { get; set; }
         [Required(ErrorMessage = "Debes de Selecionar el Estado Civil")]
         public int EdoCivil { get; set; }
+        public string Descripcion_civil { get; set; }
         public bool Reingreso { get; set; }
         [Required(ErrorMessage = "Debes seleccionar un Tipo de Licencia")]
         public int SeleLic { get; set; }
+        public string DisLic { get; set; }
         [Required(ErrorMessage = "Ingresa el Numero de Licencia")]
         public string NumLicen { get; set; }
         [Required(ErrorMessage = "Ingresa la Vigencia")]
@@ -74,23 +85,27 @@ namespace ConectDB.Models
         public string FolFonacot { get; set; }
         [Required(ErrorMessage = "Debes seleccionar un Tipo de Operación")]
         public int TipOpera { get; set; }
+        public string Descripcion_TP { get; set; }
         [Required(ErrorMessage = "Debes seleccionar una Zona de Trabajo")]
         public int ZonTra { get; set; }
+        public string Descripcion_zon { get; set; }
         [Required(ErrorMessage = "Debes seleccionar un Banco")]
         public int Banc { get; set; }
-
+        public string Descripcion_Banc { get; set; }
         [Required(ErrorMessage = "Ingresa un Numero de Cuenta")]
         public string CuentaBanca { get; set; }
         [Required(ErrorMessage = "Cuentanos tu Experiencia")]
         public string Experiencia { get; set;}
         [Required(ErrorMessage = "Debe seleccionar un Puesto")]
         public int selePues { get; set; }
+        public string Descripcion_pues { get; set; }
         [Required(ErrorMessage = "Debes de colocar la Fecha de Vigencia Apto Medico")]
         public string AptMedi { get; set; }
 
         //public int SelEsquemPago { get; set; }
         [Required(ErrorMessage = "Debes seleccionar un Salario")]
         public int selSal { get; set; }
+        public string SelSalDescrip { get; set; }
         public bool RangoMedio { get; set; }
         public bool Thorton { get; set; }
         public bool Rabon { get; set; }
@@ -98,7 +113,7 @@ namespace ConectDB.Models
         public bool TractoSenci { get; set; }
         public bool VHlig { get; set; }
         public bool TracFull { get; set; }
-        
+        public List<TipUn> tbcAt_UnidaExperiencia { get; set; }
         public List<TBCATTipoOp> TBCAT_TipoOp { get; set; }
         public List<TBCATTipoTrabajador> TBCAT_TipoTrabajador { get; set; }
         public List<TBCATEscolaridad> TBCAT_Escolaridad { get; set; }
@@ -125,6 +140,11 @@ namespace ConectDB.Models
             }
         }
 
+    }
+    public class TipUn 
+    {
+        public int ClaveTipoUnidad { get; set; }
+        public string Descripcion { get; set; }
     }
     public class TBCATEstadoCivil
     {

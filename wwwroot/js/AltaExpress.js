@@ -160,6 +160,7 @@ function mostrarEdad() {
     var fecha = document.getElementById("FechNac").value; // Corregido el ID
     var edad = calcularEdad(fecha);
     document.getElementById("Edad").value = edad; // Mostrar la edad en el input
+    document.getElementById("Edad").disabled = true;
 }
 
 function calcularEdad(fechaNacimiento) {
@@ -232,12 +233,25 @@ async function llenacolonia() {
         }
     }
 }
-
+function formato(texto) {
+    return texto.replace(/^(\d{4})-(\d{2})-(\d{2})$/g, '$3/$2/$1');
+}
 async function EjecutaValidarReingreso() {
     var curp = document.getElementById('tempCurp').textContent;
     var rfc = document.getElementById('tempRfc').textContent;
     var nss = document.getElementById('tempNss').textContent;
-
+    if (curp === '')
+    {
+        curp = null;
+    }
+    if (rfc === '')
+    {
+        rfc = null;
+    }
+    if (nss === '')
+    {
+        nss = null;
+    }
     var Js = {
         "data": {
             "bdCc": 2,
@@ -277,7 +291,7 @@ async function EjecutaValidarReingreso() {
                 <td>${Regis[i].NumEmpleado}</td> 
                 <td>${Regis[i].Estatus}</td> 
                 <td>${Regis[i].Puesto}</td> 
-                <td>${Regis[i].FechaIngreso}</td> 
+                <td>${formato(Regis[i].FechaIngreso)}</td> 
                 <td><button type="button" class="btn btn-outline-light">Mostrar</button></td>
             `;
 
@@ -300,18 +314,11 @@ async function ValidarReingreso() {
     const rfcInput = document.getElementById("RFC");
     const NSSInput = document.getElementById("NSS");
 
-    if (!curpInput.value) {
-        toastr.error("Debes de ingresar el Curp");
+    if (!curpInput.value && !rfcInput.value && !NSSInput.value) {
+        toastr.error("Debes de ingresar por lo menos un CURP,RFC o NSS ");
         return;
     }
-    if (!rfcInput.value) {
-        toastr.error("Debes de ingresar el RFC");
-        return;
-    }
-    if (!NSSInput.value) {
-        toastr.error("Debes de ingresar el Numero de Seguro Social (NSS)");
-        return;
-    }
+
     var modal = new bootstrap.Modal(document.getElementById('ValRies'));
     document.getElementById('tempCurp').textContent = curpInput.value;
     document.getElementById('tempRfc').textContent = rfcInput.value;
@@ -572,9 +579,7 @@ function imprimirPagina() {
     }
 
     var mywindow = window.open('', 'PRINT', 'height=600,width=800');
-
-
-
+        
     var htmlContent = `
 <!DOCTYPE html>
 <html lang="es">
@@ -585,13 +590,25 @@ function imprimirPagina() {
     <title>Contrato Individual de Trabajo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-          .contract {
+        .contract {
             width: 21cm;
             min-height: 27.94cm;
             padding: 0.25cm;
             margin: auto;
             background: white;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h5 {
+            text-align: center;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        ul, ol {
+            text-align: justify;
         }
 
         @media print {
@@ -607,7 +624,8 @@ function imprimirPagina() {
                 box-shadow: none;
                 text-align: justify;
             }
-            h2,h5 {
+
+            h2, h5 {
                 text-align: center;
             }
         }
@@ -741,9 +759,6 @@ function imprimirPagina() {
                 estos días será considerado como falta de probidad, debido a las necesidades operativas,
                 administrativas o comerciales de “LA EMPRESA”.</p>
         </div>
-        <br/>
-        <br/>
-        <br/>
         <div class="contract p-5">
             <p>DECIMA NOVENA: En caso de fallecimiento o desaparición derivada de un acto delincuencial el
                 trabajador haciendo uso del derecho que le concede la fracción X del artículo 25 de la Ley
@@ -794,8 +809,6 @@ function imprimirPagina() {
                 </div>
             </div>
         </div>
-        <br/>
-        <br/>
         <br/>
         <br/>
         <br/>
@@ -870,18 +883,18 @@ function imprimirPagina() {
         </div>
     </div>
     <script>
-        window.print();
+        mywindow.document.write(htmlContent);
+        mywindow.document.close(); 
+        mywindow.print();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
 `;
-
-
     mywindow.document.write(htmlContent);
-    mywindow.document.window.print();
-    mywindow.document.close(); // Importante para evitar problemas de carga
+    mywindow.document.close();
+    mywindow.print();
 }
 
 function habilitarCamposDeshabilitados() {

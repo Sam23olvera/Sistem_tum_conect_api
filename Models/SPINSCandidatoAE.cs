@@ -14,7 +14,6 @@
         public string NoExt { get; set; }
         public string NoInt { get; set; }
         public string CP { get; set; }
-        public int Entidad { get; set; }
         public string TCel { get; set; }
         public string TLocal { get; set; }
         public string FechaNac { get; set; }
@@ -42,6 +41,7 @@
         public int ClaveSalario { get; set; }
         public int AnoExperiencia { get; set; }
         public string VigenciaMedic { get; set; }
+        public int ClaveOrigi { get; set; }
         public int EdoCivil { get; set; }
         public List<TiposUni> TiposUnis { get; set; }
         public List<Docto> Doctos { get; set; }

@@ -42,7 +42,7 @@ namespace ConectDB.Controllers
             }
         }
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        [HttpPost]
+        [HttpPost, HttpGet]
         public ActionResult Guardar(int cveEmp, string XT, AltaExpressModel guar)
         {
             try
@@ -112,11 +112,6 @@ namespace ConectDB.Controllers
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
-                //if (!guar.Reingreso)
-                //{
-                //    ModelState.AddModelError("Reingreso", "Validar si es un reingreso");
-                //    return View("Index", guar);
-                //}
                 if (guar.SeleLic == 0)
                 {
                     ModelState.AddModelError("SeleLic", "Debes Seleccionar un Tipo de Licencia");
@@ -159,22 +154,26 @@ namespace ConectDB.Controllers
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
+                var alta = "";
                 if (!ModelState.IsValid)
                 {
                     guar = mov.Guardar(guar);
-                    if (guar.Errors[0].status == 200)
-                    {
-                        TempData["guardado"] = guar.Errors[0].message;
-                        TempData["status"] = guar.Errors[0].status;
-                        string[] numalta = guar.Errors[0].message.Split("|");
-                        TempData["alta"] = numalta[1];
-                    }
-                    else
-                    {
-                        TempData["Mensaje"] = guar.Errors[0].message;
-                    }
                 }
-                return View("Index", guar);
+                if (guar.Errors[0].status == 200)
+                {
+                    TempData["guardado"] = guar.Errors[0].message;
+                    TempData["status"] = guar.Errors[0].status;
+                    string[] numalta = guar.Errors[0].message.Split("|");
+                    alta = numalta[1];
+                    TempData["alta"] = alta;
+                    //return View("Index", guar);
+                    return RedirectToAction("Imprime", new { cveEmp, XT, alta });
+                }
+                else
+                {
+                    TempData["Mensaje"] = guar.Errors[0].message;
+                    return View("Index", guar);
+                }
             }
             catch (Exception ex)
             {
@@ -182,6 +181,33 @@ namespace ConectDB.Controllers
                 msj.message = "Error de Conexion | Erorr Desconocido Notificar a Sistemas Desarrollo" + ex.Message.ToString();
                 return View("Error", msj);
             }
+        }
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public ActionResult Imprime(int cveEmp, string XT, string alta)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(HttpContext.Request.Cookies["usuario"]) || string.IsNullOrEmpty(HttpContext.Request.Cookies["contra"]))
+                    return RedirectToAction("Index", "Loging");
+
+                string desusuario = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["usuario"]);
+                string descontraseña = UrlEncryptor.DecryptUrl(HttpContext.Request.Cookies["contra"]);
+
+                var model = menu.RegresMenu(desusuario, descontraseña, cveEmp, url, XT);
+                model.Token = XT;
+                ViewData["UsuarioModel"] = model;
+                Model = mov.Impresion(alta);
+                TempData["status"] = Model.Errors[0].status;
+                TempData["guardado"] = Model.Errors[0].message;
+                return View("Imprime",Model);
+            }
+            catch (Exception ex)
+            {
+                msj.status = 400;
+                msj.message = "Error de Conexion | Erorr Desconocido Notificar a Sistemas Desarrollo" + ex.Message.ToString();
+                return View("Error", msj);
+            }
+
         }
     }
 }

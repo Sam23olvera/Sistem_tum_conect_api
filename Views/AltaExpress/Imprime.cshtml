@@ -1,0 +1,447 @@
+﻿@using ConectDB.Models;
+@model ConectDB.Models.AltaExpressModel;
+@{
+    Layout = "~/Views/Shared/_Layout_AltaExpres.cshtml";
+    var usuarioModel = ViewData["UsuarioModel"] as UsuarioModel;
+    int totalDocs = Model.TBCAT_DoctoRecibidos.Count;
+    int numTablas = totalDocs >= 3 ? 3 : 1;
+    int docsPorTabla = (int)Math.Ceiling((double)totalDocs / numTablas);
+}
+<div class="container-fluid mt-5">
+    <div id="divguard">
+        <div class="row">
+            <div class="col-3">
+                <label for="CveTipoEmp" class="form-label">Tipo Trabajador:</label>
+                <select class="form-select form-select-sm" id="CveTipoEmp">
+                    <option value="@Model.CveTipoEmp">@Model.Descripcion_Emp</option>
+                </select>
+            </div>
+            <div class="col-6 text-center align-content-center">
+                <h1>Alta de Personal Express</h1>
+                <input type="hidden" value="@TempData["Mensaje"]" id="mensaje" />
+                <input type="hidden" value="@TempData["guardado"]" id="guarda" />
+                <input type="hidden" value="@TempData["status"]" id="status" />
+                <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
+                <input type="hidden" value="@usuarioModel.Token" id="XT" name="XT" />
+            </div>
+            <div class="col-3 align-content-end text-end">
+                <div class="container border border-primary rounded p-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <h7>#Solicitud:</h7>
+                        </div>
+                        <div class="col-6">
+                            <h7>@Model.ClaveCantidato</h7>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="container">
+                <div class="row border border-primary rounded text-center">
+                    <h5>Datos Personales</h5>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <label for="SelPais" class="form-label form-label-sm">Nacionalidad:</label>
+                        <select class="form-select form-select-sm" id="SelPais" name="SelPais" asp-for="SelPais">
+                            <option value="@Model.SelPais">@Model.DescripNacionalidad</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <label for="ApPaterno" class="form-label form-label-sm">Apellido Paterno:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="ApPaterno" value="@Model.ApPaterno" />
+                    </div>
+                    <div class="col-2">
+                        <label for="ApMaterno" class="form-label form-label-sm">Apellido Materno:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="ApMaterno" value="@Model.ApMaterno" />
+                    </div>
+                    <div class="col-2">
+                        <label for="Nombre" class="form-label form-label-sm">Nombre(s):</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="Nombre" value="@Model.Nombre" />
+                    </div>
+                    <div class="col-2">
+                        <label for="originario" class="form-label form-label-sm">Lugar de Nacimiento:</label>
+                        <select class="form-select form-select-sm" id="originario">
+                            <option value="@Model.originario">@Model.Desorigen</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <label for="FechNac" class="form-label">Fecha Nacimiento:</label>
+                        <input type="date" class="form-control form-control-sm" value="@Model.FechNac" id="FechNac" onchange="mostrarEdad()">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <h7>
+                            Sexo:</p>
+                            @if (@Model.sexo == "H")
+                            {
+                                <input class="form-check-input" type="radio" id="masculino" name="sexo" checked>
+                                <label for="masculino">Masculino</label>
+                                <br />
+                                <input class="form-check-input" type="radio" id="femenino" name="sexo" >
+                                <label for="femenino" class="form-check-label">Femenino</label>
+                            }
+                            else if (@Model.sexo == "M")
+                            {
+                                <input class="form-check-input" type="radio" id="masculino" name="sexo">
+                                <label for="masculino">Masculino</label>
+                                <br />
+                                <input class="form-check-input" type="radio" id="femenino" name="sexo" checked>
+                                <label for="femenino" class="form-check-label">Femenino</label>
+                            }
+                    </div>
+                    <div class="col-2">
+                        <label for="Edad" class="form-label form-label-sm">Edad:</label>
+                        <input type="number" class="form-control form-control-sm" id="Edad" placeholder="Edad:" disabled />
+                    </div>
+                    <div class="col-2">
+                        <label for="EdoCivil" class="form-label col-form-label-sm">Estado Civil</label>
+                        <select class="form-select form-select-sm" id="EdoCivil" >
+                            <option value="@Model.EdoCivil">@Model.Descripcion_civil</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <label for="Cel" class="form-label form-label-sm">Telefono Celular:</label>
+                        <input type="text" class="form-control form-control-sm" id="Cel" placeholder="Telefono Celular:" value="@Model.Cel" />
+                    </div>
+                    <div class="col-2">
+                        <label for="Tel" class="form-label form-label-sm">Telefono:</label>
+                        <input type="text" class="form-control form-control-sm" id="Tel" placeholder="Telefono:" value="@Model.Tel" />
+                    </div>
+                    <div class="col-2">
+                        <label for="CP" class="form-label form-label-sm">CP:</label>
+                        <input type="text" class="form-control form-control-sm" id="CP" placeholder="CP:" value="@Model.CP" onchange="buscarporcp()" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <label for="selEstado" class="form-label form-label-sm">Estado:</label>
+                        <select class="form-select form-select-sm" id="selEstado">
+                            <option value="@Model.selEstado">@Model.Descripcion_Esta</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="seleMuni" class="form-label form-label-sm">Municipio:</label>
+                        <select class="form-select form-select-sm" id="seleMuni" >
+                            <option value="@Model.seleMuni">@Model.Descripcion_muni</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="Colonia" class="form-label form-label-sm">Colonia:</label>
+                        <select class="form-select form-select-sm" id="Colonia">
+                            <option value="@Model.Colonia">@Model.Descripcion_col</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="Calle" class="form-label form-label-sm">Calle:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="Calle" value="@Model.Calle"  />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <label for="NumExterior" class="form-label form-label-sm"># Exterior:</label>
+                        <input type="text" class="form-control form-control-sm" id="NumExterior" value="@Model.NumExterior" />
+                    </div>
+                    <div class="col-2">
+                        <label for="NumInterior" class="form-label form-label-sm"># Interior:</label>
+                        <input type="text" class="form-control form-control-sm" id="NumInterior" value="@Model.NumInterior" />
+                    </div>
+                    <div class="col-2">
+                        <label for="NSS" class="form-label col-form-label-sm">NSS:</label>
+                        <input type="number" class="form-control form-control-sm" value="@Model.NSS" id="NSS" maxlength="11">                        
+                    </div>
+                    <div class="col-3">
+                        <label for="CURP" class="form-label form-label-sm">CURP:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="CURP" placeholder="CURP:" value="@Model.CURP" maxlength="18" />
+                    </div>
+                    <div class="col-3">
+                        <label for="RFC" class="form-label form-label-sm">RFC:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="RFC" placeholder="RFC:" value="@Model.RFC"  maxlength="13" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-4">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <label for="Escol" class="form-label form-label-sm">Escolaridad:</label>
+                                    <select class="form-select form-select-sm" id="Escol">
+                                        <option value="@Model.Escol">@Model.EscolDescripcion</option>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <input class="form-check-input" type="checkbox" name="EscoConcluida" id="EscoConcluida" checked="@Model.EscoConcluida">
+                                    <label class="form-check-label" for="EscoConcluida">Concluida</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <input class="form-check-input" type="checkbox" id="Reingreso" name="Reingreso" checked="@Model.Reingreso" />
+                        <label class="form-check-label" for="Reingreso">Reingreso</label>
+                        <br />
+                        <button type="button" class="btn btn-primary">validar Reingreso</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="container">
+                <div class="row border border-primary rounded text-center">
+                    <h5>Datos Base</h5>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <label for="SeleLic" class="form-label form-label-sm">Tipo Licencia:</label>
+                        <select class="form-select form-select-sm" id="SeleLic">
+                            <option value="@Model.SeleLic">@Model.DisLic</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <label for="NumLicen" class="form-label form-label-sm">Num Licencia:</label>
+                        <input type="text" class="form-control form-control-sm" id="NumLicen" placeholder="000-0000" value="@Model.NumLicen" />
+                    </div>
+                    <div class="col-2">
+                        <label for="VigenciaLicen" class="form-label">Vigencia:</label>
+                        <input type="date" class="form-control form-control-sm" placeholder="yyyy-MM-dd" id="VigenciaLicen" value="@Model.VigenciaLicen" />
+                    </div>
+                    <div class="col-2">
+                        <label for="RControl" class="form-label">R-Control:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="RControl" placeholder="R-Control:" value="@Model.RControl" />
+                    </div>
+                    <div class="col-2">
+                        <label for="AnoExperiencia" class="form-label">Años de Experiencia:</label>
+                        <input type="number" class="form-control form-control-sm" id="AnoExperiencia" placeholder="1 año" value="@Model.AnoExperiencia" />
+                    </div>
+                </div>
+                <br />
+                <div class="row ">
+                    <div class="col-2">
+                        <label for="ConInfonavit" class="form-label">Credito Infonavit:</label>
+                        <input class="form-check-input" type="checkbox" checked="@Model.ConInfonavit" id="ConInfonavit">
+                        <input type="text" class="form-control form-control-sm" id="FolInfonavit" value="@Model.FolInfonavit" placeholder="Folio Infonavit:" disabled />
+                    </div>
+                    <div class="col-2">
+                        <label for="ConFonacot" class="form-label">Credito Fonacot:</label>
+                        <input class="form-check-input" type="checkbox" checked="@Model.ConFonacot" id="ConFonacot">
+                        <input type="text" class="form-control form-control-sm" id="FolFonacot" value="@Model.FolFonacot" placeholder="Folio Fonacot:" disabled />
+                    </div>
+                    <div class="col-3">
+                        <label for="AptMedi" class="form-label">Vigencia Apto Medico:</label>
+                        <input type="date" class="form-control form-control-sm" placeholder="yyyy-MM-dd" id="AptMedi" value="@Model.AptMedi" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="container">
+                <div class="row border border-primary rounded text-center">
+                    <h5>Datos Laborales</h5>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <label for="TipOpera" class="form-label form-label-sm">Tipo Operacion:</label>
+                        <select class="form-select form-select-sm" id="TipOpera">
+                            <option value="@Model.TipOpera">@Model.Descripcion_TP</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="ZonTra" class="form-label form-label-sm">Zona de Trabajo:</label>
+                        <select class="form-select form-select-sm" id="ZonTra">
+                            <option value="@Model.ZonTra">@Model.Descripcion_zon</option>    
+                        </select>                        
+                    </div>
+                    <div class="col-3">
+                        <label for="Banc" class="form-label form-label-sm">Banco:</label>
+                        <select class="form-select form-select-sm" id="Banc">
+                            <option value="@Model.Banc">@Model.Descripcion_Banc</option>                            
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="selSal" class="form-label form-label-sm">Salario:</label>
+                        <select class="form-select form-select-sm" id="selSal" >
+                            <option value="@Model.selSal">@Model.SelSalDescrip</option>
+                        </select>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <label for="CuentaBanca" class="form-label form-label-sm">Cuenta Bancaria:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" placeholder="000000-000000-00000" id="CuentaBanca" name="CuentaBanca" asp-for="CuentaBanca" maxlength="18" />
+                        <span asp-validation-for="CuentaBanca" class="text-danger"></span>
+                    </div>
+                    <div class="col-4">
+                        <label for="selePues" class="form-label form-label-sm">Puesto:</label>
+                        <select class="form-select form-select-sm" id="selePues">
+                            <option value="@Model.selePues">@Model.Descripcion_pues</option>
+                        </select>
+                    </div>
+                    <div class="col-6 border border-dark">
+                        <h7>Experiencia</h7>
+                        <div class="container">
+                            <div class="row ">
+                                <div class="col-6">
+                                    <input class="form-check-input" type="checkbox" name="RangoMedio" id="RangoMedio" asp-for="RangoMedio">
+                                    <label class="form-check-label" for="RangoMedio">Rango Medio</label>
+                                    <br />
+                                    <input class="form-check-input" type="checkbox" name="Thorton" id="Thorton" asp-for="Thorton">
+                                    <label class="form-check-label" for="Thorton">Torthon</label>
+                                    <br />
+                                    <input class="form-check-input" type="checkbox" name="Rabon" id="Rabon" asp-for="Rabon">
+                                    <label class="form-check-label" for="Rabon">Rabon</label>
+                                    <br />
+                                    <input class="form-check-input" type="checkbox" name="Camioneta" id="Camioneta" asp-for="Camioneta">
+                                    <label class="form-check-label" for="Camioneta">Camioneta</label>
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-check-input" type="checkbox" name="TractoSenci" id="TractoSenci" asp-for="TractoSenci">
+                                    <label class="form-check-label" for="TractoSenci">Tracto Sencillo</label>
+                                    <br />
+                                    <input class="form-check-input" type="checkbox" name="VHlig" id="VHlig" asp-for="VHlig">
+                                    <label class="form-check-label" for="VHlig">Vehiculo Ligero</label>
+                                    <br />
+                                    <input class="form-check-input" type="checkbox" name="TracFull" id="TracFull" asp-for="TracFull">
+                                    <label class="form-check-label" for="TracFull">Tractor Full</label>
+                                </div>
+                                <span asp-validation-for="RangoMedio" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-content-start text-start">
+                    <label for="exampleFormControlTextarea1" class="form-label">Área (s) y puesto (s) que tienes experiencia</label>
+                    <textarea class="form-control text-uppercase" id="exampleFormControlTextarea1" rows="2" value="@Model.Experiencia"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4 align-content-end text-end">
+            <button id="btnguardar" type="submit" class="btn btn-info">Guardar</button>
+        </div>
+
+    </div>
+    <div id="divarchivos" class="row mt-4">
+        <div class="container">
+            <div class="row border border-primary rounded text-center">
+                <h5>Expediente</h5>
+            </div>
+            <div class="row">
+                @for (int i = 0; i < numTablas; i++)
+                {
+                    <div class="col-@(12 / numTablas)">
+                        <table class="table table-sm border-1 table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Documentos</th>
+                                    <th>Subir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var doc in Model.TBCAT_DoctoRecibidos.Skip(i * docsPorTabla).Take(docsPorTabla))
+                                {
+                                    <tr>
+                                        <td>@doc.Descripcion</td>
+                                        @if (doc.IncluirEvidencia)
+                                        {
+                                            <td>
+                                                <button id="idsubir-@doc.ClaveDoctoRecibe" class="btn btn-light" onclick="openModal('@doc.ClaveDoctoRecibe','@doc.Descripcion')">
+                                                    <i class="bi bi-paperclip"></i>
+                                                </button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div> *@
+            <div class="row mt-4 align-content-end text-end">
+                <div class="col-3">
+                    <button id="btnguardar" type="button" class="btn btn-info" onclick="imprimirPagina()">Imprimir Contrato</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Subir Documento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Subir documento : <span id="docId"></span></p>
+                    <input type="hidden" id="idDoc" />
+                    <input type="file" class="form-control" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Subir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ValRies" tabindex="-1" aria-labelledby="modalLabelReingre" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Validar Reingreso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="text-dark fs-5">¿Son correctos los datos?</p>
+                    <p class="text-danger fs-5">Recuerda Colocar la Homoclave</p>
+                    <div class="p-3 bg-light rounded border">
+                        <p class="mb-1"><strong>CURP:</strong> <span id="tempCurp" class="text-primary"></span></p>
+                        <p class="mb-1"><strong>RFC:</strong> <span id="tempRfc" class="text-primary"></span></p>
+                        <p class="mb-0"><strong>NSS:</strong> <span id="tempNss" class="text-primary"></span></p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-danger px-4" data-bs-dismiss="modal" aria-label="Close">NO</button>
+                    <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal" aria-label="Close" onclick="EjecutaValidarReingreso()">SI</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="Reigreso">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabelReingre">Reingreso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table id="TabReingreso" class="table table-sm table-secondary table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Nombre</th>
+                                <th>NumEmpleado</th>
+                                <th>Estatus</th>
+                                <th>Puesto</th>
+                                <th>FechaIngreso</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
