@@ -21,6 +21,7 @@
         public string? Descripcion { get; set; }
         public string? Mascara_Rainde { get; set; }
         public int CveUnidadNegocio { get; set; }
+        public int ClaveSalario { get; set; }
     }
     public class TBCATUNE
     {

@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+/*https://xdsoft.net/jqplugins/datetimepicker/*/
 $(document).ready(function () {
     $('#FEG').datetimepicker({
         format: 'Y/m/d H:i'

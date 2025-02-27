@@ -44,10 +44,8 @@
                 </div>
                 <div class="row">
                     <div class="col-2">
-                        <label for="SelPais" class="form-label form-label-sm">Nacionalidad:</label>
-                        <select class="form-select form-select-sm" id="SelPais" name="SelPais" asp-for="SelPais">
-                            <option value="@Model.SelPais">@Model.DescripNacionalidad</option>
-                        </select>
+                        <label for="txtSelPais" class="form-label form-label-sm">Nacionalidad:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="txtSelPais" value="@Model.DescripNacionalidad" />
                     </div>
                     <div class="col-2">
                         <label for="ApPaterno" class="form-label form-label-sm">Apellido Paterno:</label>
@@ -62,35 +60,33 @@
                         <input type="text" class="form-control form-control-sm text-uppercase" id="Nombre" value="@Model.Nombre" />
                     </div>
                     <div class="col-2">
-                        <label for="originario" class="form-label form-label-sm">Lugar de Nacimiento:</label>
-                        <select class="form-select form-select-sm" id="originario">
-                            <option value="@Model.originario">@Model.Desorigen</option>
-                        </select>
+                        <label for="txtoriginario" class="form-label form-label-sm">Lugar de Nacimiento:</label>
+                        <input value="@Model.Desorigen" id="txtoriginario" name="txtoriginario" class="form-control form-control-sm text-uppercase" />
                     </div>
                     <div class="col-2">
                         <label for="FechNac" class="form-label">Fecha Nacimiento:</label>
-                        <input type="date" class="form-control form-control-sm" value="@Model.FechNac" id="FechNac" onchange="mostrarEdad()">
+                        <input type="date" class="form-control form-control-sm" name="FechNac" id="FechNac" value="@Model.FechNac?.ToString("yyyy-MM-dd")" onchange="mostrarEdad()">
                     </div>
                 </div>
                 <br />
                 <div class="row">
                     <div class="col-2">
                         <h7>
-                            Sexo:</p>
+                            <p>Sexo:</p>
                             @if (@Model.sexo == "H")
                             {
-                                <input class="form-check-input" type="radio" id="masculino" name="sexo" checked>
+                                <input class="form-check-input" type="radio" id="masculino" value="H" name="sexo" checked>
                                 <label for="masculino">Masculino</label>
                                 <br />
-                                <input class="form-check-input" type="radio" id="femenino" name="sexo" >
+                                <input class="form-check-input" type="radio" id="femenino" value="M" name="sexo">
                                 <label for="femenino" class="form-check-label">Femenino</label>
                             }
                             else if (@Model.sexo == "M")
                             {
-                                <input class="form-check-input" type="radio" id="masculino" name="sexo">
+                                <input class="form-check-input" type="radio" id="masculino" value="H" name="sexo">
                                 <label for="masculino">Masculino</label>
                                 <br />
-                                <input class="form-check-input" type="radio" id="femenino" name="sexo" checked>
+                                <input class="form-check-input" type="radio" id="femenino" value="M" name="sexo" checked>
                                 <label for="femenino" class="form-check-label">Femenino</label>
                             }
                     </div>
@@ -99,10 +95,8 @@
                         <input type="number" class="form-control form-control-sm" id="Edad" placeholder="Edad:" disabled />
                     </div>
                     <div class="col-2">
-                        <label for="EdoCivil" class="form-label col-form-label-sm">Estado Civil</label>
-                        <select class="form-select form-select-sm" id="EdoCivil" >
-                            <option value="@Model.EdoCivil">@Model.Descripcion_civil</option>
-                        </select>
+                        <label for="textEdoCivil" class="form-label col-form-label-sm">Estado Civil</label>
+                        <input type="text" class="form-control form-control-sm" id="textEdoCivil" name="textEdoCivil" value="@Model.Descripcion_civil" />
                     </div>
                     <div class="col-2">
                         <label for="Cel" class="form-label form-label-sm">Telefono Celular:</label>
@@ -114,32 +108,26 @@
                     </div>
                     <div class="col-2">
                         <label for="CP" class="form-label form-label-sm">CP:</label>
-                        <input type="text" class="form-control form-control-sm" id="CP" placeholder="CP:" value="@Model.CP" onchange="buscarporcp()" />
+                        <input type="text" class="form-control form-control-sm" id="CP" placeholder="CP:" value="@Model.CP" />
                     </div>
                 </div>
                 <br />
                 <div class="row">
                     <div class="col-3">
-                        <label for="selEstado" class="form-label form-label-sm">Estado:</label>
-                        <select class="form-select form-select-sm" id="selEstado">
-                            <option value="@Model.selEstado">@Model.Descripcion_Esta</option>
-                        </select>
+                        <label for="textselEstado" class="form-label form-label-sm">Estado:</label>
+                        <input type="text" class="form-control form-control-sm" id="textselEstado" name="textselEstado"value="@Model.Descripcion_Esta" />
                     </div>
                     <div class="col-3">
-                        <label for="seleMuni" class="form-label form-label-sm">Municipio:</label>
-                        <select class="form-select form-select-sm" id="seleMuni" >
-                            <option value="@Model.seleMuni">@Model.Descripcion_muni</option>
-                        </select>
+                        <label for="textseleMuni" class="form-label form-label-sm">Municipio:</label>
+                        <input type="text" class="form-control form-control-sm" id="textseleMuni" name="textseleMuni" value="@Model.Descripcion_muni" />
                     </div>
                     <div class="col-3">
-                        <label for="Colonia" class="form-label form-label-sm">Colonia:</label>
-                        <select class="form-select form-select-sm" id="Colonia">
-                            <option value="@Model.Colonia">@Model.Descripcion_col</option>
-                        </select>
+                        <label for="textColonia" class="form-label form-label-sm">Colonia:</label>
+                        <input type="text" class="form-control form-control-sm" id="textColonia" name="textColonia" value="@Model.Descripcion_col" />
                     </div>
                     <div class="col-3">
                         <label for="Calle" class="form-label form-label-sm">Calle:</label>
-                        <input type="text" class="form-control form-control-sm text-uppercase" id="Calle" value="@Model.Calle"  />
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="Calle" value="@Model.Calle" />
                     </div>
                 </div>
                 <br />
@@ -154,7 +142,7 @@
                     </div>
                     <div class="col-2">
                         <label for="NSS" class="form-label col-form-label-sm">NSS:</label>
-                        <input type="number" class="form-control form-control-sm" value="@Model.NSS" id="NSS" maxlength="11">                        
+                        <input type="number" class="form-control form-control-sm" value="@Model.NSS" id="NSS" maxlength="11">
                     </div>
                     <div class="col-3">
                         <label for="CURP" class="form-label form-label-sm">CURP:</label>
@@ -162,7 +150,7 @@
                     </div>
                     <div class="col-3">
                         <label for="RFC" class="form-label form-label-sm">RFC:</label>
-                        <input type="text" class="form-control form-control-sm text-uppercase" id="RFC" placeholder="RFC:" value="@Model.RFC"  maxlength="13" />
+                        <input type="text" class="form-control form-control-sm text-uppercase" id="RFC" placeholder="RFC:" value="@Model.RFC" maxlength="13" />
                     </div>
                 </div>
                 <br />
@@ -210,7 +198,7 @@
                     </div>
                     <div class="col-2">
                         <label for="VigenciaLicen" class="form-label">Vigencia:</label>
-                        <input type="date" class="form-control form-control-sm" placeholder="yyyy-MM-dd" id="VigenciaLicen" value="@Model.VigenciaLicen" />
+                        <input type="date" class="form-control form-control-sm" id="VigenciaLicen" value="@Model.VigenciaLicen?.ToString("yyyy-MM-dd")" />
                     </div>
                     <div class="col-2">
                         <label for="RControl" class="form-label">R-Control:</label>
@@ -235,7 +223,7 @@
                     </div>
                     <div class="col-3">
                         <label for="AptMedi" class="form-label">Vigencia Apto Medico:</label>
-                        <input type="date" class="form-control form-control-sm" placeholder="yyyy-MM-dd" id="AptMedi" value="@Model.AptMedi" />
+                        <input type="date" class="form-control form-control-sm" placeholder="yyyy-MM-dd" id="AptMedi" value="@Model.AptMedi?.ToString("yyyy-MM-dd")" />
                     </div>
                 </div>
             </div>
@@ -255,76 +243,96 @@
                     <div class="col-3">
                         <label for="ZonTra" class="form-label form-label-sm">Zona de Trabajo:</label>
                         <select class="form-select form-select-sm" id="ZonTra">
-                            <option value="@Model.ZonTra">@Model.Descripcion_zon</option>    
-                        </select>                        
+                            <option value="@Model.ZonTra">@Model.Descripcion_zon</option>
+                        </select>
                     </div>
                     <div class="col-3">
                         <label for="Banc" class="form-label form-label-sm">Banco:</label>
                         <select class="form-select form-select-sm" id="Banc">
-                            <option value="@Model.Banc">@Model.Descripcion_Banc</option>                            
+                            <option value="@Model.Banc">@Model.Descripcion_Banc</option>
                         </select>
                     </div>
                     <div class="col-3">
-                        <label for="selSal" class="form-label form-label-sm">Salario:</label>
-                        <select class="form-select form-select-sm" id="selSal" >
-                            <option value="@Model.selSal">@Model.SelSalDescrip</option>
-                        </select>
+                        <label for="textselSal" class="form-label form-label-sm">Salario:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" name="textselSal" value="@Model.SelSalDescrip" id="textselSal" />
                     </div>
                 </div>
                 <br />
                 <div class="row">
                     <div class="col-2">
                         <label for="CuentaBanca" class="form-label form-label-sm">Cuenta Bancaria:</label>
-                        <input type="text" class="form-control form-control-sm text-uppercase" placeholder="000000-000000-00000" id="CuentaBanca" name="CuentaBanca" asp-for="CuentaBanca" maxlength="18" />
-                        <span asp-validation-for="CuentaBanca" class="text-danger"></span>
+                        <input type="text" class="form-control form-control-sm text-uppercase" value="@Model.CuentaBanca" id="CuentaBanca" maxlength="18" />
                     </div>
                     <div class="col-4">
-                        <label for="selePues" class="form-label form-label-sm">Puesto:</label>
-                        <select class="form-select form-select-sm" id="selePues">
-                            <option value="@Model.selePues">@Model.Descripcion_pues</option>
-                        </select>
+                        <label for="textselePues" class="form-label form-label-sm">Puesto:</label>
+                        <input type="text" class="form-control form-control-sm text-uppercase" name="textselePues" value="@Model.Descripcion_pues" id="textselePues" />
                     </div>
                     <div class="col-6 border border-dark">
                         <h7>Experiencia</h7>
                         <div class="container">
                             <div class="row ">
-                                <div class="col-6">
-                                    <input class="form-check-input" type="checkbox" name="RangoMedio" id="RangoMedio" asp-for="RangoMedio">
-                                    <label class="form-check-label" for="RangoMedio">Rango Medio</label>
-                                    <br />
-                                    <input class="form-check-input" type="checkbox" name="Thorton" id="Thorton" asp-for="Thorton">
-                                    <label class="form-check-label" for="Thorton">Torthon</label>
-                                    <br />
-                                    <input class="form-check-input" type="checkbox" name="Rabon" id="Rabon" asp-for="Rabon">
-                                    <label class="form-check-label" for="Rabon">Rabon</label>
-                                    <br />
-                                    <input class="form-check-input" type="checkbox" name="Camioneta" id="Camioneta" asp-for="Camioneta">
-                                    <label class="form-check-label" for="Camioneta">Camioneta</label>
-                                </div>
-                                <div class="col-6">
-                                    <input class="form-check-input" type="checkbox" name="TractoSenci" id="TractoSenci" asp-for="TractoSenci">
-                                    <label class="form-check-label" for="TractoSenci">Tracto Sencillo</label>
-                                    <br />
-                                    <input class="form-check-input" type="checkbox" name="VHlig" id="VHlig" asp-for="VHlig">
-                                    <label class="form-check-label" for="VHlig">Vehiculo Ligero</label>
-                                    <br />
-                                    <input class="form-check-input" type="checkbox" name="TracFull" id="TracFull" asp-for="TracFull">
-                                    <label class="form-check-label" for="TracFull">Tractor Full</label>
-                                </div>
-                                <span asp-validation-for="RangoMedio" class="text-danger"></span>
-
+                                @foreach (var car in Model.tbcAt_UnidaExperiencia)
+                                {
+                                    <div class="col-6">
+                                        @if (car.ClaveTipoUnidad == 1)
+                                        {
+                                            <input class="form-check-input" type="checkbox" name="RangoMedio" id="RangoMedio" asp-for="RangoMedio" checked>
+                                            <label class="form-check-label" for="RangoMedio">@car.Descripcion</label>
+                                            <br />
+                                        }
+                                        @if (car.ClaveTipoUnidad == 2)
+                                        {
+                                            <input class="form-check-input" type="checkbox" name="Thorton" id="Thorton" asp-for="Thorton" checked>
+                                            <label class="form-check-label" for="Thorton">@car.Descripcion</label>
+                                            <br />
+                                        }
+                                        @if (car.ClaveTipoUnidad == 3)
+                                        {
+                                            <input class="form-check-input" type="checkbox" name="Rabon" id="Rabon" asp-for="Rabon" checked>
+                                            <label class="form-check-label" for="Rabon">@car.Descripcion</label>
+                                            <br />
+                                        }
+                                        @if (car.ClaveTipoUnidad == 4)
+                                        {
+                                            <input class="form-check-input" type="checkbox" name="Camioneta" id="Camioneta" asp-for="Camioneta" checked>
+                                            <label class="form-check-label" for="Camioneta">@car.Descripcion</label>
+                                        }
+                                    </div>
+                                }
+                                @foreach (var car in Model.tbcAt_UnidaExperiencia)
+                                {
+                                    <div class="col-6">
+                                        @if (car.ClaveTipoUnidad == 5)
+                                        {
+                                            <input class="form-check-input" type="checkbox" name="TractoSenci" id="TractoSenci" asp-for="TractoSenci" checked>
+                                            <label class="form-check-label" for="TractoSenci">@car.Descripcion</label>
+                                            <br />
+                                        }
+                                        @if (car.ClaveTipoUnidad == 6)
+                                        {
+                                            <input class="form-check-input" type="checkbox" name="VHlig" id="VHlig" asp-for="VHlig" checked>
+                                            <label class="form-check-label" for="VHlig">@car.Descripcion</label>
+                                            <br />
+                                        }
+                                        @if (car.ClaveTipoUnidad == 7)
+                                        {
+                                            <input class="form-check-input" type="checkbox" name="TracFull" id="TracFull" asp-for="TracFull" checked>
+                                            <label class="form-check-label" for="TracFull">@car.Descripcion</label>
+                                        }
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row align-content-start text-start">
                     <label for="exampleFormControlTextarea1" class="form-label">Área (s) y puesto (s) que tienes experiencia</label>
-                    <textarea class="form-control text-uppercase" id="exampleFormControlTextarea1" rows="2" value="@Model.Experiencia"></textarea>
+                    <textarea class="form-control text-uppercase" id="exampleFormControlTextarea1" rows="2" value="@Model.Experiencia">@Model.Experiencia</textarea>
                 </div>
             </div>
         </div>
         <div class="row mt-4 align-content-end text-end">
-            <button id="btnguardar" type="submit" class="btn btn-info">Guardar</button>
+            <button id="btnguardar" type="button" class="btn btn-info">Guardar</button>
         </div>
 
     </div>
@@ -363,10 +371,10 @@
                         </table>
                     </div>
                 }
-            </div> *@
+            </div>
             <div class="row mt-4 align-content-end text-end">
                 <div class="col-3">
-                    <button id="btnguardar" type="button" class="btn btn-info" onclick="imprimirPagina()">Imprimir Contrato</button>
+                    <button id="btnimprimir" type="button" class="btn btn-info" onclick="imprimirPagina()">Imprimir Contrato</button>
                 </div>
             </div>
         </div>
@@ -387,60 +395,6 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary">Subir</button>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="ValRies" tabindex="-1" aria-labelledby="modalLabelReingre" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Validar Reingreso</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p class="text-dark fs-5">¿Son correctos los datos?</p>
-                    <p class="text-danger fs-5">Recuerda Colocar la Homoclave</p>
-                    <div class="p-3 bg-light rounded border">
-                        <p class="mb-1"><strong>CURP:</strong> <span id="tempCurp" class="text-primary"></span></p>
-                        <p class="mb-1"><strong>RFC:</strong> <span id="tempRfc" class="text-primary"></span></p>
-                        <p class="mb-0"><strong>NSS:</strong> <span id="tempNss" class="text-primary"></span></p>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-danger px-4" data-bs-dismiss="modal" aria-label="Close">NO</button>
-                    <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal" aria-label="Close" onclick="EjecutaValidarReingreso()">SI</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="Reigreso">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabelReingre">Reingreso</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table id="TabReingreso" class="table table-sm table-secondary table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Empresa</th>
-                                <th>Nombre</th>
-                                <th>NumEmpleado</th>
-                                <th>Estatus</th>
-                                <th>Puesto</th>
-                                <th>FechaIngreso</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-
             </div>
         </div>
     </div>

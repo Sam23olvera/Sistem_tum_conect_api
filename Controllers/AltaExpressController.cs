@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Policy;
 using ConectDB.DB;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Diagnostics;
 
 namespace ConectDB.Controllers
 {
@@ -42,7 +43,7 @@ namespace ConectDB.Controllers
             }
         }
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        [HttpPost, HttpGet]
+        [HttpPost]
         public ActionResult Guardar(int cveEmp, string XT, AltaExpressModel guar)
         {
             try
@@ -57,6 +58,7 @@ namespace ConectDB.Controllers
                 model.Token = XT;
                 ViewData["UsuarioModel"] = model;
                 Model = mov.Catalogos(cveEmp);
+                guar.TBCT_ProxFol = Model.TBCT_ProxFol;
                 guar.TBCAT_TipoOp = Model.TBCAT_TipoOp;
                 guar.TBCAT_TipoTrabajador = Model.TBCAT_TipoTrabajador;
                 guar.TBCAT_Escolaridad = Model.TBCAT_Escolaridad;
@@ -70,15 +72,35 @@ namespace ConectDB.Controllers
                 guar.TBCAT_Estado = Model.TBCAT_Estado;
                 guar.TBCAT_OriginarioDe = Model.TBCAT_OriginarioDe;
                 guar.TBCAT_EstadoCivil = Model.TBCAT_EstadoCivil;
+                guar.TBCAT_SalarioPesos = Model.TBCAT_SalarioPesos;
                 if (guar.CveTipoEmp == 0)
                 {
                     ModelState.AddModelError("CveTipoEmp", "Debes Seleccionar un Tipo de Trabajador");
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
+                if (guar.ValidaBTN != 100)
+                {
+                    ModelState.AddModelError("ValidaBTN", "Debes Validar si existe alguna alta");
+                    TempData["Mensaje"] = "Debes Validar si existe alguna alta";
+                    TempData["status"] = 400;
+                    return View("Index", guar);
+                }
                 if (guar.SelPais == 0)
                 {
                     ModelState.AddModelError("SelPais", "Debes Seleccionar un Pais");
+                    TempData["status"] = 400;
+                    return View("Index", guar);
+                }
+                if (guar.originario == 0)
+                {
+                    ModelState.AddModelError("originario", "Debes de selecionar un Lugar de Nacimiento");
+                    TempData["status"] = 400;
+                    return View("Index", guar);
+                }
+                if (guar.EdoCivil == 0)
+                {
+                    ModelState.AddModelError("EdoCivil", "Debe seleccionar un de los Estado Civil");
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
@@ -93,7 +115,7 @@ namespace ConectDB.Controllers
                     ModelState.AddModelError("seleMuni", "Debes Seleccionar un Municipio");
                     TempData["status"] = 400;
                     return View("Index", guar);
-                }
+                }                
                 if (guar.Colonia == 0)
                 {
                     ModelState.AddModelError("Colonia", "Debes Seleccionar la Colonia");
@@ -105,13 +127,7 @@ namespace ConectDB.Controllers
                     ModelState.AddModelError("Escol", "Debes Seleccionar la Escolaridad");
                     TempData["status"] = 400;
                     return View("Index", guar);
-                }
-                if (guar.originario == 0)
-                {
-                    ModelState.AddModelError("originario", "Debes de selecionar un Lugar de Nacimiento");
-                    TempData["status"] = 400;
-                    return View("Index", guar);
-                }
+                }                
                 if (guar.SeleLic == 0)
                 {
                     ModelState.AddModelError("SeleLic", "Debes Seleccionar un Tipo de Licencia");
@@ -136,15 +152,15 @@ namespace ConectDB.Controllers
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
-                if (guar.selePues == 0)
+                if (guar.selSal == 0)
                 {
-                    ModelState.AddModelError("selePues", "Debe seleccionar un Puesto");
+                    ModelState.AddModelError("selSal", "Debes seleccionar un Salario");
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
-                if (guar.EdoCivil == 0)
+                if (guar.selePues == 0)
                 {
-                    ModelState.AddModelError("EdoCivil", "Debe seleccionar un de los Estado Civil");
+                    ModelState.AddModelError("selePues", "Debe seleccionar un Puesto");
                     TempData["status"] = 400;
                     return View("Index", guar);
                 }
@@ -165,7 +181,6 @@ namespace ConectDB.Controllers
                     TempData["status"] = guar.Errors[0].status;
                     string[] numalta = guar.Errors[0].message.Split("|");
                     alta = numalta[1];
-                    TempData["alta"] = alta;
                     //return View("Index", guar);
                     return RedirectToAction("Imprime", new { cveEmp, XT, alta });
                 }

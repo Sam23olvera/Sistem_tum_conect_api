@@ -8,10 +8,11 @@
     <link rel="shortcut icon" href="~/imag/logo_difuminado.png" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/MenuSpiner.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AltaExpress.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ConectDB.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datetime/jquery.datetimepicker.min.css" />
 
 </head>
 @(await Component.InvokeAsync("Menu", ViewData["UsuarioModel"]))
@@ -36,6 +37,8 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/AltaExpress.js"></script>
+    <script src="~/js/imprimeAlta.js"></script>    
+    <script src="~/lib/datetime/jquery.datetimepicker.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

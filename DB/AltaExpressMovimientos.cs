@@ -92,7 +92,7 @@ namespace ConectDB.DB
                     ClaveOrigi = guar.originario,
                     TCel = guar.Cel,
                     TLocal = guar.Tel,
-                    FechaNac = guar.FechNac,
+                    FechaNac = guar.FechNac?.ToString("yyyy-MM-dd"),
                     CURP = guar.CURP,
                     RFC = guar.RFC,
                     NSS = guar.NSS,
@@ -102,7 +102,7 @@ namespace ConectDB.DB
                     Reingreso = guar.Reingreso,
                     IdTipoLicen = guar.SeleLic,
                     NumLicen = guar.NumLicen,
-                    VigenciaLicen = guar.VigenciaLicen,
+                    VigenciaLicen = guar.VigenciaLicen?.ToString("yyyy-MM-dd"),
                     RControl = guar.RControl,
                     ConInfonavit = guar.ConInfonavit,
                     FolInfonavit = guar.FolInfonavit,
@@ -116,7 +116,7 @@ namespace ConectDB.DB
                     IdPuesto = guar.selePues,
                     ClaveSalario = guar.selSal,
                     AnoExperiencia = guar.AnoExperiencia,
-                    VigenciaMedic = guar.AptMedi,
+                    VigenciaMedic = guar.AptMedi?.ToString("yyyy-MM-dd"),
                     EdoCivil = guar.EdoCivil,
                     TiposUnis = Tipo
                 };

@@ -29,6 +29,8 @@
                     <input type="hidden" value="@TempData["status"]" id="status" />
                     <input type="hidden" value="@usuarioModel.Data[0].EmpS[0].cveEmp" id="cveEmp" name="cveEmp" />
                     <input type="hidden" value="@usuarioModel.Token" id="XT" name="XT" />
+                    <input type="number" id="ValidaBTN" name="ValidaBTN" asp-for="ValidaBTN" class="ocultar" />
+                    <span asp-validation-for="ValidaBTN" class="text-danger"></span>
                 </div>
                 <div class="col-3 align-content-end text-end">
                     <div class="container border border-primary rounded p-3">
@@ -37,7 +39,7 @@
                                 <h7>#Solicitud:</h7>
                             </div>
                             <div class="col-6">
-                                <h7>@TempData["alta"]</h7>
+                                <h7>@Model.TBCT_ProxFol[0].proxfol</h7>
                             </div>
                         </div>
                     </div>
@@ -81,14 +83,14 @@
                                 <option value="0">[SELECIONA]</option>
                                 @foreach (var ori in Model.TBCAT_OriginarioDe)
                                 {
-                                    <option value="@ori.ClaveOriginario">@ori.Descripcion</option>
+                                    <option value="@ori.ClaveOriginario" data-entidad="@ori.Entidad">@ori.Descripcion</option>
                                 }
                             </select>
                             <span asp-validation-for="originario" class="text-danger"></span>
                         </div>
                         <div class="col-2">
                             <label for="FechNac" class="form-label">Fecha Nacimiento:</label>
-                            <input type="date" class="form-control form-control-sm" placeholder="yyyy-MM-dd" name="FechNac" id="FechNac" onchange="mostrarEdad()" asp-for="FechNac">
+                            <input type="date" class="form-control form-control-sm" name="FechNac" id="FechNac" value="@Model.FechNac?.ToString("yyyy-MM-dd")" onchange="mostrarEdad()" asp-for="FechNac">
                             <span asp-validation-for="FechNac" class="text-danger"></span>
                         </div>
                     </div>
@@ -96,7 +98,7 @@
                     <div class="row">
                         <div class="col-2">
                             <h7>
-                                Sexo:</p>
+                                <p>Sexo:</p>
                                 <input class="form-check-input" type="radio" id="masculino" name="sexo" value="H" asp-for="sexo">
                                 <label for="masculino">Masculino</label>
                                 <br />
@@ -140,7 +142,7 @@
                     <div class="row">
                         <div class="col-3">
                             <label for="selEstado" class="form-label form-label-sm">Estado:</label>
-                            <select class="form-select form-select-sm" id="selEstado" name="selEstado" onchange="llenaMunicipio()" asp-for="selEstado">
+                            <select class="form-select form-select-sm" id="selEstado" name="selEstado" onchange="llenaMunicipio()" asp-for="selEstado" data-selected="@Model.selEstado">
                                 <option value="0">[SELECIONA]</option>
                                 @foreach (var est in Model.TBCAT_Estado)
                                 {
@@ -252,13 +254,13 @@
                         </div>
                         <div class="col-2">
                             <label for="VigenciaLicen" class="form-label">Vigencia:</label>
-                            <input type="date" class="form-control form-control-sm" placeholder="yyyy-MM-dd" id="VigenciaLicen" name="VigenciaLicen" asp-for="VigenciaLicen" />
+                            <input type="date" class="form-control form-control-sm" id="VigenciaLicen" name="VigenciaLicen" value="@Model.VigenciaLicen?.ToString("yyyy-MM-dd")" asp-for="VigenciaLicen" />
                             <span asp-validation-for="VigenciaLicen" class="text-danger"></span>
                         </div>
                         <div class="col-2">
                             <label for="RControl" class="form-label">R-Control:</label>
-                            <input type="text" class="form-control form-control-sm text-uppercase" id="RControl" placeholder="R-Control:" name="RControl" asp-for="RControl" />
-                            <span asp-validation-for="RControl" class="text-danger"></span>
+                            <input type="text" class="form-control form-control-sm text-uppercase" id="RControl" placeholder="R-Control:" name="RControl" />
+                            @* <span asp-validation-for="RControl" class="text-danger"></span> *@
                         </div>
                         <div class="col-2">
                             <label for="AnoExperiencia" class="form-label">Años de Experiencia:</label>
@@ -280,7 +282,7 @@
                         </div>
                         <div class="col-3">
                             <label for="AptMedi" class="form-label">Vigencia Apto Medico:</label>
-                            <input type="date" class="form-control form-control-sm" placeholder="yyyy-MM-dd" id="AptMedi" name="AptMedi" asp-for="AptMedi" />
+                            <input type="date" class="form-control form-control-sm" id="AptMedi" name="AptMedi" value="@Model.AptMedi?.ToString("yyyy-MM-dd")" asp-for="AptMedi" />
                             <span asp-validation-for="AptMedi" class="text-danger"></span>
                         </div>
                     </div>
@@ -294,11 +296,11 @@
                     <div class="row">
                         <div class="col-3">
                             <label for="TipOpera" class="form-label form-label-sm">Tipo Operacion:</label>
-                            <select class="form-select form-select-sm" id="TipOpera" name="TipOpera" asp-for="TipOpera" onchange="Llenasal()">
+                            <select class="form-select form-select-sm" id="TipOpera" name="TipOpera" asp-for="TipOpera" onchange="Llenasal(event)" data-selected="@Model.TipOpera">
                                 <option value="0">[SELECIONA]</option>
                                 @foreach (var TipOp in Model.TBCAT_TipoOp)
                                 {
-                                    <option value="@TipOp.ClaveTipoOperacion">@TipOp.Descripcion</option>
+                                    <option value="@TipOp.ClaveTipoOperacion" data-tipo-operacion="@TipOp.ClaveTipoOperacion">@TipOp.Descripcion</option>
                                 }
                             </select>
                             <span asp-validation-for="TipOpera" class="text-danger"></span>
@@ -327,8 +329,12 @@
                         </div>
                         <div class="col-3">
                             <label for="selSal" class="form-label form-label-sm">Salario:</label>
-                            <select class="form-select form-select-sm" id="selSal" name="selSal" asp-for="selSal" data-selected="@Model.selSal">
+                            <select class="form-select form-select-sm" id="selSal" name="selSal" asp-for="selSal" onchange="Llenasal(event)" data-selected="@Model.selSal">
                                 <option value="0">[SELECIONA]</option>
+                                @foreach (var sal in Model.TBCAT_SalarioPesos)
+                                {
+                                    <option value="@sal.ClaveSalario" data-tipo-operacion="@sal.ClaveTipoOperacion">@sal.salario</option>
+                                }
                             </select>
                             <span asp-validation-for="selSal" class="text-danger"></span>
                         </div>
@@ -420,7 +426,7 @@
                                         @if (doc.IncluirEvidencia)
                                         {
                                             <td>
-                                                <button id="idsubir-@doc.ClaveDoctoRecibe" class="btn btn-light" onclick="openModal('@doc.ClaveDoctoRecibe','@doc.Descripcion')">
+                                                <button id="idsubir-@doc.ClaveDoctoRecibe" class="btn btn-light">
                                                     <i class="bi bi-paperclip"></i>
                                                 </button>
                                             </td>
@@ -434,26 +440,7 @@
             </div>
             <div class="row mt-4 align-content-end text-end">
                 <div class="col-3">
-                    <button id="btnguardar" type="button" class="btn btn-info" onclick="imprimirPagina()">Imprimir Contrato</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Subir Documento</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Subir documento : <span id="docId"></span></p>
-                    <input type="hidden" id="idDoc" />
-                    <input type="file" class="form-control" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Subir</button>
+                    <button id="btnimprimir" type="button" class="btn btn-info">Imprimir Contrato</button>
                 </div>
             </div>
         </div>
@@ -508,7 +495,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
-
             </div>
         </div>
     </div>
